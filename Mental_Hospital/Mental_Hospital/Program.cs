@@ -1,3 +1,16 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using Mental_Hospital;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-Console.WriteLine("Hello, World!");
+
+//Initiallizing DI container
+var services = new ServiceCollection();
+services.MentalHospitalSetup();
+var provider = services.BuildServiceProvider();
+
+
+var factory = provider.GetService<PersonFactory>();
+var storage = provider.GetService<PersonStorage>();
+
+factory.CreateNewPatient("aa", "aa", DateTime.Now, "asssa", "asads");
+Console.WriteLine(storage.Count);

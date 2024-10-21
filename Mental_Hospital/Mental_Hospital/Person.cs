@@ -2,13 +2,9 @@
 
 public abstract class Person
 {
-    private string _name{ get; set; }
-    private string _surname{ get; set; }
-    private DateTime _dateOfBirth{ get; set; }
-    private string _address{ get; set; }
-
-    public Person()
-    {
-        
-    }
+    public string Name{ get; set; }
+    public string Surname{ get; set; }
+    public DateTime DateOfBirth{ get; set; }
+    public string Address{ get; set; }
+    
 }

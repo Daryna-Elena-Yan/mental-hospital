@@ -1,4 +1,4 @@
-﻿namespace Mental_Hospital;
+﻿namespace Mental_Hospital.Models;
 
 public class Patient : Person
 {

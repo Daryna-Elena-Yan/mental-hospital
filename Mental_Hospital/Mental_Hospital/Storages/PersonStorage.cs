@@ -1,4 +1,6 @@
-﻿namespace Mental_Hospital;
+﻿using Mental_Hospital.Models;
+
+namespace Mental_Hospital.Storages;
 
 public class PersonStorage
 {

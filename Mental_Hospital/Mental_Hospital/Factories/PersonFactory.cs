@@ -1,7 +1,8 @@
-﻿using System.Reflection.PortableExecutable;
+﻿using Mental_Hospital.Models;
+using Mental_Hospital.Storages;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Mental_Hospital;
+namespace Mental_Hospital.Factories;
 
 public class PersonFactory
 {

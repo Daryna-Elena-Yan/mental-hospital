@@ -1,4 +1,6 @@
 ﻿using Mental_Hospital;
+using Mental_Hospital.Factories;
+using Mental_Hospital.Storages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 

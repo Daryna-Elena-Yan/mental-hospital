@@ -1,5 +1,6 @@
 using Mental_Hospital;
 using Mental_Hospital.Factories;
+using Mental_Hospital.Models;
 using Mental_Hospital.Storages;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,7 +9,7 @@ namespace Mental_Hospital_Tests;
 public class Tests
 {
     private PersonFactory? _factory;
-    private PersonStorage? _storage;
+    private Storage<Person>? _storage;
 
     [SetUp]
     public void Setup()
@@ -20,13 +21,13 @@ public class Tests
 
 
         _factory = provider.GetService<PersonFactory>();
-        _storage = provider.GetService<PersonStorage>();
+        _storage = provider.GetService<Storage<Person>>();
     }
 
     [Test]
     public void PersonStorageRegisterTest()
     {
-        _factory.CreateNewPatient("aa", "aa", DateTime.Now, "asssa", "asads");
+        _factory.CreateNewPatient(1, "aa", "aa", DateTime.Now, "asssa", "asads");
         Assert.That(_storage.Count, Is.EqualTo(1));
     }
 }

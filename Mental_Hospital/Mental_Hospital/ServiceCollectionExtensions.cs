@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
 {
     public static ServiceCollection MentalHospitalSetup(this ServiceCollection serviceCollection)
     {
-        //part of innitializing
+        //registration of services
         serviceCollection.AddTransient<Patient>();
         serviceCollection.AddSingleton<Storage<Person>>();
         serviceCollection.AddSingleton<PersonFactory>();
@@ -33,6 +33,8 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddTransient<RoomPatient>();
         serviceCollection.AddSingleton<Storage<RoomPatient>>();
         serviceCollection.AddSingleton<RoomPatientFactory>();
+
+        serviceCollection.AddSingleton<IStorageAction<Patient>, PatientStorageActions>();
         
         return serviceCollection;
     }

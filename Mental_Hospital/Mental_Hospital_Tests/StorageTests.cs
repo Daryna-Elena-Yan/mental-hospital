@@ -9,7 +9,8 @@ namespace Mental_Hospital_Tests;
 public class Tests
 {
     private PersonFactory? _factory;
-    private Storage<Person>? _storage;
+    private Storage<Person>? _personStorage;
+    private Storage<Patient>? _patientStorage;
 
     [SetUp]
     public void Setup()
@@ -19,9 +20,11 @@ public class Tests
         services.MentalHospitalSetup();
         var provider = services.BuildServiceProvider();
 
-
+        //getting of services instances for tests
         _factory = provider.GetService<PersonFactory>();
-        _storage = provider.GetService<Storage<Person>>();
+        
+        _personStorage = provider.GetService<Storage<Person>>();
+        _patientStorage = provider.GetService<Storage<Patient>>();
     }
 
     [Test]
@@ -29,6 +32,16 @@ public class Tests
     {
         _factory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        Assert.That(_storage.Count, Is.EqualTo(1));
+        Assert.That(_personStorage.Count, Is.EqualTo(1));
+    }
+
+    public void PatientStorageDeleteTest()
+    {
+        //TODO
+      var patient =  _factory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        //patient.PatientDiagnoses.Add();
+        
+        
     }
 }

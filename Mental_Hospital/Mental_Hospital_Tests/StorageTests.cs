@@ -8,9 +8,12 @@ namespace Mental_Hospital_Tests;
 
 public class Tests
 {
-    private PersonFactory? _factory;
-    private Storage<Person>? _personStorage;
-    private Storage<Patient>? _patientStorage;
+    private PersonFactory _personFactory;
+    private Storage<Person> _personStorage;
+    private DiagnosisFactory _diagnosisFactory;
+    private Storage<Diagnosis> _diagnosisStorage;
+    private Storage<PatientDiagnosis> _patientDiagnosisStorage;
+
 
     [SetUp]
     public void Setup()
@@ -21,27 +24,42 @@ public class Tests
         var provider = services.BuildServiceProvider();
 
         //getting of services instances for tests
-        _factory = provider.GetService<PersonFactory>();
+        _personFactory = provider.GetRequiredService<PersonFactory>();
+        _diagnosisFactory = provider.GetRequiredService<DiagnosisFactory>();
         
-        _personStorage = provider.GetService<Storage<Person>>();
-        _patientStorage = provider.GetService<Storage<Patient>>();
+        
+        _personStorage = provider.GetRequiredService<Storage<Person>>();
+        _diagnosisStorage = provider.GetRequiredService<Storage<Diagnosis>>();
+        _patientDiagnosisStorage = provider.GetRequiredService<Storage<PatientDiagnosis>>();
     }
 
     [Test]
     public void PersonStorageRegisterTest()
     {
-        _factory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+        _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         Assert.That(_personStorage.Count, Is.EqualTo(1));
     }
 
+    
+    [Test]
     public void PatientStorageDeleteTest()
     {
-        //TODO
-      var patient =  _factory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+      var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        //patient.PatientDiagnoses.Add();
-        
-        
+      var diagnosis = _diagnosisFactory.CreateNewLightAnxiety
+          (patient, "anexity", "aaaaa", new string[0], DateTime.Now, null);
+      
+      Assert.That(_personStorage.Count, Is.EqualTo(1));
+      Assert.That(_diagnosisStorage.Count, Is.EqualTo(1));
+      Assert.That(_patientDiagnosisStorage.Count, Is.EqualTo(1));
+      
+      
+      _personStorage.Delete(patient);
+      
+      Assert.That(_personStorage.Count, Is.EqualTo(0));
+      Assert.That(_diagnosisStorage.Count, Is.EqualTo(0));
+      Assert.That(_patientDiagnosisStorage.Count, Is.EqualTo(0));
+
     }
 }

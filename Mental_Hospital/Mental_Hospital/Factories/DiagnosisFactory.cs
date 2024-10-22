@@ -20,7 +20,7 @@ public class DiagnosisFactory
     }
 
 
-    public LightAnxiety CreateNewDiagnosis(Patient patient, string nameOfDisorder, string description,
+    public LightAnxiety CreateNewLightAnxiety(Patient patient, string nameOfDisorder, string description,
         IEnumerable<string> triggers, DateTime dateOfDiagnosis, DateTime? dateOfHealing)
     {
         var lightAnxiety = _provider.GetRequiredService<LightAnxiety>();

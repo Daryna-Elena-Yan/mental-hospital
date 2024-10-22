@@ -19,7 +19,8 @@ public class Storage<T>
 
     public void Delete(T t)
     {
-        _serviceProvider.GetService<IStorageAction<T>>()?.OnDelete(t); // if sp wont find service registration, nothong will be called
+        var storageAction = _serviceProvider.GetService<IStorageAction<T>>();
+        storageAction?.OnDelete(t); // if sp wont find service registration, nothong will be called
         _list.Remove(t);
     }
 

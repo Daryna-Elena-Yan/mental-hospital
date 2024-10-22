@@ -15,10 +15,9 @@ public class PrescriptionFactory
         _storage = storage;
     }
 
-    public Prescription CreateNewPrescription(int idPrescription, string name, int quantity, Decimal dosage, string description)
+    public Prescription CreateNewPrescription(string name, int quantity, Decimal dosage, string description)
     {
         var prescription = _provider.GetRequiredService<Prescription>();
-        prescription.IdPrescription = idPrescription;
         prescription.Name = name;
         prescription.Quantity = quantity;
         prescription.Dosage = dosage;

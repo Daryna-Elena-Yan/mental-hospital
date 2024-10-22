@@ -15,10 +15,9 @@ public class RoomFactory
         _storage = storage;
     }
 
-    public Room CreateNewRoom(int idRoom, int quantity)
+    public Room CreateNewRoom(int quantity)
     {
         var room = _provider.GetRequiredService<Room>();
-        room.IdRoom = idRoom;
         room.Quantity = quantity;
         
         _storage.RegisterNew(room);

@@ -2,7 +2,7 @@
 
 public class Equipment
 {
-    public int IdEquipment { get; set; }
+    public Guid IdEquipment { get; } = Guid.NewGuid();
     public string Name { get; set; }
     public DateTime ExpirationDate { get; set; }
     public virtual Room? Room { get; }

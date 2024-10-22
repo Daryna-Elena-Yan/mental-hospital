@@ -2,7 +2,7 @@
 
 public abstract class Person
 {
-    public int IdPerson { get; set; }
+    public Guid IdPerson { get; } = Guid.NewGuid();
     public string Name{ get; set; }
     public string Surname{ get; set; }
     public DateTime DateOfBirth{ get; set; }

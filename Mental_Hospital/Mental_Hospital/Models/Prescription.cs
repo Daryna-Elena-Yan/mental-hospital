@@ -2,7 +2,7 @@
 
 public class Prescription
 {
-    public int IdPrescription { get; set; } // identifier i.e. qualified value
+    public Guid IdPrescription { get;  } = Guid.NewGuid(); // identifier i.e. qualified value
     public string Name { get; set; }
     public int Quantity { get; set; }
     public Decimal Dosage { get; set; }

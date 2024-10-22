@@ -15,11 +15,10 @@ public class PersonFactory
         _storage = storage;
     }
 
-    public Patient CreateNewPatient(int idPerson, string name, string surname, DateTime dateOfBirth, string address, 
+    public Patient CreateNewPatient(string name, string surname, DateTime dateOfBirth, string address, 
         string anamnesis, DateTime? dateOfDeath)
     {
         var patient = _provider.GetRequiredService<Patient>(); //to create inside DI container
-        patient.IdPerson = idPerson;
         patient.Name = name;
         patient.Surname = surname;
         patient.DateOfDeath = dateOfBirth;

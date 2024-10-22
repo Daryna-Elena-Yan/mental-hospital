@@ -27,7 +27,7 @@ public class Tests
     [Test]
     public void PersonStorageRegisterTest()
     {
-        _factory.CreateNewPatient(1, "Charles", "Leclerc", DateTime.Now,
+        _factory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         Assert.That(_storage.Count, Is.EqualTo(1));
     }

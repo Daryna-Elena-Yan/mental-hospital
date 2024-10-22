@@ -15,10 +15,9 @@ public class EquipmentFactory
         _storage = storage;
     }
 
-    public Equipment CreateNewEquipment(int idEquipment, string name, DateTime expirationDate)
+    public Equipment CreateNewEquipment(string name, DateTime expirationDate)
     {
         var equipment = _provider.GetRequiredService<Equipment>();
-        equipment.IdEquipment = idEquipment;
         equipment.Name = name;
         equipment.ExpirationDate = expirationDate;
         

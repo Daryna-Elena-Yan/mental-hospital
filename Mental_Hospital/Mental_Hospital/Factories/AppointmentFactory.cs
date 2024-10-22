@@ -15,10 +15,9 @@ public class AppointmentFactory
         _storage = storage;
     }
 
-    public Appointment CreateNewAppointment(int idAppointment, DateTime dateOfAppointment, string description)
+    public Appointment CreateNewAppointment( DateTime dateOfAppointment, string description)
     {
         var appointment = _provider.GetRequiredService<Appointment>();
-        appointment.IdAppointment = idAppointment;
         appointment.DateOfAppointment = dateOfAppointment;
         appointment.Description = description;
 

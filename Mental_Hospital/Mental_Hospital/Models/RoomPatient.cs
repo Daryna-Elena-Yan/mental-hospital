@@ -1,6 +1,6 @@
 ﻿namespace Mental_Hospital.Models;
 
-public class Room_Patient
+public class RoomPatient
 {
     public DateTime DatePlaced { get; set; }
     public DateTime? DateDischarged { get; set; }

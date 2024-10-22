@@ -4,20 +4,20 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Mental_Hospital.Factories;
 
-public class Room_PatientFactory
+public class RoomPatientFactory
 {
     private readonly IServiceProvider _provider;
-    private readonly Storage<Room_Patient> _storage;
+    private readonly Storage<RoomPatient> _storage;
 
-    public Room_PatientFactory(IServiceProvider provider, Storage<Room_Patient> storage)
+    public RoomPatientFactory(IServiceProvider provider, Storage<RoomPatient> storage)
     {
         _provider = provider;
         _storage = storage;
     }
 
-    public Room_Patient CreateNewRoomPatient(DateTime datePlaced, DateTime? dateDischarged)
+    public RoomPatient CreateNewRoomPatient(DateTime datePlaced, DateTime? dateDischarged)
     {
-        var roomPatient = _provider.GetRequiredService<Room_Patient>();
+        var roomPatient = _provider.GetRequiredService<RoomPatient>();
         roomPatient.DatePlaced = datePlaced;
         roomPatient.DateDischarged = dateDischarged;
         

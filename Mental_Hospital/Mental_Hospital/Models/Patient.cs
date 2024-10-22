@@ -4,6 +4,7 @@ public class Patient : Person
 {
     public string Anamnesis { get; set; }
     public DateTime? DateOfDeath { get; set; }
-    public virtual ICollection<Appointment> Appointments { get; } = new List<Appointment>();
-    public virtual ICollection<Room_Patient> RoomPatients { get; } = new List<Room_Patient>();
+    public virtual ICollection<PatientDiagnosis> PatientDiagnoses { get; } = [];
+    public virtual ICollection<Appointment> Appointments { get; } = [];
+    public virtual ICollection<RoomPatient> RoomPatients { get; } = [];
 }

@@ -30,9 +30,9 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddSingleton<Storage<Equipment>>();
         serviceCollection.AddSingleton<EquipmentFactory>();
         
-        serviceCollection.AddTransient<Room_Patient>();
-        serviceCollection.AddSingleton<Storage<Room_Patient>>();
-        serviceCollection.AddSingleton<Room_PatientFactory>();
+        serviceCollection.AddTransient<RoomPatient>();
+        serviceCollection.AddSingleton<Storage<RoomPatient>>();
+        serviceCollection.AddSingleton<RoomPatientFactory>();
         
         return serviceCollection;
     }

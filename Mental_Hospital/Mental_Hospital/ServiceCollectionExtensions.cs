@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
     public static ServiceCollection MentalHospitalSetup(this ServiceCollection serviceCollection)
     {
         //part of innitializing
-        serviceCollection.AddSingleton<PersonStorage>();
+        serviceCollection.AddSingleton<Storage<Person>>();
         serviceCollection.AddTransient<Patient>();
         serviceCollection.AddTransient<PersonFactory>();
         return serviceCollection;

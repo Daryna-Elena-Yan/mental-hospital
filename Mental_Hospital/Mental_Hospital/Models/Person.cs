@@ -1,7 +1,4 @@
-﻿using System.Reflection.Metadata;
-using System.Security.AccessControl;
-
-namespace Mental_Hospital.Models;
+﻿namespace Mental_Hospital.Models;
 
 public abstract class Person
 {

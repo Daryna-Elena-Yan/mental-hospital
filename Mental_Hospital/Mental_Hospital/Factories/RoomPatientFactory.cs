@@ -15,11 +15,13 @@ public class RoomPatientFactory
         _storage = storage;
     }
 
-    public RoomPatient CreateNewRoomPatient(DateTime datePlaced, DateTime? dateDischarged)
+    public RoomPatient CreateNewRoomPatient(Room room, Patient patient, DateTime datePlaced, DateTime? dateDischarged)
     {
         var roomPatient = _provider.GetRequiredService<RoomPatient>();
         roomPatient.DatePlaced = datePlaced;
         roomPatient.DateDischarged = dateDischarged;
+        roomPatient.Patient = patient;
+        roomPatient.Room = room;
         
         _storage.RegisterNew(roomPatient);
         

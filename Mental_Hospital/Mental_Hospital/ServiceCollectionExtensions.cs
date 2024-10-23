@@ -17,7 +17,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddTransient<Patient>();
         serviceCollection.AddSingleton<Storage<Person>>();
         serviceCollection.AddSingleton<PersonFactory>();
-        serviceCollection.AddSingleton<IStorageAction<Person>, PatientStorageActions>();
+        serviceCollection.AddSingleton<IStorageAction<Patient>, PatientStorageActions>();
         
         serviceCollection.AddTransient<Appointment>();
         serviceCollection.AddSingleton<Storage<Appointment>>();

@@ -12,16 +12,16 @@ public class Storage<T>
         _serviceProvider = serviceProvider;
     }
     
-    public void RegisterNew(T t)
+    public void RegisterNew<TS>(TS t) where TS:T
     {
-        var storageAction = _serviceProvider.GetService<IStorageAction<T>>();
+        var storageAction = _serviceProvider.GetService<IStorageAction<TS>>();
         storageAction?.OnAdd(t);
         _list.Add(t);
     }
 
-    public void Delete(T t)
+    public void Delete<TS>(TS t) where TS:T
     {
-        var storageAction = _serviceProvider.GetService<IStorageAction<T>>();
+        var storageAction = _serviceProvider.GetService<IStorageAction<TS>>();
         storageAction?.OnDelete(t); // if sp wont find service registration, nothong will be called
         _list.Remove(t);
     }

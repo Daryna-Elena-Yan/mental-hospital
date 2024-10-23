@@ -49,9 +49,6 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddSingleton<Storage<Diagnosis>>();
         serviceCollection.AddSingleton<DiagnosisFactory>();
         
-        serviceCollection.AddTransient<PatientDiagnosis>();
-        serviceCollection.AddSingleton<Storage<PatientDiagnosis>>();
-        
         
 
 

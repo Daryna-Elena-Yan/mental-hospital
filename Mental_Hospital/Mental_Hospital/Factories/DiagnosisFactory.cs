@@ -9,14 +9,12 @@ public class DiagnosisFactory
 {
     private readonly IServiceProvider _provider;
     private readonly Storage<Diagnosis> _diagnoses;
-    private readonly Storage<PatientDiagnosis> _patientDiagnosis;
 
     public DiagnosisFactory(IServiceProvider provider,
-        Storage<Diagnosis> diagnoses, Storage<PatientDiagnosis> patientDiagnosis)
+        Storage<Diagnosis> diagnoses)
     {
         _provider = provider;
         _diagnoses = diagnoses;
-        _patientDiagnosis = patientDiagnosis;
     }
 
 
@@ -28,24 +26,17 @@ public class DiagnosisFactory
         var lightAnxiety = _provider.GetRequiredService<LightAnxiety>();
         lightAnxiety.Description = description;
         lightAnxiety.NameOfDisorder = nameOfDisorder;
-
         foreach (var trigger in triggers)
         {
             lightAnxiety.Triggers.Add(trigger);
         }
-
-        //TODO move to another factory
-        var patientDiagnosis = _provider.GetRequiredService<PatientDiagnosis>();
-        patientDiagnosis.Diagnosis = lightAnxiety;
-        patientDiagnosis.Patient = patient;
-        patientDiagnosis.DateOfDiagnosis = dateOfDiagnosis;
-        patientDiagnosis.DateOfHealing = dateOfHealing;
-
-        lightAnxiety.PatientDiagnosis = patientDiagnosis;
-        patient.PatientDiagnoses.Add(patientDiagnosis);
+        lightAnxiety.DateOfDiagnosis = dateOfDiagnosis;
+        lightAnxiety.DateOfHealing = dateOfHealing;
+        lightAnxiety.Patient = patient;
+        
+        patient.Diagnoses.Add(lightAnxiety);
         
         _diagnoses.RegisterNew(lightAnxiety);
-        _patientDiagnosis.RegisterNew(patientDiagnosis);
 
         return lightAnxiety;
     }

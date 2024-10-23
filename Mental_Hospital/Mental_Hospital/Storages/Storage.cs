@@ -14,6 +14,8 @@ public class Storage<T>
     
     public void RegisterNew(T t)
     {
+        var storageAction = _serviceProvider.GetService<IStorageAction<T>>();
+        storageAction?.OnAdd(t);
         _list.Add(t);
     }
 

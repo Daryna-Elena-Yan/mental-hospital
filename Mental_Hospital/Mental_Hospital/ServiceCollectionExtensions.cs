@@ -12,6 +12,8 @@ public static class ServiceCollectionExtensions
     public static ServiceCollection MentalHospitalSetup(this ServiceCollection serviceCollection)
     {
         //registration of services
+        serviceCollection.AddTransient<Nurse>();
+        serviceCollection.AddTransient<Therapist>();
         serviceCollection.AddTransient<Patient>();
         serviceCollection.AddSingleton<Storage<Person>>();
         serviceCollection.AddSingleton<PersonFactory>();
@@ -50,6 +52,9 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddTransient<PatientDiagnosis>();
         serviceCollection.AddSingleton<Storage<PatientDiagnosis>>();
         
+        
+
+
         //TODO implemetns throug assembly using one common interface
         
         

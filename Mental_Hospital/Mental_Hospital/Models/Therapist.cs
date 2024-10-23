@@ -2,7 +2,7 @@
 
 public class Therapist:Employee
 {
-    private static double _basicSalaryInZl = 10000;
-    private static double _overtimePaidPerHourInZl=70;
-    private List<string> _qualifications { get; set; }
+    public static double BasicSalaryInZl = 10000;
+    public static double OvertimePaidPerHourInZl=70;
+    public List<string> Qualifications { get; set; }
 }

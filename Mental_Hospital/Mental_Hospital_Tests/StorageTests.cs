@@ -18,8 +18,10 @@ public class Tests
     private Storage<Appointment> _appointmentStorage;
     private EquipmentFactory _equipmentFactory;
     private Storage<Equipment> _equipmentStorage;
-    private RoomPatientFactory _roomPatientFactoryy;
+    private RoomPatientFactory _roomPatientFactory;
     private Storage<RoomPatient> _roomPatientStorage;
+    private RoomFactory _roomFactory;
+    private Storage<Room> _roomStorage;
 
     [SetUp]
     public void Setup()
@@ -34,11 +36,15 @@ public class Tests
         _diagnosisFactory = provider.GetRequiredService<DiagnosisFactory>();
         _appointmentFactory = provider.GetRequiredService<AppointmentFactory>();
         _equipmentFactory = provider.GetRequiredService<EquipmentFactory>();
+        _roomFactory = provider.GetRequiredService<RoomFactory>();
+        _roomPatientFactory = provider.GetRequiredService<RoomPatientFactory>();
         
         _personStorage = provider.GetRequiredService<Storage<Person>>();
         _diagnosisStorage = provider.GetRequiredService<Storage<Diagnosis>>();
         _appointmentStorage = provider.GetRequiredService<Storage<Appointment>>();
         _equipmentStorage = provider.GetRequiredService<Storage<Equipment>>();
+        _roomStorage = provider.GetRequiredService<Storage<Room>>();
+        _roomPatientStorage = provider.GetRequiredService<Storage<RoomPatient>>();
     }
 
     [Test]
@@ -50,7 +56,7 @@ public class Tests
     }
     
     [Test]
-    public void PatientStorageDeleteTest()
+    public void PatientStorageDeleteWithDiagnosesTest()
     {
       var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -66,6 +72,43 @@ public class Tests
       
       Assert.That(_personStorage.Count, Is.EqualTo(0));
       Assert.That(_diagnosisStorage.Count, Is.EqualTo(0));
+    }
+    
+    [Test]
+    public void RoomPatientStorageRegisterTest()
+    {
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        var room = _roomFactory.CreateNewRoom(3);
+        
+        _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, null);
+        
+        Assert.That(_personStorage.Count, Is.EqualTo(1));
+        Assert.That(_roomStorage.Count, Is.EqualTo(1));
+        Assert.That(_roomPatientStorage.Count, Is.EqualTo(1));
+        
+        Assert.That(patient.RoomPatients.Count, Is.EqualTo(1));
+        Assert.That(room.RoomPatients.Count, Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void PatientStorageDeleteWithRoomPatientTest()
+    {
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        var room = _roomFactory.CreateNewRoom(3);
+        
+        _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, null);
+      
+        Assert.That(_roomPatientStorage.Count, Is.EqualTo(1));
+        
+        _personStorage.Delete(patient);
+      
+        Assert.That(_personStorage.Count, Is.EqualTo(0));
+        Assert.That(_roomStorage.Count, Is.EqualTo(1));
+        Assert.That(_roomPatientStorage.Count, Is.EqualTo(0));
+        
+        Assert.That(room.RoomPatients.Count, Is.EqualTo(0));
     }
     
     [Test]
@@ -102,6 +145,27 @@ public class Tests
         Assert.That(_appointmentStorage.Count, Is.EqualTo(0));
         Assert.That(therapist.Appointments.Count, Is.EqualTo(0));
         Assert.That(patient.Appointments.Count, Is.EqualTo(0));
+    }
+    
+    [Test]
+    public void PatientStorageRegisterWithAppointmentTest()
+    {
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
+            DateTime.Now,"Baker Street, 221B", []);
+        
+        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
+        patient.Appointments.Add(appointment);
+        
+        Assert.That(_personStorage.Count, Is.EqualTo(2));
+        Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
+        
+        _personStorage.Delete(patient);
+        
+        Assert.That(_personStorage.Count, Is.EqualTo(1));
+        Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
+        Assert.That(appointment.Patient, Is.Null);
     }
     
     [Test]

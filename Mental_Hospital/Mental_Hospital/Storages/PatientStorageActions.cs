@@ -13,30 +13,26 @@ public class PatientStorageActions : IStorageAction<Patient>
         _roomPatientStorage = roomPatientStorage;
     }
 
-    public void OnDelete(Patient item)
+    public void OnDelete(Patient patient)
     {
-        if (item is Patient)
+        foreach (Diagnosis diagnosis in patient.Diagnoses.ToList())
         {
-            Patient patient = (Patient) item;
-            
-            foreach (Diagnosis diagnosis in patient.Diagnoses.ToList())
-            {
-                _diagnosisStorage.Delete(diagnosis);
-            }
-            
-            foreach (RoomPatient roomPatient in patient.RoomPatients.ToList())
-            {
-                _roomPatientStorage.Delete(roomPatient);
-            }
-            
-            foreach (Appointment appointment in patient.Appointments.ToList())
-            {
-                appointment.Patient = null;
-            }
+            _diagnosisStorage.Delete(diagnosis);
         }
+        
+        foreach (RoomPatient roomPatient in patient.RoomPatients.ToList())
+        {
+            _roomPatientStorage.Delete(roomPatient);
+        }
+        
+        foreach (Appointment appointment in patient.Appointments.ToList())
+        {
+            appointment.Patient = null;
+        }
+        
     }
 
-    public void OnAdd(Patient item)
+    public void OnAdd(Patient patient)
     {
         
     }

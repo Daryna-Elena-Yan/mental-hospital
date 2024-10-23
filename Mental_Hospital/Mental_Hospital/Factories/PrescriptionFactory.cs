@@ -15,13 +15,16 @@ public class PrescriptionFactory
         _storage = storage;
     }
 
-    public Prescription CreateNewPrescription(string name, int quantity, Decimal dosage, string description)
+    public Prescription CreateNewPrescription(Appointment appointment, string name, int quantity, Decimal dosage, string description)
     {
+        // TODO check if appointment exists, if not return null 
+        
         var prescription = _provider.GetRequiredService<Prescription>();
         prescription.Name = name;
         prescription.Quantity = quantity;
         prescription.Dosage = dosage;
         prescription.Description = description;
+        prescription.Appointment = appointment;
         
         _storage.RegisterNew(prescription);
         

@@ -48,9 +48,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddTransient<SeverePsychotic>();
         serviceCollection.AddSingleton<Storage<Diagnosis>>();
         serviceCollection.AddSingleton<DiagnosisFactory>();
-        
-        serviceCollection.AddTransient<PatientDiagnosis>();
-        serviceCollection.AddSingleton<Storage<PatientDiagnosis>>();
+        serviceCollection.AddSingleton<IStorageAction<Diagnosis>, DiagnosisStorageActions>();
         
         
 

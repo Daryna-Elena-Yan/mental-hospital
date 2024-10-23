@@ -5,31 +5,26 @@ namespace Mental_Hospital.Storages;
 public class PatientStorageActions : IStorageAction<Person>
 {
     private readonly Storage<Diagnosis> _diagnosis;
-    private readonly Storage<PatientDiagnosis> _patientDiagnosis;
 
-    public PatientStorageActions(
-        Storage<Diagnosis> diagnosis, Storage<PatientDiagnosis> patientDiagnosis)
+    public PatientStorageActions(Storage<Diagnosis> diagnosis)
     {
         _diagnosis = diagnosis;
-        _patientDiagnosis = patientDiagnosis;
     }
 
     public void OnDelete(Person item)
     {
-        var diagnoses = _patientDiagnosis
+        var diagnoses = _diagnosis
             .FindBy(x => x.Patient == item)
-            .Select(x => x.Diagnosis).ToArray();
+            .ToArray();
         
         foreach (var diag in diagnoses)
         {
             _diagnosis.Delete(diag);
         }
+    }
 
-        var pds = _patientDiagnosis
-            .FindBy(x => x.Patient == item).ToArray();
-        foreach (var pd in pds)
-        {
-            _patientDiagnosis.Delete(pd);
-        }
+    public void OnAdd(Person item)
+    {
+        
     }
 }

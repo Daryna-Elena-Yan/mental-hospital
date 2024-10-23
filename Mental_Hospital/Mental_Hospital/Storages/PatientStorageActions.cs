@@ -2,7 +2,7 @@
 
 namespace Mental_Hospital.Storages;
 
-public class PatientStorageActions : IStorageAction<Person>
+public class PatientStorageActions : IStorageAction<Patient>
 {
     private readonly Storage<Diagnosis> _diagnosisStorage;
     private readonly Storage<RoomPatient> _roomPatientStorage;
@@ -13,7 +13,7 @@ public class PatientStorageActions : IStorageAction<Person>
         _roomPatientStorage = roomPatientStorage;
     }
 
-    public void OnDelete(Person item)
+    public void OnDelete(Patient item)
     {
         if (item is Patient)
         {
@@ -29,14 +29,14 @@ public class PatientStorageActions : IStorageAction<Person>
                 _roomPatientStorage.Delete(roomPatient);
             }
             
-            foreach (Appointment appointment in patient.Appointments)
+            foreach (Appointment appointment in patient.Appointments.ToList())
             {
                 appointment.Patient = null;
             }
         }
     }
 
-    public void OnAdd(Person item)
+    public void OnAdd(Patient item)
     {
         
     }

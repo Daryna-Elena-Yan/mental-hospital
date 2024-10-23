@@ -12,7 +12,7 @@ public class TherapistStorageActions:IStorageAction<Therapist>
         {
             for (int i = 0; i < appointment.Prescriptions.Count; i++)
             {
-                _prescriptionStorage.Delete(appointment.Prescriptions[i]);//////////////////////////////////////////////////////
+                appointment.Prescriptions[i].Appointment = null;
             }
             _approintmentStorage.Delete(appointment);
         }

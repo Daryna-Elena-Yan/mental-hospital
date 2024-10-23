@@ -23,6 +23,8 @@ public class DiagnosisFactory
     public LightAnxiety CreateNewLightAnxiety(Patient patient, string nameOfDisorder, string description,
         IEnumerable<string> triggers, DateTime dateOfDiagnosis, DateTime? dateOfHealing)
     {
+        // TODO check if patient exists, if not return null 
+        
         var lightAnxiety = _provider.GetRequiredService<LightAnxiety>();
         lightAnxiety.Description = description;
         lightAnxiety.NameOfDisorder = nameOfDisorder;

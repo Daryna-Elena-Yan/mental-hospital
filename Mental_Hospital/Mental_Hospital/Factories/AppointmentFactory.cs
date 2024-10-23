@@ -21,9 +21,6 @@ public class AppointmentFactory
         appointment.DateOfAppointment = dateOfAppointment;
         appointment.Description = description;
         
-        //TODO add new Prescription + GetHashCode()
-        
-
         _storage.RegisterNew(appointment);
         
         return appointment;

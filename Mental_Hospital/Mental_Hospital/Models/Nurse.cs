@@ -2,6 +2,6 @@
 
 public class Nurse:Employee
 {
-    private static double _basicSalaryInZl = 6000;
-    private static double _overtimePaidPerHourInZl=50;
+    public static double BasicSalaryInZl = 6000;
+    public static double OvertimePaidPerHourInZl=50;
 }

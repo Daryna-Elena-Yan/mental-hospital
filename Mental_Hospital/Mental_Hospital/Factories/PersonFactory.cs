@@ -30,4 +30,22 @@ public class PersonFactory
         
         return patient;
     }
+    public Nurse CreateNewNurse(string name, Employee supervisor, double bonus,string surname, DateTime dateOfBirth, string address)
+    {
+        var nurse = _provider.GetRequiredService<Nurse>();
+        nurse.Name = name;
+        nurse.Surname = surname;
+        nurse.Bonus = bonus;
+        nurse.OvertimePerMonth = 0;
+        nurse.Address = address;
+        nurse.Supervisor = supervisor;
+        nurse.DateFired = null;
+        nurse.DateHired=DateTime.Now;
+        nurse.DateOfBirth = dateOfBirth;
+        nurse.Salary=bonus+6000+nurse.OvertimePerMonth*50;
+
+        _storage.RegisterNew(nurse);
+        
+        return nurse;
+    }
 }

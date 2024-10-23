@@ -7,5 +7,5 @@ public class Prescription
     public int Quantity { get; set; }
     public Decimal Dosage { get; set; }
     public string Description { get; set; }
-    public virtual Appointment Appointment { get; set;  } = null!;
+    public virtual Appointment Appointment { get; set;  }
 }

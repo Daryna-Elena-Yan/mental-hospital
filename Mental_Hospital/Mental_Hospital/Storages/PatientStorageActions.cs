@@ -4,22 +4,44 @@ namespace Mental_Hospital.Storages;
 
 public class PatientStorageActions : IStorageAction<Person>
 {
-    private readonly Storage<Diagnosis> _diagnosis;
+    private readonly Storage<Diagnosis> _diagnosisStorage;
+    private readonly Storage<RoomPatient> _roomPatientStorage;
 
-    public PatientStorageActions(Storage<Diagnosis> diagnosis)
+    public PatientStorageActions(Storage<Diagnosis> diagnosisStorage, Storage<RoomPatient> roomPatientStorage)
     {
-        _diagnosis = diagnosis;
+        _diagnosisStorage = diagnosisStorage;
+        _roomPatientStorage = roomPatientStorage;
     }
 
     public void OnDelete(Person item)
     {
-        var diagnoses = _diagnosis
-            .FindBy(x => x.Patient == item)
-            .ToArray();
-        
-        foreach (var diag in diagnoses)
+        if (item is Patient)
         {
-            _diagnosis.Delete(diag);
+            Patient patient = (Patient) item;
+            
+            /*var diagnoses = _diagnosisStorage
+                        .FindBy(x => x.Patient == patient)
+                        .ToArray();
+                    
+            foreach (var diag in diagnoses)
+            {
+                _diagnosisStorage.Delete(diag);
+            }*/
+            
+            foreach (Diagnosis diagnosis in patient.Diagnoses)
+            {
+                _diagnosisStorage.Delete(diagnosis);
+            }
+            
+            foreach (RoomPatient roomPatient in patient.RoomPatients)
+            {
+                _roomPatientStorage.Delete(roomPatient);
+            }
+            
+            foreach (Appointment appointment in patient.Appointments)
+            {
+                appointment.Patient = null;
+            }
         }
     }
 

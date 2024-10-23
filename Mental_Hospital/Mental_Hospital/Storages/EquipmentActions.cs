@@ -6,7 +6,7 @@ public class EquipmentActions: IStorageAction<Equipment>
 {
     public void OnDelete(Equipment item)
     {
-        if(item.Room != null)
+        if(item.Room is not null)
             item.Room.Equipments.Remove(item);
     }
 

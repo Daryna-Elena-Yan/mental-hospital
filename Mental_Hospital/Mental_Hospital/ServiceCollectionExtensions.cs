@@ -13,8 +13,10 @@ public static class ServiceCollectionExtensions
     {
         //registration of services
         serviceCollection.AddTransient<Nurse>();
+        serviceCollection.AddTransient<Patient>();
         serviceCollection.AddTransient<Therapist>();
         serviceCollection.AddTransient<Patient>();
+        
         serviceCollection.AddSingleton<Storage<Person>>();
         serviceCollection.AddSingleton<PersonFactory>();
         serviceCollection.AddSingleton<IStorageAction<Person>, PatientStorageActions>();
@@ -22,10 +24,12 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddTransient<Appointment>();
         serviceCollection.AddSingleton<Storage<Appointment>>();
         serviceCollection.AddSingleton<AppointmentFactory>();
+        serviceCollection.AddSingleton<IStorageAction<Appointment>, AppointmentActions>();
         
         serviceCollection.AddTransient<Prescription>();
         serviceCollection.AddSingleton<Storage<Prescription>>();
         serviceCollection.AddSingleton<PrescriptionFactory>();
+        serviceCollection.AddSingleton<IStorageAction<Prescription>, PrescriptionActions>();
         
         serviceCollection.AddTransient<Room>();
         serviceCollection.AddSingleton<Storage<Room>>();
@@ -38,6 +42,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddTransient<RoomPatient>();
         serviceCollection.AddSingleton<Storage<RoomPatient>>();
         serviceCollection.AddSingleton<RoomPatientFactory>();
+        serviceCollection.AddSingleton<IStorageAction<RoomPatient>, RoomPatientActions>();
 
         
         serviceCollection.AddTransient<LightAnxiety>();

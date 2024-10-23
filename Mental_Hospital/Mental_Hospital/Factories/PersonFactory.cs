@@ -28,7 +28,7 @@ public class PersonFactory {
         
         return patient;
     }
-    public Nurse CreateNewNurse(string name, Employee supervisor,string surname, DateTime dateOfBirth, string address)
+    public Nurse CreateNewNurse(Employee? supervisor, string name, string surname, DateTime dateOfBirth, string address)
     {
         var nurse = _provider.GetRequiredService<Nurse>();
         nurse.Name = name;
@@ -44,7 +44,8 @@ public class PersonFactory {
         _storage.RegisterNew(nurse);
         return nurse;
     }
-    public Therapist CreateNewTherapist(List<string> qualifications,string name, Employee supervisor,string surname, DateTime dateOfBirth, string address)
+    public Therapist CreateNewTherapist(Employee? supervisor, string name, string surname, DateTime dateOfBirth, string address, 
+        List<string> qualifications)
     {
         var therapist = _provider.GetRequiredService<Therapist>();
         therapist.Name = name;

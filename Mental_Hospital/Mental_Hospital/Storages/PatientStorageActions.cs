@@ -19,21 +19,12 @@ public class PatientStorageActions : IStorageAction<Person>
         {
             Patient patient = (Patient) item;
             
-            /*var diagnoses = _diagnosisStorage
-                        .FindBy(x => x.Patient == patient)
-                        .ToArray();
-                    
-            foreach (var diag in diagnoses)
-            {
-                _diagnosisStorage.Delete(diag);
-            }*/
-            
-            foreach (Diagnosis diagnosis in patient.Diagnoses)
+            foreach (Diagnosis diagnosis in patient.Diagnoses.ToList())
             {
                 _diagnosisStorage.Delete(diagnosis);
             }
             
-            foreach (RoomPatient roomPatient in patient.RoomPatients)
+            foreach (RoomPatient roomPatient in patient.RoomPatients.ToList())
             {
                 _roomPatientStorage.Delete(roomPatient);
             }

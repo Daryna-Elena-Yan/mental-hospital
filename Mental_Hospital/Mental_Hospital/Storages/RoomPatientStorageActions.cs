@@ -2,7 +2,7 @@
 
 namespace Mental_Hospital.Storages;
 
-public class RoomPatientActions : IStorageAction<RoomPatient>
+public class RoomPatientStorageActions : IStorageAction<RoomPatient>
 {
     public void OnDelete(RoomPatient item)
     {

@@ -24,10 +24,9 @@ public class PrescriptionFactory
         prescription.Quantity = quantity;
         prescription.Dosage = dosage;
         prescription.Description = description;
+        prescription.Appointment = appointment;
         
         _storage.RegisterNew(prescription);
-
-        appointment.Prescriptions.Add(prescription.GetHashCode(), prescription);
         
         return prescription;
     }

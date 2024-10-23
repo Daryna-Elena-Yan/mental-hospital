@@ -32,6 +32,7 @@ public class DiagnosisFactory
             lightAnxiety.Triggers.Add(trigger);
         }
 
+        //TODO move to another factory
         var patientDiagnosis = _provider.GetRequiredService<PatientDiagnosis>();
         patientDiagnosis.Diagnosis = lightAnxiety;
         patientDiagnosis.Patient = patient;

@@ -20,6 +20,9 @@ public class AppointmentFactory
         var appointment = _provider.GetRequiredService<Appointment>();
         appointment.DateOfAppointment = dateOfAppointment;
         appointment.Description = description;
+        
+        //TODO add new Prescription + GetHashCode()
+        
 
         _storage.RegisterNew(appointment);
         

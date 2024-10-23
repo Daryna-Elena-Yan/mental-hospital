@@ -7,4 +7,6 @@ public class Patient : Person
     public virtual ICollection<Diagnosis> Diagnoses { get; } = [];
     public virtual ICollection<Appointment> Appointments { get; } = [];
     public virtual ICollection<RoomPatient> RoomPatients { get; } = [];
+    public virtual ICollection<Therapist> Therapists{ get; }= new List<Therapist>();
+
 }

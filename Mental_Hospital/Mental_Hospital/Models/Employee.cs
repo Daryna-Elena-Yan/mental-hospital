@@ -2,12 +2,10 @@
 
 public abstract class Employee :Person
 {
-    private double _bonus { get; set; }
-    private static double _basicSalaryInZl{ get; set; }
-    private static double _overtimePaidPerHourInZl{ get; set; }
-    private Employee? _supervisor{ get; set; }
-    private double _overtimePerMonth { get; set; }
-    private double _salary { get; set; }
-    private DateTime _dateHired { get; set; }
-    private DateTime? _dateFired { get; set; }
+    public double Bonus { get; set; }
+    public Employee? Supervisor{ get; set; }
+    public double OvertimePerMonth { get; set; }
+    public double Salary { get; set; }
+    public DateTime DateHired { get; set; }
+    public DateTime? DateFired { get; set; }
 }

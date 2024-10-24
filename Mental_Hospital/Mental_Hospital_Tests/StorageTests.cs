@@ -214,6 +214,7 @@ public class Tests
         
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
         
+        
         Assert.That(_personStorage.Count, Is.EqualTo(2));
         Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
         
@@ -295,15 +296,16 @@ public class Tests
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
         
         var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "Be healthy", 10, 0.02m, "do sth");
+        var prescriptionAnother = _prescriptionFactory.CreateNewPrescription(appointment, "Be not healthy", 12, 0.2m, "not do sth");
         
         Assert.That(_personStorage.Count, Is.EqualTo(2));
         Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
-        Assert.That(_prescriptionStorage.Count, Is.EqualTo(1));
+        Assert.That(_prescriptionStorage.Count, Is.EqualTo(2));
         
         Assert.That(prescription.Appointment, !Is.Null);
         Assert.That(appointment.Patient, !Is.Null);
         Assert.That(appointment.Therapist, !Is.Null);
-        Assert.That(appointment.Prescriptions.Count, Is.EqualTo(1));
+        Assert.That(appointment.Prescriptions.Count, Is.EqualTo(2));
         Assert.That(therapist.Appointments.Count, Is.EqualTo(1));
         Assert.That(patient.Appointments.Count, Is.EqualTo(1));
         
@@ -312,11 +314,40 @@ public class Tests
         
         _prescriptionStorage.Delete(prescription);
         
-        Assert.That(_prescriptionStorage.Count, Is.EqualTo(0));
+        Assert.That(_prescriptionStorage.Count, Is.EqualTo(1));
         Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
-        Assert.That(appointment.Prescriptions.Count, Is.EqualTo(0));
+        Assert.That(appointment.Prescriptions.Count, Is.EqualTo(1));
         Assert.IsFalse(appointment.Prescriptions.ContainsKey(prescription.GetHashCode()));
+    }
+    
+    [Test]
+    public void AppointmentStorageDeleteWithPrescriptionTest()
+    {
+        var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
+            DateTime.Now,"Baker Street, 221B", []);
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
         
+        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
+        
+        var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "Be healthy", 10, 0.02m, "do sth");
+        
+        Assert.That(_personStorage.Count, Is.EqualTo(2));
+        Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
+        Assert.That(_prescriptionStorage.Count, Is.EqualTo(1));
+        
+        Assert.That(appointment.Patient, !Is.Null);
+        Assert.That(appointment.Therapist, !Is.Null);
+        Assert.That(therapist.Appointments.Count, Is.EqualTo(1));
+        Assert.That(patient.Appointments.Count, Is.EqualTo(1));
+        
+        _appointmentStorage.Delete(appointment);
+        
+        Assert.That(_personStorage.Count, Is.EqualTo(2));
+        Assert.That(_appointmentStorage.Count, Is.EqualTo(0));
+        Assert.That(therapist.Appointments.Count, Is.EqualTo(0));
+        Assert.That(patient.Appointments.Count, Is.EqualTo(0));
+        Assert.That(prescription.Appointment, Is.Null);
     }
     
     

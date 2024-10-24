@@ -2,7 +2,7 @@
 
 namespace Mental_Hospital.Storages;
 
-public class EquipmentActions: IStorageAction<Equipment>
+public class EquipmentStorageActions: IStorageAction<Equipment>
 {
     public void OnDelete(Equipment item)
     {

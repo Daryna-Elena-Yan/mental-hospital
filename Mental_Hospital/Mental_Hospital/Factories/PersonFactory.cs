@@ -44,7 +44,7 @@ public class PersonFactory {
         _storage.RegisterNew(nurse);
         return nurse;
     }
-    public Therapist CreateNewTherapist(Employee? supervisor, string name, string surname, DateTime dateOfBirth, string address, 
+    public Therapist CreateNewTherapist(Therapist? supervisor, string name, string surname, DateTime dateOfBirth, string address, 
         List<string> qualifications)
     {
         var therapist = _provider.GetRequiredService<Therapist>();

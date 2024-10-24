@@ -403,7 +403,26 @@ public class Tests
         _equipmentFactory.CreateNewEquipment("IV stand", DateTime.Today);
         Assert.That(_equipmentStorage.Count, Is.EqualTo(1));
     }
-    
+    [Test]
+    public void TherapistWithSubordinateDeletionTest()
+    {
+        var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobka", []);
+        var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", []);
+        var appointment = _appointmentFactory.CreateNewAppointment(therapist2, null, DateTime.Now, "help"); 
+        var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "stay strong", 30, 0.02m, "hallucinations");
+        Assert.That(_personStorage.Count, Is.EqualTo(2));
+        Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
+        Assert.That(_prescriptionStorage.Count, Is.EqualTo(1));
+        Assert.That(appointment.Therapist, !Is.Null);
+        Assert.That(therapist2.Appointments.Count, Is.EqualTo(1));
+        Assert.That(therapist1.Subordinates.Count, Is.EqualTo(1));
+        Assert.That(therapist2.Supervisor, !Is.Null);
+        _personStorage.Delete(therapist2);
+        Assert.That(therapist1.Subordinates.Count, Is.EqualTo(0));
+        Assert.That(_appointmentStorage.Count, Is.EqualTo(0));
+        Assert.That(prescription.Appointment,Is.Null);
+        Assert.That(_personStorage.Count, Is.EqualTo(1));
+    }
     [Test]
     public void EquipmentStorageDeleteTest()
     {

@@ -15,7 +15,7 @@ public class AppointmentFactory
         _storage = storage;
     }
 
-    public Appointment CreateNewAppointment(Therapist therapist, Patient patient, DateTime dateOfAppointment, string description)
+    public Appointment CreateNewAppointment(Therapist therapist, Patient? patient, DateTime dateOfAppointment, string description)
     {
         var appointment = _provider.GetRequiredService<Appointment>();
         appointment.DateOfAppointment = dateOfAppointment;

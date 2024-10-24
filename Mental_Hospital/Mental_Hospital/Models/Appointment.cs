@@ -8,6 +8,6 @@ public class Appointment
     public DateTime DateOfAppointment { get; set; }
     public string Description { get; set; }
     public virtual Patient? Patient { get; set;  }
-    public virtual Therapist Therapist { get; set;  } = null!;////////////////////////////////////////////
+    public virtual Therapist Therapist { get; set;  } = null!;
     public Dictionary<int, Prescription> Prescriptions = new ();
 }

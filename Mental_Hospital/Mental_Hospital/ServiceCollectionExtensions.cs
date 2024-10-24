@@ -13,14 +13,15 @@ public static class ServiceCollectionExtensions
     {
         //registration of services
         serviceCollection.AddTransient<Nurse>();
-        serviceCollection.AddTransient<Patient>();
         serviceCollection.AddTransient<Therapist>();
         serviceCollection.AddTransient<Patient>();
         
         serviceCollection.AddSingleton<Storage<Person>>();
         serviceCollection.AddSingleton<PersonFactory>();
         serviceCollection.AddSingleton<IStorageAction<Patient>, PatientStorageActions>();
-        
+        serviceCollection.AddSingleton<IStorageAction<Therapist>, TherapistStorageActions>();
+        serviceCollection.AddSingleton<IStorageAction<Nurse>, NurseStorageActions>();
+
         serviceCollection.AddTransient<Appointment>();
         serviceCollection.AddSingleton<Storage<Appointment>>();
         serviceCollection.AddSingleton<AppointmentFactory>();

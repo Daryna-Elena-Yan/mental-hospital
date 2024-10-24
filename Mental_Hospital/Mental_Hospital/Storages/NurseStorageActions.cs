@@ -19,5 +19,9 @@ public class NurseStorageActions:IStorageAction<Nurse>
 
     public void OnAdd(Nurse item)
     {
+        if (item.Supervisor != null)
+        {
+            item.Supervisor.Subordinates.Add(item);
+        }
     }
 }

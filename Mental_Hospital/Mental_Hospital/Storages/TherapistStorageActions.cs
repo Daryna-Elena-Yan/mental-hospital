@@ -16,7 +16,7 @@ public class TherapistStorageActions:IStorageAction<Therapist>
             }
             _approintmentStorage.Delete(appointment);
         }
-        foreach (var patient in item.Patients)
+        foreach (var patient in item.Patients.ToList())
         {
             patient.Therapists.Remove(item);
         }

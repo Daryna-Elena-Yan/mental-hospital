@@ -10,6 +10,11 @@ public class NurseStorageActions:IStorageAction<Nurse>
         {
             room.Nurses.Remove(item);
         }
+        item.Supervisor?.Subordinates.Remove(item);
+        foreach (var employee in item.Subordinates.ToList())
+        {
+            employee.Supervisor = null;
+        }
     }
 
     public void OnAdd(Nurse item)

@@ -20,6 +20,13 @@ public class TherapistStorageActions:IStorageAction<Therapist>
         {
             patient.Therapists.Remove(item);
         }
+
+        foreach (var employee in item.Subordinates.ToList())
+        {
+            employee.Supervisor = null;
+        }
+
+        item.Supervisor?.Subordinates.Remove(item);
     }
 
     public void OnAdd(Therapist item)

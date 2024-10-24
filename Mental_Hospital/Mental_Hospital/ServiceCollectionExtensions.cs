@@ -2,6 +2,7 @@
 using Mental_Hospital.Models;
 using Mental_Hospital.Models.Light;
 using Mental_Hospital.Models.Severe;
+using Mental_Hospital.Services;
 using Mental_Hospital.Storages;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -57,7 +58,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddSingleton<Storage<Diagnosis>>();
         serviceCollection.AddSingleton<DiagnosisFactory>();
         serviceCollection.AddSingleton<IStorageAction<Diagnosis>, DiagnosisStorageActions>();
-        
+        serviceCollection.AddSingleton<FileService>();
         
 
 

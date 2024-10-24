@@ -38,7 +38,7 @@ public class PersonFactory {
         nurse.Address = address;
         nurse.Supervisor = supervisor;
         nurse.DateFired = null;
-        nurse.DateHired=DateTime.Now;
+        nurse.DateHired=DateTime.Today;
         nurse.DateOfBirth = dateOfBirth;
         nurse.Salary=nurse.Bonus+Nurse.BasicSalaryInZl+nurse.OvertimePerMonth*Nurse.OvertimePaidPerHourInZl;
         _storage.RegisterNew(nurse);
@@ -55,7 +55,7 @@ public class PersonFactory {
         therapist.Address = address;
         therapist.Supervisor = supervisor;
         therapist.DateFired = null;
-        therapist.DateHired=DateTime.Now;
+        therapist.DateHired=DateTime.Today;
         therapist.DateOfBirth = dateOfBirth;
         therapist.Salary=therapist.Bonus+Therapist.BasicSalaryInZl+therapist.OvertimePerMonth*Therapist.OvertimePaidPerHourInZl;
         therapist.Qualifications = qualifications;

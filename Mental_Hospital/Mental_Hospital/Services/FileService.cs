@@ -10,8 +10,12 @@ public class FileService
     }
     public static List<T>? Deserialize<T>()
     {
-        string json = File.ReadAllText($"{typeof(T).Name}.json");
-        return JsonSerializer.Deserialize<List<T>>(json);
+        return JsonSerializer.Deserialize<List<T>>(GetString<T>() ?? string.Empty);
+    }
+
+    public static string? GetString<T>()
+    {
+        return File.ReadAllText($"{typeof(T).Name}.json");
     }
 }
 

@@ -93,6 +93,27 @@ public class Tests
             Assert.That(therapist1.Salary, Is.EqualTo(10230));
         });
     }
+
+    [Test]
+    public void NurseCreateTest()
+    {
+        var nurse = _personFactory.CreateNewNurse(null, "aaa", "AAA", DateTime.Today, "korobochka");
+        Assert.That(_personStorage.Count,Is.EqualTo(1));
+        var room = _roomFactory.CreateNewRoom(3);
+        
+
+    }
+
+    [Test]
+    public void NurseDeleteTest()
+    {
+        var nurse = _personFactory.CreateNewNurse(null, "aaa", "AAA", DateTime.Today, "korobochka");
+        Assert.That(_personStorage.Count,Is.EqualTo(1));
+        _personStorage.Delete(nurse);
+        Assert.That(_personStorage.Count,Is.EqualTo(0));
+    }
+
+    
     [Test]
     public void NurseStaticDerivedTest()
     {
@@ -201,6 +222,19 @@ public class Tests
         _roomFactory.CreateNewRoom(3);
         Assert.That(_roomStorage.Count, Is.EqualTo(1));
     }
+    [Test]
+         public void NurseWithRoomsCreateTest()
+         {
+             var nurse = _personFactory.CreateNewNurse(null, "aaa", "AAA", DateTime.Today, "korobochka");
+             Assert.That(_personStorage.Count,Is.EqualTo(1));
+             var room =_roomFactory.CreateNewRoom(3);
+             nurse.Rooms.Add(room);
+             room.Nurses.Add(nurse);
+             Assert.That(nurse.Rooms.Count,Is.EqualTo(1));
+             Assert.That(room.Nurses.Count,Is.EqualTo(1));
+             _personStorage.Delete(nurse);
+             Assert.That(room.Nurses.Count,Is.EqualTo(0));
+         }
     
     [Test]
     public void RoomStorageDeleteTest()

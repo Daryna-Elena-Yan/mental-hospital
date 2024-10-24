@@ -34,10 +34,12 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddTransient<Room>();
         serviceCollection.AddSingleton<Storage<Room>>();
         serviceCollection.AddSingleton<RoomFactory>();
+        serviceCollection.AddSingleton<IStorageAction<Room>, RoomStorageActions>();
         
         serviceCollection.AddTransient<Equipment>();
         serviceCollection.AddSingleton<Storage<Equipment>>();
         serviceCollection.AddSingleton<EquipmentFactory>();
+        serviceCollection.AddSingleton<IStorageAction<Equipment>, EquipmentStorageActions>();
         
         serviceCollection.AddTransient<RoomPatient>();
         serviceCollection.AddSingleton<Storage<RoomPatient>>();

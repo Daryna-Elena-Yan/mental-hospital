@@ -115,7 +115,24 @@ public class Tests
     [Test]
     public void RoomStorageDeleteTest()
     {
-        // TODO to be continued...
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        var room = _roomFactory.CreateNewRoom(3);
+        
+        var roomPatient = _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, null);
+      
+        Assert.That(_personStorage.Count, Is.EqualTo(1));
+        Assert.That(_roomStorage.Count, Is.EqualTo(1));
+        Assert.That(_roomPatientStorage.Count, Is.EqualTo(1));
+        
+        Assert.That(patient.RoomPatients.Count, Is.EqualTo(1));
+        Assert.That(room.RoomPatients.Count, Is.EqualTo(1));
+        
+        _roomStorage.Delete(room);
+        
+        Assert.That(_roomStorage.Count, Is.EqualTo(0));
+        Assert.That(_roomPatientStorage.Count, Is.EqualTo(0));
+        Assert.That(_personStorage.Count, Is.EqualTo(1));
     }
     
     [Test]
@@ -387,4 +404,40 @@ public class Tests
         Assert.That(_equipmentStorage.Count, Is.EqualTo(1));
     }
     
+    [Test]
+    public void EquipmentStorageDeleteTest()
+    {
+        var equipment = _equipmentFactory.CreateNewEquipment("IV stand", DateTime.Today);
+        var room = _roomFactory.CreateNewRoom(3);
+        
+        room.Equipments.Add(equipment);
+        equipment.Room = room;
+        
+        Assert.That(_equipmentStorage.Count, Is.EqualTo(1));
+        
+        _equipmentStorage.Delete(equipment);
+        
+        Assert.That(_roomStorage.Count, Is.EqualTo(1));
+        Assert.That(_equipmentStorage.Count, Is.EqualTo(0));
+        Assert.That(room.Equipments.Count, Is.EqualTo(0));
+    }
+    
+    [Test]
+    public void RoomStorageDeleteWithEquipmentTest()
+    {
+        var room = _roomFactory.CreateNewRoom(3);
+        var equipment = _equipmentFactory.CreateNewEquipment("IV stand", DateTime.Today);
+        room.Equipments.Add(equipment);
+        equipment.Room = room;
+        
+        Assert.That(_roomStorage.Count, Is.EqualTo(1));
+        Assert.That(_equipmentStorage.Count, Is.EqualTo(1));
+        
+        _roomStorage.Delete(room);
+        
+        Assert.That(_roomStorage.Count, Is.EqualTo(0));
+        Assert.That(_equipmentStorage.Count, Is.EqualTo(1));
+        Assert.That(equipment.Room, Is.Null);
+    }
+
 }

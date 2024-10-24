@@ -4,13 +4,27 @@ namespace Mental_Hospital.Storages;
 
 public class RoomStorageActions : IStorageAction<Room>
 {
-    public void OnDelete(Room item)
+    private readonly Storage<RoomPatient> _roomPatientStorage;
+
+    public RoomStorageActions(Storage<RoomPatient> roomPatientStorage)
     {
-       
+        _roomPatientStorage = roomPatientStorage;
+    }
+    public void OnDelete(Room room)
+    {
+        foreach (RoomPatient roomPatient in room.RoomPatients.ToList())
+        {
+            _roomPatientStorage.Delete(roomPatient);
+        }
+        
+        foreach (Equipment equipment in room.Equipments.ToList())
+        {
+            equipment.Room = null;
+        }
     }
 
-    public void OnAdd(Room item)
+    public void OnAdd(Room room)
     {
-        
+    
     }
 }

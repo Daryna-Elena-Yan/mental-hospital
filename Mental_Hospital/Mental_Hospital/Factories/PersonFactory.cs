@@ -1,5 +1,7 @@
-﻿using Mental_Hospital.Models;
+﻿using FluentValidation;
+using Mental_Hospital.Models;
 using Mental_Hospital.Storages;
+using Mental_Hospital.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Mental_Hospital.Factories;
@@ -7,10 +9,12 @@ namespace Mental_Hospital.Factories;
 public class PersonFactory {
     private readonly IServiceProvider _provider;
     private readonly Storage<Person> _storage;
+    private readonly PatientValidator _patientValidator;
 
-    public PersonFactory(IServiceProvider provider, Storage<Person> storage) {
+    public PersonFactory(IServiceProvider provider, Storage<Person> storage, PatientValidator patientValidator) {
         _provider = provider;
         _storage = storage;
+        _patientValidator = patientValidator;
     }
 
     public Patient CreateNewPatient(string name, string surname, DateTime dateOfBirth, string address, 
@@ -19,11 +23,11 @@ public class PersonFactory {
         var patient = _provider.GetRequiredService<Patient>(); //to create inside DI container
         patient.Name = name;
         patient.Surname = surname;
-        patient.DateOfDeath = dateOfBirth;
+        patient.DateOfBirth = dateOfBirth;
         patient.Address = address;
         patient.Anamnesis = anamnesis;
         patient.DateOfDeath = dateOfDeath;
-
+        _patientValidator.ValidateAndThrow(patient);
         _storage.RegisterNew(patient);
         
         return patient;

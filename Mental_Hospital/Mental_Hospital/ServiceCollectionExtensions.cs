@@ -1,10 +1,13 @@
-﻿using Mental_Hospital.Factories;
+﻿using FluentValidation;
+using Mental_Hospital.Factories;
 using Mental_Hospital.Models;
 using Mental_Hospital.Models.Light;
 using Mental_Hospital.Models.Severe;
 using Mental_Hospital.Services;
 using Mental_Hospital.Storages;
+using Mental_Hospital.Validators;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Mental_Hospital;
 
@@ -59,6 +62,10 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddSingleton<DiagnosisFactory>();
         serviceCollection.AddSingleton<IStorageAction<Diagnosis>, DiagnosisStorageActions>();
         serviceCollection.AddSingleton<FileService>();
+        
+        
+        //adds all valigators!!!
+        serviceCollection.AddValidatorsFromAssemblyContaining<DiagnosisValidator>();
         
 
 

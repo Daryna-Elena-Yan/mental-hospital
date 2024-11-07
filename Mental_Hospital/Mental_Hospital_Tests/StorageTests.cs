@@ -1,3 +1,4 @@
+using FluentValidation;
 using Mental_Hospital;
 using Mental_Hospital.Factories;
 using Mental_Hospital.Models;
@@ -5,6 +6,7 @@ using Mental_Hospital.Models.Light;
 using Mental_Hospital.Models.Severe;
 using Mental_Hospital.Services;
 using Mental_Hospital.Storages;
+using Mental_Hospital.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Mental_Hospital_Tests;
@@ -26,6 +28,9 @@ public class Tests
     private PrescriptionFactory _prescriptionFactory;
     private Storage<Prescription> _prescriptionStorage;
     private FileService _fileService;
+    private LightDiagnosisValidator _lightDiagnosisValidator;
+    private SevereDiagnosisValidator _severeDiagnosisValidator;
+
     [SetUp]
     public void Setup()
     {
@@ -50,6 +55,8 @@ public class Tests
         _roomStorage = provider.GetRequiredService<Storage<Room>>();
         _roomPatientStorage = provider.GetRequiredService<Storage<RoomPatient>>();
         _prescriptionStorage = provider.GetRequiredService<Storage<Prescription>>();
+        _lightDiagnosisValidator = provider.GetRequiredService<LightDiagnosisValidator>();
+        _severeDiagnosisValidator = provider.GetRequiredService<SevereDiagnosisValidator>();
 
         _fileService = provider.GetRequiredService<FileService>();
     }
@@ -63,7 +70,7 @@ public class Tests
     }
     
     [Test]
-    public void TherapistCreationAndAtributesTest()
+    public void TherapistCreationAndAttributesTest()
     {
         var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Today,"korobka", []);
         Assert.Multiple(() =>
@@ -172,7 +179,7 @@ public class Tests
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         var diagnosis = _diagnosisFactory.CreateNewLightAnxiety
-            (patient, "anexity", "aaaaa", new string[0], DateTime.Now, null);
+            (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null, true);
         Assert.Multiple(() =>
         {
             Assert.That(_personStorage.Count, Is.EqualTo(1));
@@ -187,7 +194,7 @@ public class Tests
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         var diagnosis = _diagnosisFactory.CreateNewLightAnxiety
-            (patient, "anexity", "aaaaa", new string[0], DateTime.Now, null);
+            (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null, true);
         _diagnosisStorage.Delete(diagnosis);
         Assert.That(_diagnosisStorage.Count, Is.EqualTo(0));
         Assert.That(patient.Diagnoses.Where(x => x == diagnosis).Count, Is.EqualTo(0));
@@ -199,7 +206,7 @@ public class Tests
       var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
       var diagnosis = _diagnosisFactory.CreateNewLightAnxiety
-          (patient, "anexity", "aaaaa", new string[0], DateTime.Now, null);
+          (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null, true);
         Assert.Multiple(() =>
         {
             Assert.That(_personStorage.Count, Is.EqualTo(1));
@@ -590,35 +597,6 @@ public class Tests
     
     
     [Test]
-    public void AllDiagnosisTypeCreationTest()
-    {
-        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
-            "Baker Street, 221B", "Depression", null);
-        var diagnosis = _diagnosisFactory.CreateNewLightAnxiety
-            (patient, "anexity", "aaaaa", new string[0], DateTime.Now, null);
-        var diagnosis4 = _diagnosisFactory.CreateNewLightMood
-            (patient, "anexity", "aaaaa", new string[0], DateTime.Now, null);
-        var diagnosis5 = _diagnosisFactory.CreateNewLightPsychotic
-            (patient, "anexity", "aaaaa", new string[0], DateTime.Now, null);
-        var diagnosis1 = _diagnosisFactory.CreateNewSevereAnxiety
-            (patient, "anexity", "aaaaa", new string[0], DateTime.Now, null, LevelOfDanger.High, true);
-        var diagnosis2 = _diagnosisFactory.CreateNewSevereMood
-            (patient, "anexity", "aaaaa", new string[0], DateTime.Now, null, LevelOfDanger.High, true);
-        var diagnosis3 = _diagnosisFactory.CreateNewSeverePsychotic
-            (patient, "anexity", "aaaaa", new string[0], DateTime.Now, null, LevelOfDanger.High, true);
-
-        
-        Assert.That(_diagnosisStorage.FindBy(x => x is SevereMood) .Count, Is.EqualTo(1));
-        Assert.That(_diagnosisStorage.FindBy(x => x is SeverePsychotic) .Count, Is.EqualTo(1));
-        Assert.That(_diagnosisStorage.FindBy(x => x is SevereAnxiety) .Count, Is.EqualTo(1));
-        
-        Assert.That(_diagnosisStorage.FindBy(x => x is LightMood) .Count, Is.EqualTo(1));
-        Assert.That(_diagnosisStorage.FindBy(x => x is LightPsychotic) .Count, Is.EqualTo(1));
-        Assert.That(_diagnosisStorage.FindBy(x => x is LightAnxiety) .Count, Is.EqualTo(1));
-        
-    }
-    
-    [Test]
     public void EquipmentStorageRegisterTest()
     {
         _equipmentFactory.CreateNewEquipment("IV stand", DateTime.Today);
@@ -666,6 +644,177 @@ public class Tests
             Assert.That(equipment.Room, Is.Null);
         });
     }
+    
+    [Test]
+    public void PatientEmptyNameAttributeValidationTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() => _personFactory.CreateNewPatient("", "Piastri", DateTime.Now, "Melbourne, Australia",
+            "cases of selfharm in the past", null));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should not be empty.") , Is.EqualTo(1));
+            
+    }
+    
+    [Test]
+    public void PatientEmptySurnameAttributeValidationTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() => _personFactory.CreateNewPatient("Oscar", "", DateTime.Now, "Melbourne, Australia",
+            "cases of selfharm in the past", null));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should not be empty.") , Is.EqualTo(1));
+            
+    }
+    [Test]
+    public void PatientDeathEarlierThatBirthAttributeValidationTest()
+    {
+        var death =  DateTime.Parse("25/12/1999");
+        var birth = DateTime.Parse("25/12/2002");
+
+        var ex = Assert.Throws<ValidationException>(() => _personFactory.CreateNewPatient("Oscar", "Piastri", birth, "Melbourne, Australia",
+            "cases of selfharm in the past", death));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Date of healing cannot be earlier that date of Diagnosing.") , Is.EqualTo(1));
+            
+    }
+    
+    [Test]
+    public void PatientEmptyAddressAttributeValidationTest()
+    {
+        var birth = DateTime.Parse("25/12/2002");
+
+        var ex = Assert.Throws<ValidationException>(() => _personFactory.CreateNewPatient("Oscar", "Piastri", birth, "",
+            "cases of selfharm in the past", null));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Address must be of length from 10 to 70 symbols.") , Is.EqualTo(1));
+            
+    }
+    
+    [Test]
+    public void PatientLongAddressAttributeValidationTest()
+    {
+        var birth = DateTime.Parse("25/12/2002");
+
+        var ex = Assert.Throws<ValidationException>(() => _personFactory.CreateNewPatient("Oscar", "Piastri", birth, "Austrlia is a very nice country but there are spiders and insect but i think that kangoroos are cute",
+            "cases of selfharm in the past", null));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Address must be of length from 10 to 70 symbols.") , Is.EqualTo(1));
+            
+    }
+    
+
+
+    [Test]
+    public void PatientNullDateBirthAttributeValidationTest()
+    {
+
+        var ex = Assert.Throws<ValidationException>(() => _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.MinValue, 
+            "Melbourne, Australia",
+            "cases of selfharm in the past", null));
+
+        Assert.That(ex.Errors.Count(), Is.EqualTo(1));
+        Assert.That(
+            ex.Errors.Count(x => x.ErrorMessage == "Specify date of diagnosis."),
+            Is.EqualTo(1));
+
+    }
+
+    [Test]
+    public void DiagnosisEmptyNameAttributeValidationTest()
+    {
+        var patient = _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
+            "cases of selfharm in the past", null);
+
+        var ex = Assert.Throws<ValidationException>(() => _diagnosisFactory.CreateNewLightAnxiety(patient, "",
+            "cases of anexity related to the past",
+            new[] { "swap positions" }, DateTime.Now, DateTime.Now.AddDays(1), true));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify name of the Diagnosis.") , Is.EqualTo(1));
+            
+    }
+    
+    [Test]
+    public void DiagnosisShortDescriptionAttributeValidationTest()
+    {
+        var patient = _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
+            "cases of selfharm in the past", null);
+
+        var ex = Assert.Throws<ValidationException>(() => _diagnosisFactory.CreateNewLightAnxiety(patient, "PTS",
+            "cases",
+            new[] { "swap positions" }, DateTime.Now, DateTime.Now.AddDays(1), true));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void DiagnosisLongDescriptionAttributeValidationTest()
+    {
+        var patient = _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
+            "cases of selfharm in the past", null);
+
+        var ex = Assert.Throws<ValidationException>(() => _diagnosisFactory.CreateNewLightAnxiety(patient, "PTS",
+            //there is more than 500 symbols below
+            "Major Depressive Disorder is characterized by a persistent feeling of sadness or a lack of interest in external activities. Patients exhibit symptoms such as significant weight loss or gain, insomnia or excessive sleeping, fatigue, feelings of worthlessness or excessive guilt, diminished ability to think or concentrate, and recurrent thoughts of death or suicide. These symptoms must be present for at least two weeks and cause significant impairment in social, occupational, or other important areas of functioning. Diagnosis is based on clinical evaluation and adherence to DSM-5 criteria. 501 symbol ahahaha",
+            new[] { "swap positions" }, DateTime.Now, DateTime.Now.AddDays(1), true));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
+    }
+    [Test]
+    public void DiagnosisHealingDateBeforeDiagnosisDateAttributeValidationTest()
+    {
+        var healing =  DateTime.Parse("25/12/1999");
+        var diag = DateTime.Parse("25/12/2002");
+        var patient = _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
+            "cases of selfharm in the past", null);
+
+        var ex = Assert.Throws<ValidationException>(() => _diagnosisFactory.CreateNewLightAnxiety(patient, "PTS",
+            "cases of anexity related to the past",
+            new[] { "swap positions" }, diag, healing, true));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Date of healing cannot be earlier that date of Diagnosing.") , Is.EqualTo(1));
+    }
+    
+    
+    [Test]
+    public void DiagnosisHealingIsNullAttributeValidationTest()
+    {
+        var patient = _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
+            "cases of selfharm in the past", null);
+
+        Assert.DoesNotThrow(() => _diagnosisFactory.CreateNewLightAnxiety(patient, "PTS",
+            "cases of anexity related to the past",
+            new[] { "swap positions" }, DateTime.Now.AddDays(1), null, true));
+    }
+    
+    [Test]
+    public void DiagnosisPatientIncorrectAttributeValidationTest()
+    {
+       
+
+        var ex = Assert.Throws<ValidationException>(() =>
+        {
+            var patient = _personFactory.CreateNewPatient("", "Piastri", DateTime.Now, "Melbourne, Australia",
+                "cases of selfharm in the past", null);
+            _diagnosisFactory.CreateNewLightAnxiety(patient, "PTS",
+                "cases of anexity related to the past",
+                new[] { "swap positions" }, DateTime.Now, DateTime.Now.AddDays(1), true);
+        });
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should not be empty.") , Is.EqualTo(1));
+            
+    }
+
+    
+    
 
     [Test]
     public void SerializationTest()

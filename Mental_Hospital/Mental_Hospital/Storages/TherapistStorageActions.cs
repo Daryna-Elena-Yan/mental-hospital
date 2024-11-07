@@ -5,12 +5,12 @@ namespace Mental_Hospital.Storages;
 public class TherapistStorageActions:IStorageAction<Therapist>
 {
     private readonly Storage<Appointment> _approintmentStorage;
-    private readonly Storage<Prescription> _prescriptionStorage;
+    private readonly Storage<Therapist> _therapistStorage;
 
-    public TherapistStorageActions(Storage<Appointment> approintmentStorage, Storage<Prescription> prescriptionStorage)
+    public TherapistStorageActions(Storage<Appointment> approintmentStorage,Storage<Therapist> therapist)
     {
         this._approintmentStorage = approintmentStorage;
-        this._prescriptionStorage = prescriptionStorage;
+        _therapistStorage = therapist;
     }
     public void OnDelete(Therapist item)
     {
@@ -27,20 +27,29 @@ public class TherapistStorageActions:IStorageAction<Therapist>
 
         item.Supervisor?.Subordinates.Remove(item);
         foreach (var appointment in item.Appointments.ToList())
-           {
-               foreach (var prescription in appointment.Prescriptions.Values.ToList())
-               {
-                   prescription.Appointment = null;
-               }
-               _approintmentStorage.Delete(appointment);
-           }
+        {
+            foreach (var prescription in appointment.Prescriptions.Values.ToList())
+            {
+                prescription.Appointment = null;
+            }
+            _approintmentStorage.Delete(appointment);
+        }
     }
 
     public void OnAdd(Therapist item)
     {
-        if (item.Supervisor != null)
-        {
+        if(item.Supervisor is not null)
             item.Supervisor.Subordinates.Add(item);
+        else
+        {
+            foreach (var person in _therapistStorage.GetList())
+            {
+                if (person.IdPerson.Equals(item.IdSupervisor))
+                {
+                    item.Supervisor = person;
+                    person.Subordinates.Add(item);
+                }
+            }
         }
     }
 }

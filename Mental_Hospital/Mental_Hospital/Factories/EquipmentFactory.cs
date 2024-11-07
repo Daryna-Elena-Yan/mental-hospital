@@ -18,6 +18,7 @@ public class EquipmentFactory
     public Equipment CreateNewEquipment(string name, DateTime expirationDate)
     {
         var equipment = _provider.GetRequiredService<Equipment>();
+        equipment.IdEquipment = Guid.NewGuid();
         equipment.Name = name;
         equipment.ExpirationDate = expirationDate;
         

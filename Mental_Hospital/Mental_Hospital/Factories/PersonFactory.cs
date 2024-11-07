@@ -8,12 +8,16 @@ namespace Mental_Hospital.Factories;
 
 public class PersonFactory {
     private readonly IServiceProvider _provider;
-    private readonly Storage<Person> _storage;
+    private readonly Storage<Therapist> _therapisStorage;
+    private readonly Storage<Patient> _patientStorage;
+    private readonly Storage<Nurse> _nurseStorage;
     private readonly PatientValidator _patientValidator;
 
-    public PersonFactory(IServiceProvider provider, Storage<Person> storage, PatientValidator patientValidator) {
+    public PersonFactory(IServiceProvider provider, Storage<Therapist> tstorage,Storage<Nurse> nstorage,Storage<Patient> pstorage, PatientValidator patientValidator) {
         _provider = provider;
-        _storage = storage;
+        _therapisStorage = tstorage;
+        _patientStorage = pstorage;
+        _nurseStorage = nstorage;
         _patientValidator = patientValidator;
     }
 
@@ -21,6 +25,7 @@ public class PersonFactory {
         string anamnesis, DateTime? dateOfDeath)
     {
         var patient = _provider.GetRequiredService<Patient>(); //to create inside DI container
+        patient.IdPerson = Guid.NewGuid();
         patient.Name = name;
         patient.Surname = surname;
         patient.DateOfBirth = dateOfBirth;
@@ -28,7 +33,7 @@ public class PersonFactory {
         patient.Anamnesis = anamnesis;
         patient.DateOfDeath = dateOfDeath;
         _patientValidator.ValidateAndThrow(patient);
-        _storage.RegisterNew(patient);
+        _patientStorage.RegisterNew(patient);
         
         return patient;
     }
@@ -45,7 +50,7 @@ public class PersonFactory {
         nurse.DateHired=DateTime.Today;
         nurse.DateOfBirth = dateOfBirth;
         nurse.Salary=nurse.Bonus+Nurse.BasicSalaryInZl+nurse.OvertimePerMonth*Nurse.OvertimePaidPerHourInZl;
-        _storage.RegisterNew(nurse);
+        _nurseStorage.RegisterNew(nurse);
         return nurse;
     }
     public Therapist CreateNewTherapist(Therapist? supervisor, string name, string surname, DateTime dateOfBirth, string address, 
@@ -63,7 +68,7 @@ public class PersonFactory {
         therapist.DateOfBirth = dateOfBirth;
         therapist.Salary=therapist.Bonus+Therapist.BasicSalaryInZl+therapist.OvertimePerMonth*Therapist.OvertimePaidPerHourInZl;
         therapist.Qualifications = qualifications;
-        _storage.RegisterNew(therapist);
+        _therapisStorage.RegisterNew(therapist);
         return therapist;
     }
 }

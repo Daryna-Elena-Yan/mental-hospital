@@ -18,6 +18,7 @@ public class AppointmentFactory
     public Appointment CreateNewAppointment(Therapist therapist, Patient? patient, DateTime dateOfAppointment, string description)
     {
         var appointment = _provider.GetRequiredService<Appointment>();
+        appointment.IdAppointment = Guid.NewGuid();
         appointment.DateOfAppointment = dateOfAppointment;
         appointment.Description = description;
         appointment.Therapist = therapist;

@@ -20,7 +20,9 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddTransient<Therapist>();
         serviceCollection.AddTransient<Patient>();
         
-        serviceCollection.AddSingleton<Storage<Person>>();
+        serviceCollection.AddSingleton<Storage<Therapist>>();
+        serviceCollection.AddSingleton<Storage<Nurse>>();
+        serviceCollection.AddSingleton<Storage<Patient>>();
         serviceCollection.AddSingleton<PersonFactory>();
         serviceCollection.AddSingleton<IStorageAction<Patient>, PatientStorageActions>();
         serviceCollection.AddSingleton<IStorageAction<Therapist>, TherapistStorageActions>();

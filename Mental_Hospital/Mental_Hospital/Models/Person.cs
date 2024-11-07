@@ -1,8 +1,15 @@
-﻿namespace Mental_Hospital.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace Mental_Hospital.Models;
 
 public abstract class Person
 {
-    public Guid IdPerson { get; } = Guid.NewGuid();
+    [JsonConstructor]
+    protected Person()
+    {
+    }
+
+    public Guid IdPerson { get; set; }
     public string Name{ get; set; }
     public string Surname{ get; set; }
     public DateTime DateOfBirth{ get; set; }

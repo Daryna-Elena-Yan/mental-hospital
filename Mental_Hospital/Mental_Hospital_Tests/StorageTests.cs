@@ -718,7 +718,7 @@ public class Tests
 
         Assert.That(ex.Errors.Count(), Is.EqualTo(1));
         Assert.That(
-            ex.Errors.Count(x => x.ErrorMessage == "Specify date of diagnosis."),
+            ex.Errors.Count(x => x.ErrorMessage == "Specify date of birth"),
             Is.EqualTo(1));
 
     }

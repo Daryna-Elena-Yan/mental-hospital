@@ -855,10 +855,7 @@ public class Tests
         Assert.That(_roomStorage.Count,Is.EqualTo(0));
         Assert.That(_nurseStorage.Count,Is.EqualTo(0));
         _fileService.Deserialize();
-        foreach (var r in _roomStorage.GetList())
-        {
-            Assert.That(g,Is.EqualTo(r.IdRoom));
-        }
+        Assert.That(g,Is.EqualTo(_roomStorage.FindBy(room1 =>room1.IdRoom==g).First().IdRoom));
         Assert.That(_roomStorage.Count,Is.EqualTo(1));
         Assert.That(_nurseStorage.Count,Is.EqualTo(1));
         Assert.That(FileService.GetString(),

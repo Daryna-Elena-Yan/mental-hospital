@@ -34,7 +34,7 @@ public class FileService
     }
     public  void Serialize()
     {
-        var data = new AllData
+       /* var data = new AllData
         {
             Patients = _patientStorage.GetList(),
             Therapists = _therapistStorage.GetList(),
@@ -46,11 +46,11 @@ public class FileService
             Rooms = _roomStorage.GetList(),
             RoomPatients = _roomPatientStorage.GetList()
         };
-        File.WriteAllText("data.json",JsonSerializer.Serialize(data));
+        File.WriteAllText("data.json",JsonSerializer.Serialize(data));*/
     }
     public  void Deserialize()
     {
-        var data =JsonSerializer.Deserialize<AllData>(GetString() ?? string.Empty);
+        /*var data =JsonSerializer.Deserialize<AllData>(GetString() ?? string.Empty);
         foreach (var item in data.Rooms)
         {
             var absent = _roomStorage.GetList().All(a => !a.IdRoom.Equals(item.IdRoom));
@@ -136,7 +136,7 @@ public class FileService
             _prescriptionStorage.Link(e);
         }
         
-        
+        */
     }
 
     public static string? GetString()

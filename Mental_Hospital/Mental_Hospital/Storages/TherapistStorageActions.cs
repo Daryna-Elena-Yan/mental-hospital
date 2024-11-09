@@ -5,12 +5,12 @@ namespace Mental_Hospital.Storages;
 public class TherapistStorageActions:IStorageAction<Therapist>
 {
     private readonly Storage<Appointment> _approintmentStorage;
-    private readonly Storage<Therapist> _therapistStorage;
+    private readonly Storage<Prescription> _prescriptionStorage;
 
-    public TherapistStorageActions(Storage<Appointment> approintmentStorage,Storage<Therapist> therapist)
+    public TherapistStorageActions(Storage<Appointment> approintmentStorage, Storage<Prescription> prescriptionStorage)
     {
         this._approintmentStorage = approintmentStorage;
-        _therapistStorage = therapist;
+        this._prescriptionStorage = prescriptionStorage;
     }
     public void OnDelete(Therapist item)
     {
@@ -38,18 +38,9 @@ public class TherapistStorageActions:IStorageAction<Therapist>
 
     public void OnAdd(Therapist item)
     {
-        if(item.Supervisor is not null)
-            item.Supervisor.Subordinates.Add(item);
-        else
+        if (item.Supervisor != null)
         {
-            foreach (var person in _therapistStorage.GetList())
-            {
-                if (person.IdPerson.Equals(item.IdSupervisor))
-                {
-                    item.Supervisor = person;
-                    person.Subordinates.Add(item);
-                }
-            }
+            item.Supervisor.Subordinates.Add(item);
         }
     }
 }

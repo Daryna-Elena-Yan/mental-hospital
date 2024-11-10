@@ -834,6 +834,29 @@ public class Tests
         var res = _diagnosisStorage.FindBy(d => true);
 
     }
+
+    [Test]
+    public void DiagnosisSerializeTest()
+    {
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        var diagnosis = _diagnosisFactory.CreateNewLightAnxiety
+            (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null, true);
+        var diagnosis2 = _diagnosisFactory.CreateNewSevereAnxiety
+        (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null,
+            LevelOfDanger.High, true);
+        
+        var foundPatient = (_personStorage.FindBy(x => x.IdPerson == patient.IdPerson).First() as Patient);
+        Assert.That(foundPatient?.Diagnoses.Count, Is.EqualTo(2));
+        Assert.That(_diagnosisStorage.FindBy(x => x.IdPatient == patient.IdPerson).ToList().Count, Is.EqualTo(2));
+        
+        _storageManager.Serialize();
+        _storageManager.Deserialize();
+        
+         foundPatient = (_personStorage.FindBy(x => x.IdPerson == patient.IdPerson).First() as Patient);
+        Assert.That(foundPatient?.Diagnoses.Count, Is.EqualTo(2));
+        Assert.That(_diagnosisStorage.FindBy(x => x.IdPatient == patient.IdPerson).ToList().Count, Is.EqualTo(2));
+    }
     
     [Test]
     public void BigManagerSerializeTest()

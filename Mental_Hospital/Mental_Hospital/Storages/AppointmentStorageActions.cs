@@ -23,4 +23,14 @@ public class AppointmentStorageActions : IStorageAction<Appointment>
         if(item.Patient is not null)
             item.Patient.Appointments.Add(item);
     }
+
+    public void OnRestore(Appointment item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnDeserialize(Appointment item)
+    {
+        
+    }
 }

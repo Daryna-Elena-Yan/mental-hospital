@@ -1,5 +1,5 @@
-﻿using System.Text.Json;
-using Mental_Hospital.DTO;
+﻿using System.Collections;
+using System.Text.Json;
 using Mental_Hospital.Models;
 using Mental_Hospital.Storages;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,44 +8,26 @@ namespace Mental_Hospital.Services;
 
 public class FileService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly Storage<Diagnosis> _diagnosisStorage;
-    private readonly Storage<Appointment> _appointmentStorage;
-    private readonly Storage<Equipment> _equipmentStorage;
-    private readonly Storage<Therapist> _therapistStorage;
-    private readonly Storage<Patient> _patientStorage;
-    private readonly Storage<Nurse> _nurseStorage;
-    private readonly Storage<Prescription> _prescriptionStorage;
-    private readonly Storage<RoomPatient> _roomPatientStorage;
-    private readonly Storage<Room> _roomStorage;
+    private readonly Dictionary<Type, IStorage> _storages = new();
+ 
 
-    public FileService(IServiceProvider serviceProvider)
+    public FileService(IEnumerable<IStorage> storages)
     {
-        _serviceProvider = serviceProvider;
-        _therapistStorage = serviceProvider.GetService<Storage<Therapist>>();
-        _nurseStorage = serviceProvider.GetService<Storage<Nurse>>();
-        _patientStorage = serviceProvider.GetService<Storage<Patient>>();
-        _diagnosisStorage = serviceProvider.GetService<Storage<Diagnosis>>();
-        _appointmentStorage = serviceProvider.GetService<Storage<Appointment>>();
-        _equipmentStorage = serviceProvider.GetService<Storage<Equipment>>();
-        _prescriptionStorage = serviceProvider.GetService<Storage<Prescription>>();
-        _roomStorage = serviceProvider.GetService<Storage<Room>>();
-        _roomPatientStorage = serviceProvider.GetService<Storage<RoomPatient>>();
-    }
-    public  void Serialize()
-    {
-       /* var data = new AllData
+        foreach (var stor in storages)
         {
-            Patients = _patientStorage.GetList(),
-            Therapists = _therapistStorage.GetList(),
-            Nurses = _nurseStorage.GetList(),
-            Diagnoses = _diagnosisStorage.GetList(),
-            Appointments = _appointmentStorage.GetList(),
-            Equipments = _equipmentStorage.GetList(),
-            Prescriptions = _prescriptionStorage.GetList(),
-            Rooms = _roomStorage.GetList(),
-            RoomPatients = _roomPatientStorage.GetList()
-        };
+            _storages.Add(stor.GetType().GenericTypeArguments[0], stor);
+        }
+    }
+
+    public Storage<T> GetStorage<T>() where T : IEntity
+    {
+        return (_storages[typeof(T)] as Storage<T>)!;
+    }
+    public void Serialize()
+    {
+        
+        //TODO mark storage type in resulting file
+       /* 
         File.WriteAllText("data.json",JsonSerializer.Serialize(data));*/
     }
     public  void Deserialize()

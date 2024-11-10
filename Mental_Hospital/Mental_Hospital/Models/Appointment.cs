@@ -3,7 +3,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mental_Hospital.Models;
 
-public class Appointment
+public class Appointment : IEntity
 {
     [JsonConstructor]
     public Appointment()

@@ -2,7 +2,7 @@
 
 namespace Mental_Hospital.Models;
 
-public class Prescription
+public class Prescription : IEntity
 {
     [JsonConstructor]
     public Prescription()

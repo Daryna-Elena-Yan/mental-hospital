@@ -1,8 +1,14 @@
 ﻿using System.Text.Json.Serialization;
+using Mental_Hospital.Models.Light;
+using Mental_Hospital.Models.Severe;
 
 namespace Mental_Hospital.Models;
 
-public abstract class Diagnosis
+
+
+[JsonDerivedType(typeof(LightAnxiety), typeDiscriminator: nameof(LightAnxiety))]
+[JsonDerivedType(typeof(SevereAnxiety), typeDiscriminator: nameof(SevereAnxiety))]
+public abstract class Diagnosis : IEntity
 {
     [JsonConstructor]
     protected Diagnosis()

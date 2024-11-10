@@ -27,4 +27,16 @@ public class RoomStorageActions : IStorageAction<Room>
     {
     
     }
+
+    public void OnRestore(Room item)
+    {
+            throw new NotImplementedException();
+    }
+
+    public void OnDeserialize(Room item)
+    {
+        
+    }
+
+
 }

@@ -15,4 +15,15 @@ public class PrescriptionStorageActions : IStorageAction<Prescription>
         if(item.Appointment is not null)
             item.Appointment.Prescriptions.Add(item.GetHashCode(), item);
     }
+
+    public void OnRestore(Prescription item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnDeserialize(Prescription item)
+    {
+       
+    }
+    
 }

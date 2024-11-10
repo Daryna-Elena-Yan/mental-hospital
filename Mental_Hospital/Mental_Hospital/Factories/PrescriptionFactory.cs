@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Mental_Hospital.Factories;
 
-public class PrescriptionFactory
+public class PrescriptionFactory : IFactory
 {
     private readonly IServiceProvider _provider;
     private readonly Storage<Prescription> _storage;

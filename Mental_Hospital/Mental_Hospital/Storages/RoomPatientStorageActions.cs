@@ -15,4 +15,14 @@ public class RoomPatientStorageActions : IStorageAction<RoomPatient>
         item.Room.RoomPatients.Add(item);
         item.Patient.RoomPatients.Add(item);
     }
+
+    public void OnRestore(RoomPatient item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnDeserialize(RoomPatient item)
+    {
+        
+    }
 }

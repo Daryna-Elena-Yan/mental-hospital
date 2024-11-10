@@ -2,7 +2,7 @@
 
 namespace Mental_Hospital.Models;
 
-public class Equipment
+public class Equipment : IEntity
 {
     [JsonConstructor]
     public Equipment()

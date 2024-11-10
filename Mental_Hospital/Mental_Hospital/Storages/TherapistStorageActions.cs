@@ -43,4 +43,14 @@ public class TherapistStorageActions:IStorageAction<Therapist>
             item.Supervisor.Subordinates.Add(item);
         }
     }
+
+    public void OnRestore(Therapist item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnDeserialize(Therapist item)
+    {
+        
+    }
 }

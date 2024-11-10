@@ -6,19 +6,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Mental_Hospital.Factories;
 
-public class PersonFactory {
+public class PersonFactory : IFactory
+{
     private readonly IServiceProvider _provider;
-    private readonly Storage<Therapist> _therapisStorage;
-    private readonly Storage<Patient> _patientStorage;
-    private readonly Storage<Nurse> _nurseStorage;
+    private readonly Storage<Person> _personStorage;
     private readonly PatientValidator _patientValidator;
 
-    public PersonFactory(IServiceProvider provider, Storage<Therapist> tstorage,Storage<Nurse> nstorage,Storage<Patient> pstorage, PatientValidator patientValidator) {
+    public PersonFactory(IServiceProvider provider,  PatientValidator patientValidator, Storage<Person> personStorage) {
         _provider = provider;
-        _therapisStorage = tstorage;
-        _patientStorage = pstorage;
-        _nurseStorage = nstorage;
         _patientValidator = patientValidator;
+        _personStorage = personStorage;
     }
 
     public Patient CreateNewPatient(string name, string surname, DateTime dateOfBirth, string address, 
@@ -33,7 +30,7 @@ public class PersonFactory {
         patient.Anamnesis = anamnesis;
         patient.DateOfDeath = dateOfDeath;
         _patientValidator.ValidateAndThrow(patient);
-        _patientStorage.RegisterNew(patient);
+        _personStorage.RegisterNew(patient);
         
         return patient;
     }
@@ -50,7 +47,7 @@ public class PersonFactory {
         nurse.DateHired=DateTime.Today;
         nurse.DateOfBirth = dateOfBirth;
         nurse.Salary=nurse.Bonus+Nurse.BasicSalaryInZl+nurse.OvertimePerMonth*Nurse.OvertimePaidPerHourInZl;
-        _nurseStorage.RegisterNew(nurse);
+        _personStorage.RegisterNew(nurse);
         return nurse;
     }
     public Therapist CreateNewTherapist(Therapist? supervisor, string name, string surname, DateTime dateOfBirth, string address, 
@@ -68,7 +65,7 @@ public class PersonFactory {
         therapist.DateOfBirth = dateOfBirth;
         therapist.Salary=therapist.Bonus+Therapist.BasicSalaryInZl+therapist.OvertimePerMonth*Therapist.OvertimePaidPerHourInZl;
         therapist.Qualifications = qualifications;
-        _therapisStorage.RegisterNew(therapist);
+        _personStorage.RegisterNew(therapist);
         return therapist;
     }
 }

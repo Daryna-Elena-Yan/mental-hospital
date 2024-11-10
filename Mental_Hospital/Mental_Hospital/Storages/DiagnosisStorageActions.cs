@@ -1,4 +1,5 @@
-﻿using Mental_Hospital.Models;
+﻿using System.Collections;
+using Mental_Hospital.Models;
 
 namespace Mental_Hospital.Storages;
 
@@ -16,5 +17,15 @@ public class DiagnosisStorageActions : IStorageAction<Diagnosis>
     {
         var patient = item.Patient;
         patient.Diagnoses.Add(item);
+    }
+
+    public void OnRestore(Diagnosis item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnDeserialize(Diagnosis item)
+    {
+         
     }
 }

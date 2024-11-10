@@ -16,64 +16,65 @@ public static class ServiceCollectionExtensions
     public static ServiceCollection MentalHospitalSetup(this ServiceCollection serviceCollection)
     {
         //registration of services
-        serviceCollection.AddTransient<Nurse>();
-        serviceCollection.AddTransient<Therapist>();
-        serviceCollection.AddTransient<Patient>();
-        
-        serviceCollection.AddSingleton<Storage<Therapist>>();
-        serviceCollection.AddSingleton<Storage<Nurse>>();
-        serviceCollection.AddSingleton<Storage<Patient>>();
-        serviceCollection.AddSingleton<PersonFactory>();
+        //TODO IStorageActions register through Assembly
         serviceCollection.AddSingleton<IStorageAction<Patient>, PatientStorageActions>();
         serviceCollection.AddSingleton<IStorageAction<Therapist>, TherapistStorageActions>();
         serviceCollection.AddSingleton<IStorageAction<Nurse>, NurseStorageActions>();
-
-        serviceCollection.AddTransient<Appointment>();
-        serviceCollection.AddSingleton<Storage<Appointment>>();
-        serviceCollection.AddSingleton<AppointmentFactory>();
         serviceCollection.AddSingleton<IStorageAction<Appointment>, AppointmentStorageActions>();
-        
-        serviceCollection.AddTransient<Prescription>();
-        serviceCollection.AddSingleton<Storage<Prescription>>();
-        serviceCollection.AddSingleton<PrescriptionFactory>();
         serviceCollection.AddSingleton<IStorageAction<Prescription>, PrescriptionStorageActions>();
-        
-        serviceCollection.AddTransient<Room>();
-        serviceCollection.AddSingleton<Storage<Room>>();
-        serviceCollection.AddSingleton<RoomFactory>();
         serviceCollection.AddSingleton<IStorageAction<Room>, RoomStorageActions>();
-        
-        serviceCollection.AddTransient<Equipment>();
-        serviceCollection.AddSingleton<Storage<Equipment>>();
-        serviceCollection.AddSingleton<EquipmentFactory>();
         serviceCollection.AddSingleton<IStorageAction<Equipment>, EquipmentStorageActions>();
-        
-        serviceCollection.AddTransient<RoomPatient>();
-        serviceCollection.AddSingleton<Storage<RoomPatient>>();
-        serviceCollection.AddSingleton<RoomPatientFactory>();
         serviceCollection.AddSingleton<IStorageAction<RoomPatient>, RoomPatientStorageActions>();
-
-        
-        serviceCollection.AddTransient<LightAnxiety>();
-        serviceCollection.AddTransient<LightMood>();
-        serviceCollection.AddTransient<LightPsychotic>();
-        serviceCollection.AddTransient<SevereAnxiety>();
-        serviceCollection.AddTransient<SevereMood>();
-        serviceCollection.AddTransient<SeverePsychotic>();
-        serviceCollection.AddSingleton<Storage<Diagnosis>>();
-        serviceCollection.AddSingleton<DiagnosisFactory>();
         serviceCollection.AddSingleton<IStorageAction<Diagnosis>, DiagnosisStorageActions>();
+        
+        
         serviceCollection.AddSingleton<FileService>();
         
         
-        //adds all valigators!!!
+        //adds all validators!!!
         serviceCollection.AddValidatorsFromAssemblyContaining<DiagnosisValidator>();
         
-
-
-        //TODO implemetns throug assembly using one common interface
         
+        RegisterFactories(serviceCollection);
+        RegisterModels(serviceCollection);
+        RegisterStorages(serviceCollection);
         
         return serviceCollection;
+    }
+
+    private static void RegisterStorages(ServiceCollection serviceCollection)
+    {
+        var type = typeof(IEntity);
+        var storageTypes = type.Assembly.GetTypes()
+            .Where(p => type.IsAssignableFrom(p) && p.BaseType == typeof(object));
+        foreach (var storageType in storageTypes)
+        {
+            var inStorageType = typeof(Storage<>);
+            var makeGenericType = inStorageType.MakeGenericType(storageType);
+            serviceCollection.AddSingleton(makeGenericType);
+            serviceCollection.AddSingleton<IStorage>(s => s.GetRequiredService(makeGenericType) as IStorage);
+        }
+    }
+
+    private static void RegisterModels(ServiceCollection serviceCollection)
+    {
+        var type = typeof(IEntity);
+        var entityTypes = type.Assembly.GetTypes()
+            .Where(p => type.IsAssignableFrom(p) && !p.IsAbstract);
+        foreach (var entityType in entityTypes)
+        {
+            serviceCollection.AddTransient(entityType);
+        }
+    }
+
+    private static void RegisterFactories(ServiceCollection serviceCollection)
+    {
+        var type1 = typeof(IFactory);
+        var factoryTypes = type1.Assembly.GetTypes()
+            .Where(p => type1.IsAssignableFrom(p) && !p.IsAbstract);
+        foreach (var fType in factoryTypes)
+        {
+            serviceCollection.AddSingleton(fType);
+        }
     }
 }

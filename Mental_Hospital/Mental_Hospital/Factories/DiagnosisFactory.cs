@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Mental_Hospital.Factories;
 
-public class DiagnosisFactory
+public class DiagnosisFactory : IFactory
 {
     private readonly IServiceProvider _provider;
     private readonly Storage<Diagnosis> _diagnoses;

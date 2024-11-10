@@ -2,7 +2,7 @@
 
 namespace Mental_Hospital.Models;
 
-public abstract class Person
+public abstract class Person : IEntity
 {
     [JsonConstructor]
     protected Person()

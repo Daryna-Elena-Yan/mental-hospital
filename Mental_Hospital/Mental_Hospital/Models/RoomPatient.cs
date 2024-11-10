@@ -2,7 +2,7 @@
 
 namespace Mental_Hospital.Models;
 
-public class RoomPatient
+public class RoomPatient : IEntity
 {
     [JsonConstructor]
     public RoomPatient()

@@ -9,7 +9,7 @@ public class Prescription : IEntity
     {
     }
 
-    public Guid IdPrescription { get; set; }  // identifier i.e. qualified value
+    public Guid IdPrescription { get; set; } 
     public string Name { get; set; }
     public int Quantity { get; set; }
     public Decimal Dosage { get; set; }

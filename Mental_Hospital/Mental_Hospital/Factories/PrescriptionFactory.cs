@@ -15,7 +15,7 @@ public class PrescriptionFactory : IFactory
         _storage = storage;
     }
 
-    public Prescription CreateNewPrescription(Appointment appointment, string name, int quantity, Decimal dosage, string description)
+    public Prescription CreateNewPrescription(Appointment? appointment, string name, int quantity, Decimal dosage, string description)
     {
         // TODO check if appointment exists, if not return null 
         

@@ -8,7 +8,6 @@ public class Equipment : IEntity
     public Equipment()
     {
     }
-
     public Guid IdEquipment { get; set; } 
     public string Name { get; set; }
     public DateTime ExpirationDate { get; set; }

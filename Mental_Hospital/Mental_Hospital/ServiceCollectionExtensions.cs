@@ -15,31 +15,29 @@ public static class ServiceCollectionExtensions
 {
     public static ServiceCollection MentalHospitalSetup(this ServiceCollection serviceCollection)
     {
-        //registration of services
-        //TODO IStorageActions register through Assembly
-        serviceCollection.AddSingleton<IStorageAction<Patient>, PatientStorageActions>();
-        serviceCollection.AddSingleton<IStorageAction<Therapist>, TherapistStorageActions>();
-        serviceCollection.AddSingleton<IStorageAction<Nurse>, NurseStorageActions>();
-        serviceCollection.AddSingleton<IStorageAction<Appointment>, AppointmentStorageActions>();
-        serviceCollection.AddSingleton<IStorageAction<Prescription>, PrescriptionStorageActions>();
-        serviceCollection.AddSingleton<IStorageAction<Room>, RoomStorageActions>();
-        serviceCollection.AddSingleton<IStorageAction<Equipment>, EquipmentStorageActions>();
-        serviceCollection.AddSingleton<IStorageAction<RoomPatient>, RoomPatientStorageActions>();
-        serviceCollection.AddSingleton<IStorageAction<Diagnosis>, DiagnosisStorageActions>();
-        
-        
-        serviceCollection.AddSingleton<FileService>();
-        
-        
         //adds all validators!!!
         serviceCollection.AddValidatorsFromAssemblyContaining<DiagnosisValidator>();
-        
-        
         RegisterFactories(serviceCollection);
         RegisterModels(serviceCollection);
         RegisterStorages(serviceCollection);
+        RegisterStorageActions(serviceCollection);
+        serviceCollection.AddSingleton<FileService>();
         
         return serviceCollection;
+    }
+
+    private static void RegisterStorageActions(ServiceCollection serviceCollection)
+    {
+        var type = typeof(IStorageAction<>);
+        var actionTypes = type.Assembly.GetTypes()
+            .Where(p => p.GetInterfaces().Any(x => x.IsGenericType &&
+                                                   x.GetGenericTypeDefinition() == typeof(IStorageAction<>)));
+        foreach (var actionType in actionTypes)
+        {
+            var makeGenericType = actionType.GetInterfaces().First();  
+            serviceCollection.AddSingleton(makeGenericType, actionType);
+           
+        }
     }
 
     private static void RegisterStorages(ServiceCollection serviceCollection)

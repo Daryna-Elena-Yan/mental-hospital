@@ -15,13 +15,12 @@ public static class ServiceCollectionExtensions
 {
     public static ServiceCollection MentalHospitalSetup(this ServiceCollection serviceCollection)
     {
-        //adds all validators!!!
-        serviceCollection.AddValidatorsFromAssemblyContaining<DiagnosisValidator>();
         RegisterFactories(serviceCollection);
         RegisterModels(serviceCollection);
         RegisterStorages(serviceCollection);
         RegisterStorageActions(serviceCollection);
-        serviceCollection.AddSingleton<FileService>();
+        serviceCollection.AddValidatorsFromAssemblyContaining<DiagnosisValidator>();  //adds all validators!!!
+        serviceCollection.AddSingleton<StorageManager>();
         
         return serviceCollection;
     }

@@ -29,7 +29,7 @@ public class Tests
     private Storage<Room> _roomStorage;
     private PrescriptionFactory _prescriptionFactory;
     private Storage<Prescription> _prescriptionStorage;
-    private FileService _fileService;
+    private StorageManager _storageManager;
     private LightDiagnosisValidator _lightDiagnosisValidator;
     private SevereDiagnosisValidator _severeDiagnosisValidator;
     private Storage<Person> _personStorage;
@@ -62,7 +62,7 @@ public class Tests
         _lightDiagnosisValidator = provider.GetRequiredService<LightDiagnosisValidator>();
         _severeDiagnosisValidator = provider.GetRequiredService<SevereDiagnosisValidator>();
 
-        _fileService = provider.GetRequiredService<FileService>();
+        _storageManager = provider.GetRequiredService<StorageManager>();
     }
 
     [Test]
@@ -401,8 +401,8 @@ public class Tests
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
         Assert.Multiple(() =>
         {
-            Assert.That(_fileService.GetStorage<Person>().Count, Is.EqualTo(2));
-            Assert.That(_fileService.GetStorage<Appointment>().Count, Is.EqualTo(1));
+            Assert.That(_storageManager.GetStorage<Person>().Count, Is.EqualTo(2));
+            Assert.That(_storageManager.GetStorage<Appointment>().Count, Is.EqualTo(1));
 
             Assert.That(appointment.Patient, !Is.Null);
             Assert.That(appointment.Therapist, !Is.Null);
@@ -413,8 +413,8 @@ public class Tests
         _appointmentStorage.Delete(appointment);
         Assert.Multiple(() =>
         {
-            Assert.That(_fileService.GetStorage<Person>().Count, Is.EqualTo(2));
-            Assert.That(_fileService.GetStorage<Appointment>().Count, Is.EqualTo(0));
+            Assert.That(_storageManager.GetStorage<Person>().Count, Is.EqualTo(2));
+            Assert.That(_storageManager.GetStorage<Appointment>().Count, Is.EqualTo(0));
            
             Assert.That(therapist.Appointments.Count, Is.EqualTo(0));
             Assert.That(patient.Appointments.Count, Is.EqualTo(0));
@@ -829,7 +829,7 @@ public class Tests
     }
 
     [Test]
-    public void SerializeTest()
+    public void StorageInnerSerializeTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -844,6 +844,33 @@ public class Tests
         var res = _diagnosisStorage.FindBy(d => true);
 
     }
+    
+    [Test]
+    public void ManagerSerializeTest()
+    {
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        var diagnosis = _diagnosisFactory.CreateNewLightAnxiety
+            (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null, true);
+        var diagnosis2 = _diagnosisFactory.CreateNewSevereAnxiety
+            (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null, LevelOfDanger.High, true);
+        var str = _diagnosisStorage.Serialize();
+        var room = _roomFactory.CreateNewRoom(3);
+        var g = room.IdRoom;
+        var thersp = _personFactory.CreateNewTherapist(null, "Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
+            new[] { "swap positions" });
+        var nurse = _personFactory.CreateNewNurse(null, "Pomogite", "Pomogovich", DateTime.Now, "Korobusik");
+        var bd = nurse.DateOfBirth;
+        var d = nurse.IdPerson;
+        nurse.Rooms.Add(room);
+        room.Nurses.Add(nurse);
+        nurse.IdsRooms.Add(room.IdRoom);
+       
+        
+        _storageManager.Serialize();
+        _storageManager.Deserialize();
+        
+    }
 
     
     
@@ -851,15 +878,7 @@ public class Tests
     // [Test]
     // public void SerializationTest()
     // {
-    //     var room = _roomFactory.CreateNewRoom(3);
-    //     var g = room.IdRoom;
-    //    
-    //     var nurse = _personFactory.CreateNewNurse(null, "Pomogite", "Pomogovich", DateTime.Now, "Korobusik");
-    //     var bd = nurse.DateOfBirth;
-    //     var d = nurse.IdPerson;
-    //     nurse.Rooms.Add(room);
-    //     room.Nurses.Add(nurse);
-    //     nurse.IdsRooms.Add(room.IdRoom);
+    //  
     //     Assert.That(_roomStorage.Count,Is.EqualTo(1));
     //     Assert.That(_personStorage.Count,Is.EqualTo(1));
     //     _fileService.Serialize();

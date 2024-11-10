@@ -51,7 +51,7 @@ public class PersonFactory : IFactory
         return nurse;
     }
     public Therapist CreateNewTherapist(Therapist? supervisor, string name, string surname, DateTime dateOfBirth, string address, 
-        List<string> qualifications)
+        IEnumerable<string> qualifications)
     {
         var therapist = _provider.GetRequiredService<Therapist>();
         therapist.Name = name;
@@ -64,7 +64,7 @@ public class PersonFactory : IFactory
         therapist.DateHired=DateTime.Today;
         therapist.DateOfBirth = dateOfBirth;
         therapist.Salary=therapist.Bonus+Therapist.BasicSalaryInZl+therapist.OvertimePerMonth*Therapist.OvertimePaidPerHourInZl;
-        therapist.Qualifications = qualifications;
+        therapist.Qualifications.AddRange(qualifications);
         _personStorage.RegisterNew(therapist);
         return therapist;
     }

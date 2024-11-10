@@ -2,6 +2,10 @@
 
 namespace Mental_Hospital.Models;
 
+
+[JsonDerivedType(typeof(Patient), typeDiscriminator: nameof(Patient))]
+[JsonDerivedType(typeof(Nurse), typeDiscriminator: nameof(Nurse))]
+[JsonDerivedType(typeof(Therapist), typeDiscriminator: nameof(Therapist))]
 public abstract class Person : IEntity
 {
     [JsonConstructor]

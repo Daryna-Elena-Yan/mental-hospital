@@ -11,7 +11,7 @@ public class Therapist:Employee
 
     public static double BasicSalaryInZl = 10000;
     public static double OvertimePaidPerHourInZl=70;
-    public List<string> Qualifications { get; set; }
+    public List<string> Qualifications { get; } = [];
     public List<Guid> IdsPatients{ get; set;  }= [];
     [JsonIgnore]
 

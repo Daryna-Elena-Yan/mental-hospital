@@ -361,7 +361,8 @@ public class Tests
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         
-        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
+        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now,
+            "very important appointment for your live");
         Assert.Multiple(() =>
         {
             Assert.That(_personStorage.Count, Is.EqualTo(2));
@@ -377,7 +378,8 @@ public class Tests
         {
             var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobka", []);
             var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", []);
-            var appointment = _appointmentFactory.CreateNewAppointment(therapist2, null, DateTime.Now, "help");
+            var appointment = _appointmentFactory.CreateNewAppointment(therapist2, null, DateTime.Now, 
+                "very important appointment for your live");
         Assert.Multiple(() =>
         {
             Assert.That(therapist1.Subordinates.Count, Is.EqualTo(1));
@@ -397,7 +399,8 @@ public class Tests
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         
-        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
+        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now,
+            "very important appointment for your live");
         Assert.Multiple(() =>
         {
             Assert.That(_storageManager.GetStorage<Person>().Count, Is.EqualTo(2));
@@ -424,7 +427,8 @@ public class Tests
         {
             var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobka", []);
             var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", []);
-            var appointment = _appointmentFactory.CreateNewAppointment(therapist2, null, DateTime.Now, "help");
+            var appointment = _appointmentFactory.CreateNewAppointment(therapist2, null, DateTime.Now, 
+                "very important appointment for your live");
         Assert.Multiple(() =>
         {
             Assert.That(therapist1.Subordinates.Count, Is.EqualTo(1));
@@ -451,7 +455,8 @@ public class Tests
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", []);
         
-        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
+        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now,
+            "very important appointment for your live");
         Assert.Multiple(() =>
         {
             Assert.That(_personStorage.Count, Is.EqualTo(2));
@@ -481,9 +486,11 @@ public class Tests
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         
-        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
+        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, 
+            "very important appointment for your live");
         
-        var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "Be healthy", 10, 0.02m, "do sth");
+        var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "Be healthy", 10, 0.02m, 
+            "very important prescription for your live");
         Assert.Multiple(() =>
         {
             Assert.That(_personStorage.Count, Is.EqualTo(2));
@@ -510,10 +517,13 @@ public class Tests
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         
-        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
+        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, 
+            "very important appointment for your live");
         
-        var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "Be healthy", 10, 0.02m, "do sth");
-        var prescriptionAnother = _prescriptionFactory.CreateNewPrescription(appointment, "Be not healthy", 12, 0.2m, "not do sth");
+        var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "Be healthy", 10, 0.02m, 
+            "very important prescription for your live");
+        var prescriptionAnother = _prescriptionFactory.CreateNewPrescription(appointment, "Be not healthy", 12, 0.2m, 
+            "very important prescription for your live");
         Assert.Multiple(() =>
         {
             Assert.That(_personStorage.Count, Is.EqualTo(2));
@@ -545,8 +555,10 @@ public class Tests
             {
                 var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobka", []);
                 var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", []);
-                var appointment = _appointmentFactory.CreateNewAppointment(therapist2, null, DateTime.Now, "help"); 
-                var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "stay strong", 30, 0.02m, "hallucinations");
+                var appointment = _appointmentFactory.CreateNewAppointment(therapist2, null, DateTime.Now, 
+                    "very important appointment for your live"); 
+                var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "stay strong", 30, 0.02m,
+                    "very important prescription for your live");
         Assert.Multiple(() =>
         {
             Assert.That(_personStorage.Count, Is.EqualTo(2));
@@ -574,9 +586,11 @@ public class Tests
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         
-        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
+        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, 
+            "very important appointment for your live");
         
-        var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "Be healthy", 10, 0.02m, "do sth");
+        var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "Be healthy", 10, 0.02m,
+            "very important prescription for your live");
         Assert.Multiple(() =>
         {
             Assert.That(_personStorage.Count, Is.EqualTo(2));
@@ -879,8 +893,9 @@ public class Tests
         var rp = _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, DateTime.Now.AddDays(2));
         var appoint =
             _appointmentFactory.CreateNewAppointment(thersp, patient, DateTime.Now,
-                "Patient needed some strong medication");
-        var prescr = _prescriptionFactory.CreateNewPrescription(appoint, "Anti-stress pills", 30, 5.5m, "");
+                "Patient needed some strong medication immediately.");
+        var prescr = _prescriptionFactory.CreateNewPrescription(appoint, "Anti-stress pills", 30, 5.5m, 
+            "very important prescription for your live");
         
         Assert.That(_personStorage.Count , Is.EqualTo(4));
         Assert.That(_diagnosisStorage.Count , Is.EqualTo(2));

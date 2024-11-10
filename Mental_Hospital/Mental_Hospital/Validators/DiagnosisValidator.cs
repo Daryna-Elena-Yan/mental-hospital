@@ -8,7 +8,7 @@ public class DiagnosisValidator : AbstractValidator<Diagnosis>
 {
     private readonly Storage<Person> _personStorage;
 
-    public DiagnosisValidator(PatientValidator patientValidator, Storage<Person> personStorage)
+    public DiagnosisValidator(Storage<Person> personStorage)
     {
         _personStorage = personStorage;
         RuleFor(x => x.NameOfDisorder).NotEmpty().WithMessage("Specify name of the Diagnosis.");
@@ -18,7 +18,7 @@ public class DiagnosisValidator : AbstractValidator<Diagnosis>
             .Must(x => IsHealingDateAfterDiagnosing(x.DateOfHealing, x.DateOfDiagnosis))
             .WithMessage("Date of healing cannot be earlier that date of Diagnosing.");
         RuleFor(x => x.Description).Length(20, 500).WithMessage("Description should be from 20 to 500 symbols long.");
-        RuleFor(x => x.Patient).Must(x => DoesPatientExist(x)).NotNull();
+        RuleFor(x => x.Patient).Must(DoesPatientExist).NotNull();
     }
 
     private bool DoesPatientExist(Patient patient)

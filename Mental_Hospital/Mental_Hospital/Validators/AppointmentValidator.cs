@@ -7,17 +7,16 @@ namespace Mental_Hospital.Validators;
 
 public class AppointmentValidator : AbstractValidator<Appointment>
 {
-    private Storage<Therapist> _therapistStorage;
-    private Storage<Patient> _patientStorage;
+    private readonly Storage<Person> _personStorage;
     
-    public AppointmentValidator(Storage<Therapist> therapistStorage, Storage<Patient> patientStorage)
+    public AppointmentValidator(Storage<Person> personStorage)
     {
-        _therapistStorage = therapistStorage;
-        _patientStorage = patientStorage;
+        _personStorage = personStorage;
         RuleFor(x => x.DateOfAppointment).NotNull()
             .Must(x => x != DateTime.MinValue).WithMessage("Specify date of appointment.");;
         RuleFor(x => x.Description).Length(20, 500).WithMessage("Description should be from 20 to 500 symbols long.");
-        RuleFor(x => x.Therapist).NotNull().Must(DoesTherapistExist).WithMessage("Therapist does not exist.");
+        RuleFor(x => x.Therapist).NotNull().WithMessage(("Therapist is required."))
+            .Must(DoesTherapistExist).WithMessage("Therapist does not exist.");
         RuleFor(x => x.Patient).Custom((patient, context) => {
                 if (patient != null) {
                     if (!DoesPatientExist(patient))
@@ -27,12 +26,12 @@ public class AppointmentValidator : AbstractValidator<Appointment>
                 }
         });
     }
-    private bool DoesTherapistExist(Therapist therapist)
+    private bool DoesTherapistExist(Therapist? therapist)
     {
-        return _therapistStorage.FindBy(x => x.IdPerson == therapist.IdPerson).Any();
+        return therapist is null ? true : _personStorage.FindBy(x => x.IdPerson == therapist.IdPerson).Any();
     } 
     private bool DoesPatientExist(Patient patient)
     {
-        return _patientStorage.FindBy(x => x.IdPerson == patient.IdPerson).Any();
+        return _personStorage.FindBy(x => x.IdPerson == patient.IdPerson).Any();
     } 
 }

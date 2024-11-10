@@ -7,11 +7,11 @@ namespace Mental_Hospital.Validators;
 
 public class RoomPatientValidator : AbstractValidator<RoomPatient>
 {
-    private Storage<Patient> _patientStorage;
-    private Storage<Room> _roomStorage;
-    public RoomPatientValidator(Storage<Patient> patientStorage, Storage<Room> roomStorage)
+    private readonly Storage<Person> _personStorage;
+    private readonly Storage<Room> _roomStorage;
+    public RoomPatientValidator(Storage<Person> personStorage, Storage<Room> roomStorage)
     {
-        _patientStorage = patientStorage;
+        _personStorage = personStorage;
         _roomStorage = roomStorage;
         RuleFor(x => x.DatePlaced).NotNull()
             .Must(x => x != DateTime.MinValue)
@@ -34,6 +34,6 @@ public class RoomPatientValidator : AbstractValidator<RoomPatient>
     } 
     private bool DoesPatientExist(Patient patient)
     {
-        return _patientStorage.FindBy(x => x.IdPerson == patient.IdPerson).Any();
+        return _personStorage.FindBy(x => x.IdPerson == patient.IdPerson).Any();
     } 
 }

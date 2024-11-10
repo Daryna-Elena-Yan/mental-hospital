@@ -710,8 +710,6 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Address must be of length from 10 to 70 symbols.") , Is.EqualTo(1));
             
     }
-    
-
 
     [Test]
     public void PatientNullDateBirthAttributeValidationTest()
@@ -771,6 +769,7 @@ public class Tests
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
     }
+    
     [Test]
     public void DiagnosisHealingDateBeforeDiagnosisDateAttributeValidationTest()
     {
@@ -817,7 +816,7 @@ public class Tests
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should not be empty.") , Is.EqualTo(1));
     }
-
+    
     [Test]
     public void StorageInnerSerializeTest()
     {
@@ -861,4 +860,94 @@ public class Tests
         _storageManager.Serialize();
         _storageManager.Deserialize();
     }
+    
+    [Test]
+    public void AppointmentNullDateOfAppointmentAttributeValidationTest()
+    {
+        var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
+            DateTime.Now,"Baker Street, 221B", []);
+        
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        
+        var ex = Assert.Throws<ValidationException>(() => _appointmentFactory.CreateNewAppointment(therapist, patient,DateTime.MinValue, 
+            "very important appointment for your live"));
+
+        Assert.That(ex.Errors.Count(), Is.EqualTo(1));
+        Assert.That(
+            ex.Errors.Count(x => x.ErrorMessage == "Specify date of appointment."),
+            Is.EqualTo(1));
+
+    }
+    
+    [Test]
+    public void AppointmentShortDescriptionAttributeValidationTest()
+    {
+        var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
+            DateTime.Now,"Baker Street, 221B", []);
+        
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        
+        var ex = Assert.Throws<ValidationException>(() =>
+            _appointmentFactory.CreateNewAppointment(therapist, patient,DateTime.Now, 
+            "too short"));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void AppointmentLongDescriptionAttributeValidationTest()
+    {
+        var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
+            DateTime.Now,"Baker Street, 221B", []);
+        
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        
+        var ex = Assert.Throws<ValidationException>(() =>
+            _appointmentFactory.CreateNewAppointment(therapist, patient,DateTime.Now, 
+                "The patient attended today’s session reporting ongoing symptoms of anxiety and depressive moods, which have worsened over the past month. They described feeling overwhelmed with work stress and difficulty sleeping. The patient shared a history of generalized anxiety disorder and mild depression, both of which have been managed with therapy and medication. During the session, cognitive-behavioral therapy techniques were used to address negative thought patterns. A follow-up appointment is scheduled in two weeks to reassess progress and adjust treatment as necessary."));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void AppointmentNullTherapistValidationTest()
+    {
+        var therapist =  new Therapist();
+        
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+
+        var ex = Assert.Throws<ValidationException>(() =>
+            _appointmentFactory.CreateNewAppointment(null!, patient, DateTime.Now,
+                "very important appointment for your live"));
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Therapist is required.") , Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void AppointmentTherapistDoesNotExistValidationTest()
+    {
+        var therapist = new Therapist();
+        therapist.Supervisor = null;
+        therapist.Name = "Charles";
+        therapist.Surname = "Leclerc";
+        therapist.DateOfBirth = DateTime.Now;
+        therapist.Address = "Baker Street, 221B";
+        
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+
+        var ex = Assert.Throws<ValidationException>(() =>
+            _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now,
+                "very important appointment for your live"));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Therapist does not exist.") , Is.EqualTo(1));
+    }
+    
 }

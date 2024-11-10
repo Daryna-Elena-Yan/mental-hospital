@@ -17,11 +17,6 @@ public class EquipmentStorageActions: IStorageAction<Equipment>
 
     public void OnRestore(Equipment item)
     {
-        throw new NotImplementedException();
-    }
-
-    public void OnDeserialize(Equipment item)
-    {
-        throw new NotImplementedException();
+        
     }
 }

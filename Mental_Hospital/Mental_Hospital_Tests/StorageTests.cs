@@ -867,7 +867,7 @@ public class Tests
         var appoint =
             _appointmentFactory.CreateNewAppointment(thersp, patient, DateTime.Now,
                 "Patient needed some strong medication");
-        var prescr = _prescriptionFactory.CreateNewPrescription(appoint, "Anti-stress pills", 30, 5.5m, "");
+        var prescr = _prescriptionFactory.CreateNewPrescription(appoint, "Anti-stress pills", 30, 5.5m, "Hope it helps");
        
         
         _storageManager.Serialize();

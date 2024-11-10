@@ -18,12 +18,9 @@ public class PrescriptionStorageActions : IStorageAction<Prescription>
 
     public void OnRestore(Prescription item)
     {
-        throw new NotImplementedException();
+        
     }
 
-    public void OnDeserialize(Prescription item)
-    {
-       
-    }
+
     
 }

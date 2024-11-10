@@ -2,7 +2,7 @@
 
 namespace Mental_Hospital.Storages;
 
-public class TherapistStorageActions:IStorageAction<Therapist>
+public class TherapistStorageActions : IStorageAction<Therapist>
 {
     private readonly Storage<Appointment> _approintmentStorage;
     private readonly Storage<Prescription> _prescriptionStorage;
@@ -12,9 +12,10 @@ public class TherapistStorageActions:IStorageAction<Therapist>
         this._approintmentStorage = approintmentStorage;
         this._prescriptionStorage = prescriptionStorage;
     }
+
     public void OnDelete(Therapist item)
     {
-        
+
         foreach (var patient in item.Patients.ToList())
         {
             patient.Therapists.Remove(item);
@@ -32,6 +33,7 @@ public class TherapistStorageActions:IStorageAction<Therapist>
             {
                 prescription.Appointment = null;
             }
+
             _approintmentStorage.Delete(appointment);
         }
     }
@@ -46,11 +48,6 @@ public class TherapistStorageActions:IStorageAction<Therapist>
 
     public void OnRestore(Therapist item)
     {
-        throw new NotImplementedException();
-    }
 
-    public void OnDeserialize(Therapist item)
-    {
-        
     }
 }

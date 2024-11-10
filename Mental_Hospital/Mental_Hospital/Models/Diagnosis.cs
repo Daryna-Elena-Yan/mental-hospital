@@ -31,7 +31,7 @@ public abstract class Diagnosis : IEntity
         get => _patient;
         set
         {
-            IdPatient = value.IdPerson;
+            IdPatient = value?.IdPerson;
             _patient = value;
         }
     }

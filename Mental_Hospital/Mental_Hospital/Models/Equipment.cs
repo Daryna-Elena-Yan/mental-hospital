@@ -5,7 +5,6 @@ namespace Mental_Hospital.Models;
 public class Equipment : IEntity
 {
     private Room? _room;
-
     public Guid IdEquipment { get; set; } 
     public string Name { get; set; }
     public DateTime ExpirationDate { get; set; }

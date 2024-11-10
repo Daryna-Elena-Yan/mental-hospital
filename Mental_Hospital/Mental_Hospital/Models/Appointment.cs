@@ -8,8 +8,8 @@ public class Appointment : IEntity
     public Guid IdAppointment { get; set; } 
     public DateTime DateOfAppointment { get; set; }
     public string Description { get; set; }
-    public Guid? IdPatient{ get; set;  }
-    public Guid? IdTherapist{ get; set;  }
+    public Guid? IdPatient { get; set;  }
+    public Guid? IdTherapist { get; set;  }
 
     [JsonIgnore]
     public virtual Patient? Patient

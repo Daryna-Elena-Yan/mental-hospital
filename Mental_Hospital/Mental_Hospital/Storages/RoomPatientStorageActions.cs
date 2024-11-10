@@ -4,6 +4,13 @@ namespace Mental_Hospital.Storages;
 
 public class RoomPatientStorageActions : IStorageAction<RoomPatient>
 {
+    private readonly Storage<Room> _roomStorage;
+    private readonly Storage<Person> _personStorage;
+    public RoomPatientStorageActions(Storage<Room> roomStorage, Storage<Person> personStorage)
+    {
+        _roomStorage = roomStorage;
+        _personStorage = personStorage;
+    }
     public void OnDelete(RoomPatient item)
     {
         item.Room.RoomPatients.Remove(item);
@@ -18,7 +25,13 @@ public class RoomPatientStorageActions : IStorageAction<RoomPatient>
 
     public void OnRestore(RoomPatient item)
     {
-       
+        var room = _roomStorage.FindBy(x => x.IdRoom == item.IdRoom).First();
+        item.Room = room;
+        room.RoomPatients.Add(item);
+        
+        var patient = _personStorage.FindBy(x => x.IdPerson == item.IdPatient).First() as Patient;
+        item.Patient = patient!;
+        patient!.RoomPatients.Add(item);
     }
     
 }

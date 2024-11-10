@@ -4,6 +4,11 @@ namespace Mental_Hospital.Storages;
 
 public class PrescriptionStorageActions : IStorageAction<Prescription>
 {
+    private readonly Storage<Appointment> _appointmentStorage;
+    public PrescriptionStorageActions(Storage<Appointment> appointmentStorage)
+    {
+        _appointmentStorage = appointmentStorage;
+    }
     public void OnDelete(Prescription item)
     {
         if(item.Appointment is not null)
@@ -18,7 +23,9 @@ public class PrescriptionStorageActions : IStorageAction<Prescription>
 
     public void OnRestore(Prescription item)
     {
-        
+        var appointment = _appointmentStorage.FindBy(x => x.IdAppointment == item.IdAppointment).First();
+        item.Appointment = appointment;
+        appointment.Prescriptions.Add(item.GetHashCode(), item);
     }
 
 

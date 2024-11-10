@@ -29,10 +29,6 @@ public class NurseStorageActions:IStorageAction<Nurse>
     {
         throw new NotImplementedException();
     }
-
-    public void OnDeserialize(Nurse item)
-    {
-        throw new NotImplementedException();
-    }
+    
     
 }

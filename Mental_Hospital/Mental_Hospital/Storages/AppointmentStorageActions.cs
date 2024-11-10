@@ -26,11 +26,7 @@ public class AppointmentStorageActions : IStorageAction<Appointment>
 
     public void OnRestore(Appointment item)
     {
-        throw new NotImplementedException();
+       
     }
-
-    public void OnDeserialize(Appointment item)
-    {
-        
-    }
+    
 }

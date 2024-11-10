@@ -4,20 +4,16 @@ namespace Mental_Hospital.Models;
 
 public class Therapist:Employee
 {
-    [JsonConstructor]
-    public Therapist()
-    {
-    }
-
-    public static double BasicSalaryInZl = 10000;
-    public static double OvertimePaidPerHourInZl=70;
+    
+    public new static double BasicSalaryInZl = 10000;
+    public new static double OvertimePaidPerHourInZl=70;
     public ICollection<string> Qualifications { get; } = [];
-    public ICollection<Guid> IdsPatients{ get; set;  }= [];
+    public ICollection<Guid> IdsPatients{ get; }= [];
+    
     [JsonIgnore]
-
     public virtual ICollection<Appointment> Appointments { get; } = [];
+    
     [JsonIgnore]
-
     public virtual ICollection<Patient> Patients{ get; }=[];
     public override void RecalculateSalary()
     {

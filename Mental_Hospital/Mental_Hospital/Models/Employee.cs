@@ -4,11 +4,8 @@ namespace Mental_Hospital.Models;
 
 public abstract class Employee :Person
 {
-    [JsonConstructor]
-    protected Employee()
-    {
-    }
-
+    private Employee? _supervisor;
+    
     public double Bonus { get; set; }
     public static double BasicSalaryInZl { get; set; }
     public static double OvertimePaidPerHourInZl { get; set; }
@@ -17,12 +14,20 @@ public abstract class Employee :Person
     public DateTime DateHired { get; set; }
     public DateTime? DateFired { get; set; }
     public Guid? IdSupervisor{ get; set;  }
+    
     [JsonIgnore]
-
     public virtual ICollection<Employee> Subordinates{ get; }= [];
-    [JsonIgnore]
 
-    public virtual Employee? Supervisor{ get; set; }
+    [JsonIgnore]
+    public virtual Employee? Supervisor
+    {
+        get => _supervisor;
+        set
+        {
+            IdSupervisor = value?.IdPerson;
+            _supervisor = value;
+        }
+    }
 
     public abstract void RecalculateSalary();
 }

@@ -39,11 +39,8 @@ public class PatientStorageActions : IStorageAction<Patient>
 
     public void OnRestore(Patient item)
     {
-        throw new NotImplementedException();
-    }
-
-    public void OnDeserialize(Patient item)
-    {
         
     }
+
+
 }

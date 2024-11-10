@@ -18,11 +18,7 @@ public class RoomPatientStorageActions : IStorageAction<RoomPatient>
 
     public void OnRestore(RoomPatient item)
     {
-        throw new NotImplementedException();
+       
     }
-
-    public void OnDeserialize(RoomPatient item)
-    {
-        
-    }
+    
 }

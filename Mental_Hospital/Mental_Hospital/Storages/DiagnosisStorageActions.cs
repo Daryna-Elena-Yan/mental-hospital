@@ -5,6 +5,12 @@ namespace Mental_Hospital.Storages;
 
 public class DiagnosisStorageActions : IStorageAction<Diagnosis>
 {
+    private readonly Storage<Person> _personStorage;
+
+    public DiagnosisStorageActions(Storage<Person> personStorage)
+    {
+        this._personStorage = personStorage;
+    }
     
     public void OnDelete(Diagnosis item)
     {
@@ -21,11 +27,9 @@ public class DiagnosisStorageActions : IStorageAction<Diagnosis>
 
     public void OnRestore(Diagnosis item)
     {
-        throw new NotImplementedException();
+        var patient = _personStorage.FindBy(x => x.IdPerson == item.IdPatient).First() as Patient;
+        item.Patient = patient!;
+        patient!.Diagnoses.Add(item);
     }
 
-    public void OnDeserialize(Diagnosis item)
-    {
-         
-    }
 }

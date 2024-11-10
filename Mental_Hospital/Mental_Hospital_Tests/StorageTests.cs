@@ -364,8 +364,7 @@ public class Tests
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
         Assert.Multiple(() =>
         {
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
+            Assert.That(_personStorage.Count, Is.EqualTo(2));
             Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
             Assert.That(appointment.Patient, !Is.Null);
             Assert.That(appointment.Therapist, !Is.Null);
@@ -455,8 +454,7 @@ public class Tests
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, "sth");
         Assert.Multiple(() =>
         {
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
+            Assert.That(_personStorage.Count, Is.EqualTo(2));
             Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
 
             Assert.That(appointment.Patient, !Is.Null);
@@ -469,7 +467,6 @@ public class Tests
         Assert.Multiple(() =>
         {
             Assert.That(_personStorage.Count, Is.EqualTo(1));
-            Assert.That(_personStorage.Count, Is.EqualTo(0));
             Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
             Assert.That(therapist.Appointments.Count, Is.EqualTo(1));
             Assert.That(appointment.Patient, Is.Null);
@@ -489,8 +486,7 @@ public class Tests
         var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "Be healthy", 10, 0.02m, "do sth");
         Assert.Multiple(() =>
         {
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
+            Assert.That(_personStorage.Count, Is.EqualTo(2));
             Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
             Assert.That(_prescriptionStorage.Count, Is.EqualTo(1));
 
@@ -520,8 +516,7 @@ public class Tests
         var prescriptionAnother = _prescriptionFactory.CreateNewPrescription(appointment, "Be not healthy", 12, 0.2m, "not do sth");
         Assert.Multiple(() =>
         {
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
+            Assert.That(_personStorage.Count, Is.EqualTo(2));
             Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
             Assert.That(_prescriptionStorage.Count, Is.EqualTo(2));
 
@@ -584,8 +579,7 @@ public class Tests
         var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "Be healthy", 10, 0.02m, "do sth");
         Assert.Multiple(() =>
         {
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
+            Assert.That(_personStorage.Count, Is.EqualTo(2));
             Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
             Assert.That(_prescriptionStorage.Count, Is.EqualTo(1));
 
@@ -598,8 +592,7 @@ public class Tests
         _appointmentStorage.Delete(appointment);
         Assert.Multiple(() =>
         {
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
-            Assert.That(_personStorage.Count, Is.EqualTo(1));
+            Assert.That(_personStorage.Count, Is.EqualTo(2));
             Assert.That(_appointmentStorage.Count, Is.EqualTo(0));
             Assert.That(therapist.Appointments.Count, Is.EqualTo(0));
             Assert.That(patient.Appointments.Count, Is.EqualTo(0));
@@ -812,8 +805,6 @@ public class Tests
     [Test]
     public void DiagnosisPatientIncorrectAttributeValidationTest()
     {
-       
-
         var ex = Assert.Throws<ValidationException>(() =>
         {
             var patient = _personFactory.CreateNewPatient("", "Piastri", DateTime.Now, "Melbourne, Australia",
@@ -825,7 +816,6 @@ public class Tests
         
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should not be empty.") , Is.EqualTo(1));
-            
     }
 
     [Test]
@@ -853,53 +843,22 @@ public class Tests
         var diagnosis = _diagnosisFactory.CreateNewLightAnxiety
             (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null, true);
         var diagnosis2 = _diagnosisFactory.CreateNewSevereAnxiety
-            (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null, LevelOfDanger.High, true);
-        var str = _diagnosisStorage.Serialize();
+        (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null,
+            LevelOfDanger.High, true);
         var room = _roomFactory.CreateNewRoom(3);
-        var g = room.IdRoom;
-        var thersp = _personFactory.CreateNewTherapist(null, "Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
-            new[] { "swap positions" });
+        var thersp = _personFactory.CreateNewTherapist(null, "Max", "Verstappen", DateTime.Now, "Melbourne, Australia",
+            new[] { "finished high school" });
         var nurse = _personFactory.CreateNewNurse(null, "Pomogite", "Pomogovich", DateTime.Now, "Korobusik");
-        var bd = nurse.DateOfBirth;
-        var d = nurse.IdPerson;
+        var nurse2 = _personFactory.CreateNewNurse(thersp, "Lewis", "Hamilton", DateTime.Now, "Monte-Carlo, Monaco");
         nurse.Rooms.Add(room);
         room.Nurses.Add(nurse);
-        nurse.IdsRooms.Add(room.IdRoom);
-       
-        
+        nurse.Rooms.Add(room);
+        var rp = _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, DateTime.Now.AddDays(2));
+        var appoint =
+            _appointmentFactory.CreateNewAppointment(thersp, patient, DateTime.Now,
+                "Patient needed some strong medication");
+        var prescr = _prescriptionFactory.CreateNewPrescription(appoint, "Anti-stress pills", 30, 5.5m, "");
         _storageManager.Serialize();
         _storageManager.Deserialize();
-        
     }
-
-    
-    
-
-    // [Test]
-    // public void SerializationTest()
-    // {
-    //  
-    //     Assert.That(_roomStorage.Count,Is.EqualTo(1));
-    //     Assert.That(_personStorage.Count,Is.EqualTo(1));
-    //     _fileService.Serialize();
-    //     _roomStorage.Delete(room);
-    //     _personStorage.Delete(nurse);
-    //     Assert.That(_roomStorage.Count,Is.EqualTo(0));
-    //     Assert.That(_personStorage.Count,Is.EqualTo(0));
-    //     _fileService.Deserialize();
-    //     Assert.That(g,Is.EqualTo(_roomStorage.FindBy(room1 =>room1.IdRoom==g).First().IdRoom));
-    //     Assert.That(_roomStorage.Count,Is.EqualTo(1));
-    //     Assert.That(_personStorage.Count,Is.EqualTo(1));
-    //     Assert.That(FileService.GetString(),
-    //         Is.EqualTo("{\"Patients\":[],\"Nurses\":[{\"IdsRooms\":[\""+g+"\"],\"Bonus\":0," +
-    //                    "\"OvertimePerMonth\":0,\"Salary\":6000,\"DateHired\":\"2024-11-07T00:00:00+01:00\"," +
-    //                    "\"DateFired\":null,\"IdSupervisor\":null,\"IdPerson\":\""+d+"\",\"Name\":\"Pomogite" +
-    //                    "\",\"Surname\":\"Pomogovich\",\"DateOfBirth\":\""+bd.ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz")+"\"," +
-    //                    "\"Address\":\"Korobusik\"}],\"Therapists\":[],\"Diagnoses\":[],\"Appointments\":[]," +
-    //                    "\"Equipments\":[],\"Prescriptions\":[],\"Rooms\":[{\"IdRoom\":\""+g+"\",\"Quantity\"" +
-    //                    ":3}],\"RoomPatients\":[]}"));
-    //     /*Assert.That(FileService.GetString(),
-    //         Is.EqualTo("[{\"IdRoom\":\""+g+
-    //                    "\",\"Quantity\":3,\"Nurses\":[],\"Equipments\":[],\"RoomPatients\":[]}]"));*/
-    // }
 }

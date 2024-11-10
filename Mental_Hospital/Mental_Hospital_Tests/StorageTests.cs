@@ -657,7 +657,7 @@ public class Tests
             "cases of selfharm in the past", null));
         
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
-        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should not be empty.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should ba at least 2 characters long.") , Is.EqualTo(1));
             
     }
     
@@ -668,7 +668,7 @@ public class Tests
             "cases of selfharm in the past", null));
         
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
-        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should not be empty.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should ba at least 2 characters long.") , Is.EqualTo(1));
             
     }
     [Test]
@@ -815,7 +815,7 @@ public class Tests
         });
         
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
-        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should not be empty.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should ba at least 2 characters long.") , Is.EqualTo(1));
     }
 
     [Test]
@@ -836,7 +836,7 @@ public class Tests
     }
     
     [Test]
-    public void ManagerSerializeTest()
+    public void BigManagerSerializeTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -848,9 +848,10 @@ public class Tests
         var room = _roomFactory.CreateNewRoom(3);
         var thersp = _personFactory.CreateNewTherapist(null, "Max", "Verstappen", DateTime.Now, "Melbourne, Australia",
             new[] { "finished high school" });
+        thersp.Patients.Add(patient);
+        patient.Therapists.Add(thersp);
         var nurse = _personFactory.CreateNewNurse(null, "Pomogite", "Pomogovich", DateTime.Now, "Korobusik");
         var nurse2 = _personFactory.CreateNewNurse(thersp, "Lewis", "Hamilton", DateTime.Now, "Monte-Carlo, Monaco");
-        nurse.Rooms.Add(room);
         room.Nurses.Add(nurse);
         nurse.Rooms.Add(room);
         var rp = _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, DateTime.Now.AddDays(2));
@@ -858,7 +859,33 @@ public class Tests
             _appointmentFactory.CreateNewAppointment(thersp, patient, DateTime.Now,
                 "Patient needed some strong medication");
         var prescr = _prescriptionFactory.CreateNewPrescription(appoint, "Anti-stress pills", 30, 5.5m, "");
+        
+        Assert.That(_personStorage.Count , Is.EqualTo(4));
+        Assert.That(_diagnosisStorage.Count , Is.EqualTo(2));
+        Assert.That(_roomStorage.Count , Is.EqualTo(1));
+        
+        Assert.That(_roomStorage.FindBy(x => x.Nurses.Any(n => n.IdPerson == nurse.IdPerson)).ToList().Count , Is.EqualTo(1));
+        var foundPatient = (_personStorage.FindBy(x => x.IdPerson == patient.IdPerson).First() as Patient);
+        var foundTherapist = (_personStorage.FindBy(x => x.IdPerson == thersp.IdPerson).First() as Therapist);
+        Assert.That(foundPatient?.Diagnoses.Count, Is.EqualTo(2));
+        Assert.That(foundPatient?.Therapists.Count , Is.EqualTo(1));
+        Assert.That(foundTherapist?.Patients.Count , Is.EqualTo(1));
+        var foundNurse2 = (_personStorage.FindBy(x => x.IdPerson == nurse2.IdPerson).First() as Nurse);
+        Assert.That(foundTherapist?.Subordinates.Count , Is.EqualTo(1));
+        Assert.That(foundNurse2?.Supervisor , !Is.Null);
+        var foundNurse = (_personStorage.FindBy(x => x.IdPerson == nurse.IdPerson).First() as Nurse);
+        Assert.That(foundNurse?.Rooms.Count , Is.EqualTo(1));
+        var foundRoom = _roomStorage.FindBy(x => x.IdRoom == room.IdRoom).First();
+        Assert.That(foundRoom?.Nurses.Count , Is.EqualTo(1));
+        var foundAppoint = _appointmentStorage.FindBy(x => x.IdAppointment == appoint.IdAppointment).First();
+        Assert.That(foundAppoint?.Therapist.IdPerson , Is.EqualTo(foundTherapist?.IdPerson));
+        Assert.That(foundAppoint?.Patient?.IdPerson , Is.EqualTo(foundPatient?.IdPerson));
+        var foundPrescr = _prescriptionStorage.FindBy(x => x.IdPrescription == prescr.IdPrescription).First();
+        Assert.That(foundPrescr?.IdAppointment , Is.EqualTo(foundAppoint?.IdAppointment));
+     
+        
         _storageManager.Serialize();
         _storageManager.Deserialize();
+        
     }
 }

@@ -4,19 +4,33 @@ namespace Mental_Hospital.Models;
 
 public class RoomPatient : IEntity
 {
-    [JsonConstructor]
-    public RoomPatient()
-    {
-    }
+    private Room _room = null!;
+    private Patient _patient = null!;
 
     public DateTime DatePlaced { get; set; }
     public DateTime? DateDischarged { get; set; }
     public Guid? IdRoom{ get; set;  }
     public Guid? IdPatient{ get; set;  }
-    [JsonIgnore]
 
-    public virtual Room Room { get; set; } = null!;
     [JsonIgnore]
+    public virtual Room Room
+    {
+        get => _room;
+        set
+        {
+            IdRoom = value.IdRoom;
+            _room = value;
+        }
+    }
 
-    public virtual Patient Patient { get; set;  } = null!;
+    [JsonIgnore]
+    public virtual Patient Patient
+    {
+        get => _patient;
+        set
+        {
+            IdPatient = value.IdPerson;
+            _patient = value;
+        }
+    }
 }

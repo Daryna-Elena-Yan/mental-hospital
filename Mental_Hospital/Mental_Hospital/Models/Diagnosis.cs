@@ -14,10 +14,8 @@ namespace Mental_Hospital.Models;
 [JsonDerivedType(typeof(SeverePsychotic), typeDiscriminator: nameof(SeverePsychotic))]
 public abstract class Diagnosis : IEntity
 {
-    [JsonConstructor]
-    protected Diagnosis()
-    {
-    }
+    private Patient _patient;
+    
 
     public Guid IdDisorder { get; set; } 
     public virtual string NameOfDisorder { get; set; }
@@ -25,7 +23,16 @@ public abstract class Diagnosis : IEntity
     public DateTime DateOfDiagnosis { get; set; }
     public DateTime? DateOfHealing { get; set; }
     public Guid? IdPatient{ get; set; }
-    [JsonIgnore]
+    
 
-    public virtual Patient Patient { get; set; }
+    [JsonIgnore]
+    public virtual Patient Patient
+    {
+        get => _patient;
+        set
+        {
+            IdPatient = value.IdPerson;
+            _patient = value;
+        }
+    }
 }

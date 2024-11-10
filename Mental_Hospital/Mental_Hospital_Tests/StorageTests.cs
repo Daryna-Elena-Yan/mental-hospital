@@ -862,13 +862,23 @@ public class Tests
         var nurse2 = _personFactory.CreateNewNurse(thersp, "Lewis", "Hamilton", DateTime.Now, "Monte-Carlo, Monaco");
         nurse.Rooms.Add(room);
         room.Nurses.Add(nurse);
-        nurse.Rooms.Add(room);
         var rp = _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, DateTime.Now.AddDays(2));
         var appoint =
             _appointmentFactory.CreateNewAppointment(thersp, patient, DateTime.Now,
                 "Patient needed some strong medication");
         var prescr = _prescriptionFactory.CreateNewPrescription(appoint, "Anti-stress pills", 30, 5.5m, "Hope it helps");
        
+        Assert.That(_personStorage.Count, Is.EqualTo(4));
+        Assert.That(_diagnosisStorage.Count, Is.EqualTo(2));
+        Assert.That(patient.Diagnoses.Count, Is.EqualTo(2));
+        Assert.That(_roomStorage.Count, Is.EqualTo(1));
+        Assert.That(nurse.Rooms.Count, Is.EqualTo(1));
+        Assert.That(room.Nurses.Count, Is.EqualTo(1));
+        Assert.That(_appointmentStorage.Count, Is.EqualTo(1));
+        Assert.That(_roomPatientStorage.Count, Is.EqualTo(1));
+        Assert.That(_prescriptionStorage.Count, Is.EqualTo(1));
+        
+        
         
         _storageManager.Serialize();
         _storageManager.Deserialize();

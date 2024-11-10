@@ -5,17 +5,12 @@ namespace Mental_Hospital.Validators;
 
 public class PatientValidator : AbstractValidator<Patient>
 {
-    public PatientValidator()
+    public PatientValidator(PersonValidator personValidator)
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessage("Name should not be empty.");
-        RuleFor(x => x.Surname).NotEmpty().WithMessage("Surname should not be empty.");
-        RuleFor(x => x.DateOfBirth).NotNull()
-            .Must(x => x != DateTime.MinValue)
-            .WithMessage("Specify date of birth");
+        Include(personValidator);
         RuleFor(x => new { x.DateOfBirth, x.DateOfDeath })
             .Must(x => IsBirthEarlierThanDeath( x.DateOfBirth, x.DateOfDeath))
             .WithMessage("Date of healing cannot be earlier that date of Diagnosing.");
-        RuleFor(x => x.Address).Length(10, 70).WithMessage("Address must be of length from 10 to 70 symbols.");
     }
 
     private bool IsBirthEarlierThanDeath(DateTime dateOfBirth, DateTime? dateOfDeath)

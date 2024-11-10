@@ -11,7 +11,7 @@ public class Nurse:Employee
 
     public static double BasicSalaryInZl { get; } = 6000;
     public static double OvertimePaidPerHourInZl { get; } = 50;
-    public List<Guid> IdsRooms{ get; set;  }=[];
+    public ICollection<Guid> IdsRooms{ get; set;  }=[];
 
     public override void RecalculateSalary()
     {

@@ -37,6 +37,7 @@ public class PersonFactory : IFactory
     public Nurse CreateNewNurse(Employee? supervisor, string name, string surname, DateTime dateOfBirth, string address)
     {
         var nurse = _provider.GetRequiredService<Nurse>();
+        nurse.IdPerson = Guid.NewGuid();
         nurse.Name = name;
         nurse.Surname = surname;
         nurse.Bonus = 0;
@@ -54,6 +55,7 @@ public class PersonFactory : IFactory
         IEnumerable<string> qualifications)
     {
         var therapist = _provider.GetRequiredService<Therapist>();
+        therapist.IdPerson = Guid.NewGuid();
         therapist.Name = name;
         therapist.Surname = surname;
         therapist.Bonus = 0;
@@ -64,7 +66,10 @@ public class PersonFactory : IFactory
         therapist.DateHired=DateTime.Today;
         therapist.DateOfBirth = dateOfBirth;
         therapist.Salary=therapist.Bonus+Therapist.BasicSalaryInZl+therapist.OvertimePerMonth*Therapist.OvertimePaidPerHourInZl;
-        therapist.Qualifications.AddRange(qualifications);
+        foreach (var q in qualifications)
+        {
+            therapist.Qualifications.Add(q);
+        }
         _personStorage.RegisterNew(therapist);
         return therapist;
     }

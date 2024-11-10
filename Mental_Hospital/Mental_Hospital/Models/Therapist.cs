@@ -7,7 +7,7 @@ public class Therapist:Employee
     
     public new static double BasicSalaryInZl = 10000;
     public new static double OvertimePaidPerHourInZl=70;
-    public List<string> Qualifications { get; } = [];
+    public ICollection<string> Qualifications { get; } = [];
     public ICollection<Guid> IdsPatients{ get; }= [];
     
     [JsonIgnore]

@@ -999,5 +999,4 @@ public class Tests
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Therapist does not exist.") , Is.EqualTo(1));
     }
-    
 }

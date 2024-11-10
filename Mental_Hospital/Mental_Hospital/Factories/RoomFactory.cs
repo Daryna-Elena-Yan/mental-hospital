@@ -15,11 +15,11 @@ public class RoomFactory : IFactory
         _storage = storage;
     }
 
-    public Room CreateNewRoom(int quantity)
+    public Room CreateNewRoom(int capacity)
     {
         var room = _provider.GetRequiredService<Room>();
         room.IdRoom = Guid.NewGuid();
-        room.Quantity = quantity;
+        room.Capacity = capacity;
         
         _storage.RegisterNew(room);
         

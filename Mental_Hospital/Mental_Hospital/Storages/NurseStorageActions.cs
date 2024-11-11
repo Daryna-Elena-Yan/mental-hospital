@@ -10,6 +10,7 @@ public class NurseStorageActions:IStorageAction<Nurse>
     public NurseStorageActions(Storage<Person> personStorage,Storage<Room> roomStorage)
     {
         _personStorage = personStorage;
+        _roomStorage = roomStorage;
     }
     public void OnDelete(Nurse item)
     {
@@ -34,13 +35,18 @@ public class NurseStorageActions:IStorageAction<Nurse>
 
     public void OnRestore(Nurse item)
     {
-        var person =(Employee) _personStorage.FindBy(x => x.IdPerson.Equals(item.IdSupervisor)).First();
-            item.Supervisor = person;
-            person.Subordinates.Add(item);
+        var foundPerson = _personStorage.FindBy(x => x.IdPerson.Equals(item.IdSupervisor)).FirstOrDefault();
+        if (foundPerson is not null)
+        {
+            var employee = foundPerson as Employee;
+              item.Supervisor = employee;
+              employee.Subordinates.Add(item);
+        }
+          
            
         foreach (var rid in item.IdsRooms)
         {
-            var room = _roomStorage.FindBy(x => x.IdRoom.Equals(rid)).First();
+            var room = _roomStorage.FindBy(x => x.IdRoom == rid).FirstOrDefault();
                 item.Rooms.Add(room);
                 room.Nurses.Add(item);
         }

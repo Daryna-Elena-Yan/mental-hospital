@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Reflection;
+using System.Text.Json;
+using Mental_Hospital.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Mental_Hospital.Storages;
@@ -49,14 +51,16 @@ public class Storage<T> : IStorage
 
     public void RestoreAllConnections()
     {
-        foreach (var obj in _list)
+        foreach ( dynamic obj in _list)
         {
+            var type = obj.GetType();
             RestoreObjectConnections(obj);
         }
     }
 
     private void RestoreObjectConnections<TS>(TS t) where TS : T
     {
+        var tsType = typeof(TS);
         var storageAction = _serviceProvider.GetService<IStorageAction<TS>>();
         if (storageAction is not null)
             storageAction?.OnRestore(t); 

@@ -13,6 +13,5 @@ public class Room : IEntity
     public virtual ICollection<Equipment> Equipments { get; } =[];
     
     [JsonIgnore]
-
     public virtual ICollection<RoomPatient> RoomPatients { get; } = [];
 }

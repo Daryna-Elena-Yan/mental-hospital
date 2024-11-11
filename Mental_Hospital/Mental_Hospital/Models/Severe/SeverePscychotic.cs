@@ -2,5 +2,5 @@
 
 public class SeverePsychotic : Severe
 {
-    public ICollection<string> Hallucinations { get; } = []; 
+    public ICollection<string> Hallucinations { get; set;} = []; 
 }

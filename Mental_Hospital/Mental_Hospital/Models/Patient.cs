@@ -4,8 +4,6 @@ namespace Mental_Hospital.Models;
 
 public class Patient : Person
 {
-
-
     public string Anamnesis { get; set; }
     public DateTime? DateOfDeath { get; set; }
     
@@ -21,4 +19,5 @@ public class Patient : Person
     [JsonIgnore]
     public virtual ICollection<Therapist> Therapists{ get; }= [];
 
+    
 }

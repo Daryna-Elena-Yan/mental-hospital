@@ -2,5 +2,5 @@
 
 public class SevereAnxiety : Severe
 {
-    public ICollection<string> Triggers { get; } = [];
+    public ICollection<string> Triggers { get; set;} = [];
 }

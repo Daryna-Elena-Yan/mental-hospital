@@ -2,5 +2,5 @@
 
 public class LightMood : Light
 {
-    public ICollection<string> ConsumedPsychedelics { get; } = [];
+    public ICollection<string> ConsumedPsychedelics { get; set; } = [];
 }

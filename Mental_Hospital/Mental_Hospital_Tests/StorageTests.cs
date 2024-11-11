@@ -1043,6 +1043,24 @@ public class Tests
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Patient does not exist.") , Is.EqualTo(1));
     }
+    [Test]
+    public void PrescriptionNullNameAttributeValidationTest()
+    {
+        var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
+            DateTime.Now,"Baker Street, 221B", []);
+        
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        
+        var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, 
+            "very important appointment for your live");
+        
+        var ex = Assert.Throws<ValidationException>(() => _prescriptionFactory.CreateNewPrescription(appointment, 
+            null!, 10, 0.02m, "very important prescription for your live"));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Please specify name.") , Is.EqualTo(1));
+    }
     
     [Test]
     public void PrescriptionEmptyNameAttributeValidationTest()
@@ -1163,4 +1181,39 @@ public class Tests
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Appointment does not exist.") , Is.EqualTo(1));
     }
+    
+    [Test]
+    public void EquipmentNullNameAttributeValidationTest()
+    {
+        
+        var ex = Assert.Throws<ValidationException>(() => 
+            _equipmentFactory.CreateNewEquipment(null!, DateTime.Today));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Please specify name.") , Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void EquipmentEmptyNameAttributeValidationTest()
+    {
+        
+        var ex = Assert.Throws<ValidationException>(() => 
+            _equipmentFactory.CreateNewEquipment("", DateTime.Today));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 1 characters long.") , Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void EquipmentNullExpirationDateAttributeValidationTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() => 
+            _equipmentFactory.CreateNewEquipment("Some stuff", DateTime.MinValue));
+
+        Assert.That(ex.Errors.Count(), Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of expiration."),
+            Is.EqualTo(1));
+
+    }
+    
 }

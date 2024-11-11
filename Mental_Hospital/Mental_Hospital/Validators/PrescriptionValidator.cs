@@ -10,7 +10,8 @@ public class PrescriptionValidator : AbstractValidator<Prescription>
     public PrescriptionValidator(Storage<Appointment> appointmentStorage)
     {
         _appointmentStorage = appointmentStorage;
-        RuleFor(x => x.Name).MinimumLength(1).WithMessage("Name should be at least 1 characters long.");
+        RuleFor(x => x.Name).NotNull().WithMessage("Please specify name.")
+            .MinimumLength(1).WithMessage("Name should be at least 1 characters long.");
         RuleFor(x => x.Quantity).GreaterThanOrEqualTo(0).WithMessage("Quantity must be greater than or equal to 0.");
         RuleFor(x => x.Dosage).GreaterThanOrEqualTo(0).WithMessage("Dosage must be greater than or equal to 0.");
         RuleFor(x => x.Description).Length(20, 500).WithMessage("Description should be from 20 to 500 symbols long.");

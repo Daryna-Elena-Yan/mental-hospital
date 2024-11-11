@@ -2,5 +2,5 @@
 
 public class LightAnxiety : Light
 {
-    public ICollection<string> Triggers { get; } = [];
+    public ICollection<string> Triggers { get; set; } = [];
 }

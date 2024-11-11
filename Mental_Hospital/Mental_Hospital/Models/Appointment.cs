@@ -22,11 +22,20 @@ public class Appointment : IEntity
         }
     }
 
-    [JsonIgnore] 
-    public virtual Therapist Therapist { get; set;  } = null!;
-    
     [JsonIgnore]
-    public Dictionary<int, Prescription> Prescriptions = new ();
+    public virtual Therapist Therapist
+    {
+        get => _therapist;
+        set
+        {
+            IdTherapist = value.IdPerson;
+            _therapist = value;
+        }
+    }
+
+    [JsonIgnore]
+    public Dictionary<int, Prescription> Prescriptions { get; set; } = new ();
 
     private Patient? _patient;
+    private Therapist _therapist = null!;
 }

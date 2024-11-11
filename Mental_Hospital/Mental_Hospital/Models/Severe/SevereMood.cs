@@ -2,5 +2,5 @@
 
 public class SevereMood : Severe
 {
-    public ICollection<string> ConsumedPsychedelics { get; } = [];
+    public ICollection<string> ConsumedPsychedelics { get; set;} = [];
 }

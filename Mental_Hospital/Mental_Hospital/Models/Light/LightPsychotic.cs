@@ -2,5 +2,5 @@
 
 public class LightPsychotic : Light
 {
-    public ICollection<string> Hallucinations { get; } = []; 
+    public ICollection<string> Hallucinations { get; set;} = []; 
 }

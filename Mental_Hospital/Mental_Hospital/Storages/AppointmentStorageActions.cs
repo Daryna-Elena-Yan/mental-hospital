@@ -32,8 +32,8 @@ public class AppointmentStorageActions : IStorageAction<Appointment>
     public void OnRestore(Appointment item)
     {
         var therapist = _personStorage.FindBy(x => x.IdPerson == item.IdTherapist).First() as Therapist;
-        item.Therapist = therapist!;
-        therapist!.Appointments.Add(item);
+        item.Therapist = therapist;
+        therapist?.Appointments.Add(item);
         
         var patient = _personStorage.FindBy(x => x.IdPerson == item.IdPatient).First() as Patient;
         if (patient is not null)

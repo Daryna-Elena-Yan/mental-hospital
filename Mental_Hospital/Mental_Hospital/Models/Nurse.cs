@@ -18,4 +18,10 @@ public class Nurse:Employee
     
     [JsonIgnore]
     public virtual ICollection<Room> Rooms { get; } = [];
+
+    public void AddRoom(Room room)
+    {
+        Rooms.Add(room);
+        IdsRooms.Add(room.IdRoom);
+    }
 }

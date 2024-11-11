@@ -11,6 +11,6 @@ public class EquipmentValidator : AbstractValidator<Equipment>
             .MinimumLength(1).WithMessage("Name should be at least 1 characters long.");
         RuleFor(x => x.ExpirationDate).NotNull()
             .Must(x => x != DateTime.MinValue)
-            .WithMessage("Specify date of expiration");
+            .WithMessage("Specify date of expiration.");
     }
 }

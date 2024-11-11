@@ -15,12 +15,14 @@ public class RoomPatientValidator : AbstractValidator<RoomPatient>
         _roomStorage = roomStorage;
         RuleFor(x => x.DatePlaced).NotNull()
             .Must(x => x != DateTime.MinValue)
-            .WithMessage("Specify date of being placed");
+            .WithMessage("Specify date of being placed.");
         RuleFor(x => new { x.DatePlaced, x.DateDischarged })
             .Must(x => IsPlacedEarlierThanDischarged(x.DatePlaced, x.DateDischarged))
             .WithMessage("Date of being placed cannot be earlier that date of being discharged.");
-        RuleFor(x => x.Patient).NotNull().Must(DoesPatientExist).WithMessage("Patient does not exist.");
-        RuleFor(x => x.Room).NotNull().Must(DoesRoomExist).WithMessage("Room does not exist.");
+        RuleFor(x => x.Patient).NotNull().WithMessage(("Patient is required."))
+            .Must(DoesPatientExist).WithMessage("Patient does not exist.");
+        RuleFor(x => x.Room).NotNull().NotNull().WithMessage(("Room is required."))
+            .Must(DoesRoomExist).WithMessage("Room does not exist.");
 
     }
     private bool IsPlacedEarlierThanDischarged(DateTime datePlaced, DateTime? dateDischarged)
@@ -28,12 +30,12 @@ public class RoomPatientValidator : AbstractValidator<RoomPatient>
         if (!dateDischarged.HasValue) return true;
         return dateDischarged.Value.CompareTo(datePlaced) > 0;
     }
-    private bool DoesRoomExist(Room room )
+    private bool DoesRoomExist(Room? room )
     {
-        return _roomStorage.FindBy(x => x.IdRoom == room.IdRoom).Any();
+        return room is null ? true : _roomStorage.FindBy(x => x.IdRoom == room.IdRoom).Any();
     } 
-    private bool DoesPatientExist(Patient patient)
+    private bool DoesPatientExist(Patient? patient)
     {
-        return _personStorage.FindBy(x => x.IdPerson == patient.IdPerson).Any();
+        return patient is null ? true : _personStorage.FindBy(x => x.IdPerson == patient.IdPerson).Any();
     } 
 }

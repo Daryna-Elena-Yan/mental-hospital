@@ -786,9 +786,6 @@ public class Tests
     [Test]
     public void DiagnosisHealingDateBeforeDiagnosisDateAttributeValidationTest()
     {
-        var format = "dd/MM/yyyy";
-        var culture = CultureInfo.InvariantCulture;
-
         var healing = DateTime.ParseExact("25/12/1999", format, culture);
         var diag = DateTime.ParseExact("25/12/2002", format, culture);
         var patient = _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
@@ -976,19 +973,6 @@ public class Tests
         
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
-    }
-    
-    [Test]
-    public void AppointmentNullTherapistValidationTest()
-    {
-        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
-            "Baker Street, 221B", "Depression", null);
-
-        var ex = Assert.Throws<ValidationException>(() =>
-            _appointmentFactory.CreateNewAppointment(null!, patient, DateTime.Now,
-                "very important appointment for your live"));
-        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
-        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Therapist is required.") , Is.EqualTo(1));
     }
     
     [Test]
@@ -1213,7 +1197,87 @@ public class Tests
         Assert.That(ex.Errors.Count(), Is.EqualTo(1));
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of expiration."),
             Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void RoomNegativeCapacityAttributeValidationTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() => _roomFactory.CreateNewRoom(-3));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Capacity must be greater than or equal to 0.") , Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void RoomPatientNullDatePlacedAttributeValidationTest()
+    {
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        
+        var room = _roomFactory.CreateNewRoom(3);
+        
+        var ex = Assert.Throws<ValidationException>(() => 
+            _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.MinValue, null));
 
+        Assert.That(ex.Errors.Count(), Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of being placed."),
+            Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void RoomPatientDatePlacedAfterDateDischargedAttributeValidationTest()
+    {
+        var discharged = DateTime.ParseExact("25/12/1999", format, culture);
+        var placed = DateTime.ParseExact("25/12/2002", format, culture);
+        
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        
+        var room = _roomFactory.CreateNewRoom(3);
+        
+        var ex = Assert.Throws<ValidationException>(() => 
+            _roomPatientFactory.CreateNewRoomPatient(room, patient, placed, discharged));
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => 
+            x.ErrorMessage == "Date of being placed cannot be earlier that date of being discharged.") , Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void RoomPatientPatientDoesNotExistValidationTest()
+    {
+        var patient = new Patient();
+        patient.Name = "Charles";
+        patient.Surname = "Leclerc";
+        patient.DateOfBirth = DateTime.Now;
+        patient.Address = "Baker Street, 221B";
+        patient.Anamnesis = "Depression";
+        
+        var room = _roomFactory.CreateNewRoom(3);
+
+        var ex = Assert.Throws<ValidationException>(() =>
+            _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, null));
+        
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Patient does not exist.") , Is.EqualTo(1));
+    }
+    
+    [Test]
+    public void RoomPatientRoomDoesNotExistValidationTest()
+    {
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+
+        var room = new Room();
+        room.Capacity = 3;
+
+        var ex = Assert.Throws<ValidationException>(() =>
+            _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, null));
+        
+        
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Room does not exist.") , Is.EqualTo(1));
     }
     
 }

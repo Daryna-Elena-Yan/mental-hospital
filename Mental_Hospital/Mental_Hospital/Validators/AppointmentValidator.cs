@@ -15,7 +15,7 @@ public class AppointmentValidator : AbstractValidator<Appointment>
         RuleFor(x => x.DateOfAppointment).NotNull()
             .Must(x => x != DateTime.MinValue).WithMessage("Specify date of appointment.");;
         RuleFor(x => x.Description).Length(20, 500).WithMessage("Description should be from 20 to 500 symbols long.");
-        RuleFor(x => x.Therapist).NotNull().WithMessage(("Therapist is required."))
+        RuleFor(x => x.Therapist).NotNull().WithMessage("Therapist is required.")
             .Must(DoesTherapistExist).WithMessage("Therapist does not exist.");
         RuleFor(x => x.Patient).Custom((patient, context) => {
                 if (patient != null) {

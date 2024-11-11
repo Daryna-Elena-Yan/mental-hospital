@@ -670,7 +670,7 @@ public class Tests
             "cases of selfharm in the past", null));
         
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
-        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should ba at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 2 characters long.") , Is.EqualTo(1));
             
     }
     
@@ -681,7 +681,7 @@ public class Tests
             "cases of selfharm in the past", null));
         
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
-        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should ba at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should be at least 2 characters long.") , Is.EqualTo(1));
             
     }
     [Test]
@@ -827,7 +827,7 @@ public class Tests
         });
         
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
-        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should ba at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 2 characters long.") , Is.EqualTo(1));
     }
     
     [Test]
@@ -1230,7 +1230,7 @@ public class Tests
             _equipmentFactory.CreateNewEquipment("Some stuff", DateTime.MinValue));
 
         Assert.That(ex.Errors.Count(), Is.EqualTo(1));
-        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of expiration."),
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of expiration"),
             Is.EqualTo(1));
 
     }

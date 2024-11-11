@@ -34,7 +34,7 @@ public class Appointment : IEntity
     }
 
     [JsonIgnore]
-    public Dictionary<int, Prescription> Prescriptions { get; set; } = new ();
+    public Dictionary<Guid, Prescription> Prescriptions { get; set; } = new ();
 
     private Patient? _patient;
     private Therapist _therapist = null!;

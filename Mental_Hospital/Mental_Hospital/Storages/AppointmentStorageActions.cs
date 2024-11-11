@@ -16,9 +16,9 @@ public class AppointmentStorageActions : IStorageAction<Appointment>
         if(appointment.Patient is not null)
             appointment.Patient.Appointments.Remove(appointment);
         
-        foreach (int hash in appointment.Prescriptions.Keys)
+        foreach (Guid qualifier in appointment.Prescriptions.Keys)
         {
-            appointment.Prescriptions[hash].Appointment = null;
+            appointment.Prescriptions[qualifier].Appointment = null;
         }
     }
 
@@ -32,7 +32,7 @@ public class AppointmentStorageActions : IStorageAction<Appointment>
     public void OnRestore(Appointment item)
     {
         var therapist = _personStorage.FindBy(x => x.IdPerson == item.IdTherapist).First() as Therapist;
-        item.Therapist = therapist;
+        item.Therapist = therapist!;
         therapist?.Appointments.Add(item);
         
         var patient = _personStorage.FindBy(x => x.IdPerson == item.IdPatient).First() as Patient;

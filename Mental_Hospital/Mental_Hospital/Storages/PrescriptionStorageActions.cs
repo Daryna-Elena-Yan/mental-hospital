@@ -12,20 +12,20 @@ public class PrescriptionStorageActions : IStorageAction<Prescription>
     public void OnDelete(Prescription item)
     {
         if(item.Appointment is not null)
-            item.Appointment.Prescriptions.Remove(item.GetHashCode());
+            item.Appointment.Prescriptions.Remove(item.IdPrescription);
     }
 
     public void OnAdd(Prescription item)
     {
         if(item.Appointment is not null)
-            item.Appointment.Prescriptions.Add(item.GetHashCode(), item);
+            item.Appointment.Prescriptions.Add(item.IdPrescription, item);
     }
 
     public void OnRestore(Prescription item)
     {
         var appointment = _appointmentStorage.FindBy(x => x.IdAppointment == item.IdAppointment).First();
         item.Appointment = appointment;
-        appointment.Prescriptions.Add(item.GetHashCode(), item);
+        appointment.Prescriptions.Add(item.IdPrescription, item);
     }
 
 

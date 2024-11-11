@@ -24,4 +24,5 @@ public class Prescription : IEntity
             _appointment = value;
         }
     }
+
 }

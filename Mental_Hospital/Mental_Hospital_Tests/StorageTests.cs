@@ -1170,10 +1170,10 @@ public class Tests
     }
     
     [Test]
-    public void PrescriptionTherapistDoesNotExistValidationTest()
+    public void PrescriptionAppointmentDoesNotExistValidationTest()
     {
         var appointment = new Appointment();
-        appointment.Therapist = null!;
+        appointment.Therapist = new Therapist();
         appointment.Patient = null;
         appointment.DateOfAppointment = DateTime.Now;
         appointment.Description = "very important appointment for your live";
@@ -1214,7 +1214,7 @@ public class Tests
             _equipmentFactory.CreateNewEquipment("Some stuff", DateTime.MinValue));
 
         Assert.That(ex.Errors.Count(), Is.EqualTo(1));
-        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of expiration"),
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of expiration."),
             Is.EqualTo(1));
     }
     

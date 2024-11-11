@@ -657,10 +657,6 @@ public class Tests
         therapist.AddPatient(patient1);
         therapist.AddPatient(patient2);
         therapist.AddPatient(patient3);
-        foreach (var patient in therapist.Patients)
-        {
-            therapist.IdsPatients.Add(patient.IdPerson);
-        }
         _storageManager.Serialize();
         _personStorage.Delete(therapist);
         _personStorage.Delete(patient1);
@@ -672,6 +668,51 @@ public class Tests
         Assert.That((_personStorage.FindBy(x=>x.IdPerson==patient2.IdPerson).First()as Patient)?.Therapists.Count,Is.EqualTo(1));
         Assert.That((_personStorage.FindBy(x=>x.IdPerson==patient3.IdPerson).First()as Patient)?.Therapists.Count,Is.EqualTo(1));
     }
+    [Test]
+    public void NurseConnectionsTest()
+    {
+        var nurse =
+            _personFactory.CreateNewNurse(null, "horoshii", "doctor", DateTime.Now, "korobochka");
+        var room1 = _roomFactory.CreateNewRoom(3);
+        var room2 = _roomFactory.CreateNewRoom(2);
+        var room3 = _roomFactory.CreateNewRoom(1);
+        
+        nurse.AddRoom(room1);
+        nurse.AddRoom(room2);
+        nurse.AddRoom(room3);
+        _storageManager.Serialize();
+        _personStorage.Delete(nurse);
+        _roomStorage.Delete(room2);
+        _roomStorage.Delete(room1);
+        _roomStorage.Delete(room3);
+        _storageManager.Deserialize();
+        Assert.That((_personStorage.FindBy(x=>x.IdPerson==nurse.IdPerson).First()as Nurse)?.Rooms.Count,Is.EqualTo(3));
+        Assert.That((_roomStorage.FindBy(x=>x.IdRoom==room1.IdRoom).First())?.Nurses.Count,Is.EqualTo(1));
+        Assert.That((_roomStorage.FindBy(x=>x.IdRoom==room2.IdRoom).First())?.Nurses.Count,Is.EqualTo(1));
+        Assert.That((_roomStorage.FindBy(x=>x.IdRoom==room3.IdRoom).First())?.Nurses.Count,Is.EqualTo(1));
+        }
+    [Test]
+    public void NurseConnectionsNonDeletedTest()
+    {
+        var nurse =
+            _personFactory.CreateNewNurse(null, "horoshii", "doctor", DateTime.Now, "korobochka");
+        var room1 = _roomFactory.CreateNewRoom(3);
+        var room2 = _roomFactory.CreateNewRoom(2);
+        var room3 = _roomFactory.CreateNewRoom(1);
+        
+        nurse.AddRoom(room1);
+        nurse.AddRoom(room2);
+        nurse.AddRoom(room3);
+        _storageManager.Serialize();
+        _storageManager.Deserialize();
+        Assert.That(_personStorage.Count,Is.EqualTo(1));
+        Assert.That(_roomStorage.Count,Is.EqualTo(3));
+
+        Assert.That((_personStorage.FindBy(x=>x.IdPerson==nurse.IdPerson).First()as Nurse)?.Rooms.Count,Is.EqualTo(3));
+        Assert.That((_roomStorage.FindBy(x=>x.IdRoom==room1.IdRoom).First())?.Nurses.Count,Is.EqualTo(1));
+        Assert.That((_roomStorage.FindBy(x=>x.IdRoom==room2.IdRoom).First())?.Nurses.Count,Is.EqualTo(1));
+        Assert.That((_roomStorage.FindBy(x=>x.IdRoom==room3.IdRoom).First())?.Nurses.Count,Is.EqualTo(1));
+        }
     [Test]
     public void TherapistConnectionsNonDeletedTest()
     {
@@ -686,10 +727,6 @@ public class Tests
         therapist.AddPatient(patient1);
         therapist.AddPatient(patient2);
         therapist.AddPatient(patient3);
-        foreach (var patient in therapist.Patients)
-        {
-            therapist.IdsPatients.Add(patient.IdPerson);
-        }
         _storageManager.Serialize();
         _storageManager.Deserialize();
         Assert.That(_personStorage.Count,Is.EqualTo(4));

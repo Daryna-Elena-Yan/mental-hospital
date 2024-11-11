@@ -9,7 +9,7 @@ public class Therapist : Employee
     public new static double OvertimePaidPerHourInZl=70;
     
     public List<string> Qualifications { get; set; } = [];
-    public List<Guid> IdsPatients{ get; set; }= [];
+    public ICollection<Guid> IdsPatients{ get; set; }= [];
     
     [JsonIgnore]
     public virtual ICollection<Appointment> Appointments { get; set; } = [];

@@ -11,11 +11,16 @@ public class PersonFactory : IFactory
     private readonly IServiceProvider _provider;
     private readonly Storage<Person> _personStorage;
     private readonly PatientValidator _patientValidator;
+    private readonly TherapistValidator _therapistValidator;
+    private readonly NurseValidator _nurseValidator;
 
-    public PersonFactory(IServiceProvider provider,  PatientValidator patientValidator, Storage<Person> personStorage) {
+
+    public PersonFactory(IServiceProvider provider,  PatientValidator patientValidator, TherapistValidator therapistValidator, NurseValidator nurseValidator, Storage<Person> personStorage) {
         _provider = provider;
         _patientValidator = patientValidator;
         _personStorage = personStorage;
+        _therapistValidator = therapistValidator;
+        _nurseValidator = nurseValidator;
     }
 
     public Patient CreateNewPatient(string name, string surname, DateTime dateOfBirth, string address, 
@@ -48,6 +53,7 @@ public class PersonFactory : IFactory
         nurse.DateHired=DateTime.Today;
         nurse.DateOfBirth = dateOfBirth;
         nurse.Salary=nurse.Bonus+Nurse.BasicSalaryInZl+nurse.OvertimePerMonth*Nurse.OvertimePaidPerHourInZl;
+        _nurseValidator.ValidateAndThrow(nurse);
         _personStorage.RegisterNew(nurse);
         return nurse;
     }
@@ -66,10 +72,13 @@ public class PersonFactory : IFactory
         therapist.DateHired=DateTime.Today;
         therapist.DateOfBirth = dateOfBirth;
         therapist.Salary=therapist.Bonus+Therapist.BasicSalaryInZl+therapist.OvertimePerMonth*Therapist.OvertimePaidPerHourInZl;
-        foreach (var q in qualifications)
+        if(qualifications is not null)
+        {foreach (var q in qualifications)
         {
             therapist.Qualifications.Add(q);
-        }
+        }}
+
+        _therapistValidator.ValidateAndThrow(therapist);
         _personStorage.RegisterNew(therapist);
         return therapist;
     }

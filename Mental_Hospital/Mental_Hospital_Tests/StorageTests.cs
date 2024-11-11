@@ -9,6 +9,7 @@ using Mental_Hospital.Services;
 using Mental_Hospital.Storages;
 using Mental_Hospital.Validators;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Mental_Hospital_Tests;
 
@@ -76,25 +77,26 @@ public class Tests
     [Test]
     public void TherapistCreationAndAttributesTest()
     {
-        var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Today,"korobka", []);
+        var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Today,"korobkaaaaaa", ["s"]);
         Assert.Multiple(() =>
         {
             Assert.That(_personStorage.Count, Is.EqualTo(1));
             Assert.That(therapist1.Name, Is.EqualTo("frst"));
             Assert.That(therapist1.Bonus, Is.EqualTo(0));
-            Assert.That(therapist1.Address, Is.EqualTo("korobka"));
+            Assert.That(therapist1.Address, Is.EqualTo("korobkaaaaaa"));
             Assert.That(therapist1.Surname, Is.EqualTo("frstovich"));
             Assert.That(therapist1.DateHired, Is.EqualTo(DateTime.Today));
             Assert.That(therapist1.Supervisor, Is.Null);
             Assert.That(therapist1.DateOfBirth, Is.EqualTo(DateTime.Today));
-            Assert.That(therapist1.Qualifications, Is.EqualTo(new List<string>()));
+            List<string> l = ["s"];
+            Assert.That(therapist1.Qualifications, Is.EqualTo(l));
             Assert.That(therapist1.OvertimePerMonth, Is.EqualTo(0));
         });
     }
     [Test]
     public void TherapistStaticDerivedTest()
     {
-        var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobka", []);
+        var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaaa", ["d"]);
         therapist1.Bonus = 20;
         therapist1.OvertimePerMonth = 3;
         therapist1.RecalculateSalary();
@@ -126,7 +128,7 @@ public class Tests
     [Test]
     public void NurseStaticDerivedTest()
     {
-        var nurse =  _personFactory.CreateNewNurse(null, "frst", "frstovich", DateTime.Now,"korobka");
+        var nurse =  _personFactory.CreateNewNurse(null, "frst", "frstovich", DateTime.Now,"korobkaaaaaaaaaaaaa");
         nurse.Bonus = 20;
         nurse.OvertimePerMonth = 3;
         nurse.RecalculateSalary();
@@ -139,7 +141,7 @@ public class Tests
     [Test]
     public void TherapistDeletionTest()
     {
-        var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobka", []);
+        var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaaa", ["s"]);
         Assert.That(_personStorage.Count, Is.EqualTo(1));
         _personStorage.Delete(therapist1);
         Assert.That(_personStorage.Count, Is.EqualTo(0));
@@ -147,8 +149,8 @@ public class Tests
     [Test]
     public void TherapistWithSupervisorCreationTest()
     {
-        var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobka", []);
-        var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", []);
+        var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaaaa", ["d"]);
+        var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", ["d"]);
         Assert.Multiple(() =>
         {
             Assert.That(therapist1.Subordinates, Has.Count.EqualTo(1));
@@ -159,8 +161,8 @@ public class Tests
     [Test]
     public void TherapistWithSupervisorDeletionTest()
     {
-        var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobka", []);
-        var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", []);
+        var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaa", ["s"]);
+        var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", ["s"]);
         Assert.Multiple(() =>
         {
             Assert.That(therapist1.Subordinates.Count, Is.EqualTo(1));
@@ -355,7 +357,7 @@ public class Tests
     public void AppointmentStorageRegisterTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         
@@ -374,8 +376,8 @@ public class Tests
     [Test]
     public void TherapistWithSupervisorAndAppointmentCreationTest()
         {
-            var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobka", []);
-            var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", []);
+            var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaaaa", ["d"]);
+            var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", ["d"]);
             var appointment = _appointmentFactory.CreateNewAppointment(therapist2, null, DateTime.Now, 
                 "very important appointment for your live");
         Assert.Multiple(() =>
@@ -393,7 +395,7 @@ public class Tests
     public void AppointmentStorageDeleteTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         
@@ -423,8 +425,8 @@ public class Tests
     [Test]
         public void TherapistWithSupervisorAndAppointmentDeletionTest()
         {
-            var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobka", []);
-            var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", []);
+            var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobochkaka", ["d"]);
+            var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", ["d"]);
             var appointment = _appointmentFactory.CreateNewAppointment(therapist2, null, DateTime.Now, 
                 "very important appointment for your live");
         Assert.Multiple(() =>
@@ -451,7 +453,7 @@ public class Tests
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now,
             "very important appointment for your live");
@@ -480,7 +482,7 @@ public class Tests
     public void PrescriptionStorageRegisterTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         
@@ -511,7 +513,7 @@ public class Tests
     public void PrescriptionStorageDeleteTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         
@@ -552,8 +554,8 @@ public class Tests
     [Test]
             public void TherapistWithSupervisorAndAppointmentAndPrescriptionDeletionTest()
             {
-                var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobka", []);
-                var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", []);
+                var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaaaaaa", ["d"]);
+                var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", ["D"]);
                 var appointment = _appointmentFactory.CreateNewAppointment(therapist2, null, DateTime.Now, 
                     "very important appointment for your live"); 
                 var prescription = _prescriptionFactory.CreateNewPrescription(appointment, "stay strong", 30, 0.02m,
@@ -581,7 +583,7 @@ public class Tests
     public void AppointmentStorageDeleteWithPrescriptionTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         
@@ -882,7 +884,7 @@ public class Tests
             new[] { "finished high school" });
         thersp.AddPatient(patient);
         patient.Therapists.Add(thersp);
-        var nurse = _personFactory.CreateNewNurse(null, "Pomogite", "Pomogovich", DateTime.Now, "Korobusik");
+        var nurse = _personFactory.CreateNewNurse(null, "Pomogite", "Pomogovich", DateTime.Now, "Korobusikaaaa");
         var nurse2 = _personFactory.CreateNewNurse(thersp, "Lewis", "Hamilton", DateTime.Now, "Monte-Carlo, Monaco");
         room.Nurses.Add(nurse);
         nurse.AddRoom(room);
@@ -945,7 +947,7 @@ public class Tests
     public void AppointmentNullDateOfAppointmentAttributeValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -964,7 +966,7 @@ public class Tests
     public void AppointmentShortDescriptionAttributeValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["g"]);
         
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -981,7 +983,7 @@ public class Tests
     public void AppointmentLongDescriptionAttributeValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -1019,7 +1021,7 @@ public class Tests
     public void AppointmentNullPatientValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
 
         Assert.DoesNotThrow(() => _appointmentFactory.CreateNewAppointment(therapist, null, DateTime.Now,
                 "very important appointment for your live"));
@@ -1029,7 +1031,7 @@ public class Tests
     public void AppointmentPatientDoesNotExistValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         
         var patient = new Patient();
         patient.Name = "Charles";
@@ -1050,7 +1052,7 @@ public class Tests
     public void PrescriptionNullNameAttributeValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -1069,7 +1071,7 @@ public class Tests
     public void PrescriptionEmptyNameAttributeValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -1083,12 +1085,132 @@ public class Tests
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 1 characters long.") , Is.EqualTo(1));
     }
-    
+    [Test]
+    public void EmployeeNameTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() => 
+            _personFactory.CreateNewNurse(null, "1", "helpovich", DateTime.Now, "korobochka_lesnaya"));
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 2 characters long.") , Is.EqualTo(1));
+    }
+    [Test]
+    public void EmployeeSurnameTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() =>
+            _personFactory.CreateNewNurse(null, "1", "2", DateTime.Now, "korobochka"));
+        Assert.That(ex.Errors.Count() , Is.EqualTo(2));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should be at least 2 characters long.") , Is.EqualTo(1));
+    }
+    [Test]
+    public void EmployeeBDayTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() =>
+            _personFactory.CreateNewNurse(null, "1", "2",DateTime.MinValue, "korobochka"));
+        Assert.That(ex.Errors.Count() , Is.EqualTo(3));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should be at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of birth") , Is.EqualTo(1));
+    }
+    [Test]
+    public void EmployeeAddressTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() =>
+            _personFactory.CreateNewNurse(null, "1", "2",DateTime.MinValue, "korobka"));
+        Assert.That(ex.Errors.Count() , Is.EqualTo(4));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should be at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of birth") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Address must be of length from 10 to 70 symbols.") , Is.EqualTo(1));
+    }
+    [Test]
+    public void TherapistQualificationsTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() =>
+            _personFactory.CreateNewTherapist(null, "1", "2",DateTime.MinValue, "korobka",[]));
+        Assert.That(ex.Errors.Count() , Is.EqualTo(5));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should be at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of birth") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Address must be of length from 10 to 70 symbols.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Therapist must have at least one qualification.") , Is.EqualTo(1));
+    }
+
+    [Test]
+    public void FakeSupervisorTest()
+    {
+        var fake = new Therapist();
+        fake.IdPerson = new Guid();
+        fake.Appointments = [];
+        fake.Bonus = 0;
+        fake.DateOfBirth = DateTime.Now;
+        fake.OvertimePerMonth = 0;
+        fake.Patients = [];
+        fake.Qualifications = [];
+        fake.Address = "korobishcheee";
+        fake.IdsPatients = [];
+        fake.Name = "cccc";
+        fake.Supervisor = null;
+        fake.Salary = 0;
+        fake.Subordinates = [];
+        fake.DateHired = DateTime.Now;
+        fake.DateFired = null;
+        fake.IdSupervisor = null;
+        var ex = Assert.Throws<ValidationException>((() => 
+            _personFactory.CreateNewNurse(fake, "ddddd", "ddd", DateTime.Now, "korobochka")));
+        Assert.That(ex.Errors.Count(),Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x=>x.ErrorMessage=="No such employee found."),Is.EqualTo(1));
+    }
+    [Test]
+    public void TherapistNullQualificationsTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() =>
+            _personFactory.CreateNewTherapist(null, "1", "2",DateTime.MinValue, "korobka",null!));
+        Assert.That(ex.Errors.Count() , Is.EqualTo(5));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should be at least 2 characters long.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of birth") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Address must be of length from 10 to 70 symbols.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Therapist must have at least one qualification.") , Is.EqualTo(1));
+    }
+    [Test]
+    public void EmployeeNullSupervisorTest()
+    {
+        Assert.DoesNotThrow(() =>
+            _personFactory.CreateNewTherapist(null, "12", "22",DateTime.Now, "korobochka",["medal"]));
+    }
+    [Test]
+    public void EmployeeNullNameTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() =>
+            _personFactory.CreateNewNurse(null, null!, "helpovich", DateTime.Now, "korobochka_lesnaya"));
+        Assert.That(ex.Errors.Count() , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name cannot be null.") , Is.EqualTo(1));
+    }
+    [Test]
+    public void EmployeeNullSurnameTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() =>
+            _personFactory.CreateNewNurse(null, null!, null!, DateTime.Now, "korobochka_lesnaya"));
+        Assert.That(ex.Errors.Count() , Is.EqualTo(2));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name cannot be null.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname cannot be null.") , Is.EqualTo(1));
+    }
+    [Test]
+    public void EmployeeNullAddressTest()
+    {
+        var ex = Assert.Throws<ValidationException>(() =>
+            _personFactory.CreateNewNurse(null, null!, null!, DateTime.Now, null!));
+        Assert.That(ex.Errors.Count() , Is.EqualTo(3));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name cannot be null.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname cannot be null.") , Is.EqualTo(1));
+        Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Address cannot be null.") , Is.EqualTo(1));
+    }
     [Test]
     public void PrescriptionNegativeQuantityAttributeValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -1107,7 +1229,7 @@ public class Tests
     public void PrescriptionNegativeDosageAttributeValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -1127,7 +1249,7 @@ public class Tests
     {
         
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -1147,7 +1269,7 @@ public class Tests
     {
         
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
-            DateTime.Now,"Baker Street, 221B", []);
+            DateTime.Now,"Baker Street, 221B", ["d"]);
         
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);

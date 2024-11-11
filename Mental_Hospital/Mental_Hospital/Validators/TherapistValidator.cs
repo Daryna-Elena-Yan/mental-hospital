@@ -9,6 +9,7 @@ public class TherapistValidator : AbstractValidator<Therapist>
     {
         Include(employeeValidator);
         RuleFor(x => x.Qualifications).NotEmpty().WithMessage("Therapist must have at least one qualification.");
-        RuleFor(x => x.Supervisor).Must(x => x is Therapist);
+        RuleFor(x => x.Supervisor).Must(x => x is Therapist or null)
+            .WithMessage("Therapist supervisor cannot be a nurse.");
     }
 }

@@ -12,10 +12,10 @@ public class Therapist : Employee
     public List<Guid> IdsPatients{ get; set; }= [];
     
     [JsonIgnore]
-    public virtual ICollection<Appointment> Appointments { get; } = [];
+    public virtual ICollection<Appointment> Appointments { get; set; } = [];
     
     [JsonIgnore]
-    public virtual ICollection<Patient> Patients{ get; }=[];
+    public virtual ICollection<Patient> Patients { get; set; } =[];
     public override void RecalculateSalary()
     {
         this.Salary=this.Bonus+BasicSalaryInZl+this.OvertimePerMonth*OvertimePaidPerHourInZl;

@@ -62,16 +62,16 @@ public class Tests
         _storageManager = provider.GetRequiredService<StorageManager>();
     }
 
-    [Test]
-    public void PersonStorageRegisterTest()
+    [Test, Category("Patient"), Category("Register")]
+    public void PatientRegisterTest()
     {
         _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
         Assert.That(_personStorage.Count, Is.EqualTo(1));
     }
     
-    [Test]
-    public void TherapistCreationAndAttributesTest()
+    [Test, Category("Therapist"), Category("Register")]
+    public void TherapistRegisterTest()
     {
         var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Today,"korobkaaaaaa", ["s"]);
         Assert.Multiple(() =>
@@ -89,8 +89,9 @@ public class Tests
             Assert.That(therapist1.OvertimePerMonth, Is.EqualTo(0));
         });
     }
-    [Test]
-    public void TherapistStaticDerivedTest()
+    
+    [Test, Category("Therapist"), Category("Register")]
+    public void TherapistStaticDerivedRegisterTest()
     {
         var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaaa", ["d"]);
         therapist1.Bonus = 20;
@@ -103,15 +104,15 @@ public class Tests
         });
     }
 
-    [Test]
-    public void NurseCreateTest()
+    [Test, Category("Nurse"), Category("Register")]
+    public void NurseRegisterTest()
     {
         var nurse = _personFactory.CreateNewNurse(null, "aaa", "AAA", DateTime.Today, "korobochka");
         Assert.That(_personStorage.Count,Is.EqualTo(1));
         var room = _roomFactory.CreateNewRoom(3);
     }
 
-    [Test]
+    [Test, Category("Nurse"), Category("Delete")]
     public void NurseDeleteTest()
     {
         var nurse = _personFactory.CreateNewNurse(null, "aaa", "AAA", DateTime.Today, "korobochka");
@@ -121,8 +122,8 @@ public class Tests
     }
 
     
-    [Test]
-    public void NurseStaticDerivedTest()
+    [Test, Category("Nurse"), Category("Register")]
+    public void NurseStaticDerivedRegisterTest()
     {
         var nurse =  _personFactory.CreateNewNurse(null, "frst", "frstovich", DateTime.Now,"korobkaaaaaaaaaaaaa");
         nurse.Bonus = 20;
@@ -134,16 +135,18 @@ public class Tests
             Assert.That(nurse.Salary, Is.EqualTo(6170));
         });
     }
-    [Test]
-    public void TherapistDeletionTest()
+    
+    [Test, Category("Therapist"), Category("Delete")]
+    public void TherapistDeleteTest()
     {
         var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaaa", ["s"]);
         Assert.That(_personStorage.Count, Is.EqualTo(1));
         _personStorage.Delete(therapist1);
         Assert.That(_personStorage.Count, Is.EqualTo(0));
-}
-    [Test]
-    public void TherapistWithSupervisorCreationTest()
+    }
+    
+    [Test, Category("Therapist"), Category("Register")]
+    public void TherapistWithSupervisorRegisterTest()
     {
         var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaaaa", ["d"]);
         var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", ["d"]);
@@ -154,8 +157,9 @@ public class Tests
             Assert.That(_personStorage.Count, Is.EqualTo(2));
         });
     }
-    [Test]
-    public void TherapistWithSupervisorDeletionTest()
+    
+    [Test, Category("Therapist"), Category("Delete")]
+    public void TherapistWithSupervisorDeleteTest()
     {
         var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaa", ["s"]);
         var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", ["s"]);
@@ -173,8 +177,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void AddNewDiagnosisTest()
+    [Test, Category("Diagnosis"), Category("Register")]
+    public void DiagnosisRegisterTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -188,8 +192,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void DeleteDiagnosisTest()
+    [Test, Category("Diagnosis"), Category("Delete")]
+    public void DiagnosisDeleteTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -200,12 +204,12 @@ public class Tests
         Assert.That(patient.Diagnoses.Where(x => x == diagnosis).Count, Is.EqualTo(0));
     }
     
-    [Test]
-    public void PatientStorageDeleteWithDiagnosesTest()
+    [Test, Category("Patient"), Category("Delete")]
+    public void PatientWithDiagnosesDeleteTest()
     {
-      var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-      var diagnosis = _diagnosisFactory.CreateNewLightAnxiety
+        var diagnosis = _diagnosisFactory.CreateNewLightAnxiety
           (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null, true);
         Assert.Multiple(() =>
         {
@@ -223,28 +227,32 @@ public class Tests
         });
     }
     
-    [Test]
-    public void RoomStorageRegisterTest()
+    [Test, Category("Room"), Category("Register")]
+    public void RoomRegisterTest()
     {
         _roomFactory.CreateNewRoom(3);
         Assert.That(_roomStorage.Count, Is.EqualTo(1));
     }
-    [Test]
-         public void NurseWithRoomsCreateTest()
-         {
-             var nurse = _personFactory.CreateNewNurse(null, "aaa", "AAA", DateTime.Today, "korobochka");
-             Assert.That(_personStorage.Count,Is.EqualTo(1));
-             var room =_roomFactory.CreateNewRoom(3);
-             nurse.Rooms.Add(room);
-             room.Nurses.Add(nurse);
-             Assert.That(nurse.Rooms.Count,Is.EqualTo(1));
-             Assert.That(room.Nurses.Count,Is.EqualTo(1));
-             _personStorage.Delete(nurse);
-             Assert.That(room.Nurses.Count,Is.EqualTo(0));
-         }
     
-    [Test]
-    public void RoomStorageDeleteTest()
+    [Test, Category("Nurse"), Category("Register")]
+    public void NurseWithRoomsRegisterTest()
+    {
+        var nurse = _personFactory.CreateNewNurse(null, "aaa", "AAA", DateTime.Today, "korobochka");
+        Assert.That(_personStorage.Count,Is.EqualTo(1));
+        var room =_roomFactory.CreateNewRoom(3);
+        nurse.Rooms.Add(room);
+        room.Nurses.Add(nurse);
+
+        Assert.That(nurse.Rooms.Count,Is.EqualTo(1));
+        Assert.That(room.Nurses.Count,Is.EqualTo(1));
+
+        _personStorage.Delete(nurse);
+
+        Assert.That(room.Nurses.Count,Is.EqualTo(0));
+    }
+    
+    [Test, Category("Room"), Category("Delete")]
+    public void RoomDeleteTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -270,8 +278,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void RoomPatientStorageRegisterTest()
+    [Test, Category("RoomPatient"), Category("Register")]
+    public void RoomPatientRegisterTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -289,8 +297,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void RoomPatientStorageDeleteTest()
+    [Test, Category("RoomPatient"), Category("Delete")]
+    public void RoomPatientDeleteTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -320,8 +328,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void PatientStorageDeleteWithRoomPatientTest()
+    [Test, Category("Patient"), Category("Delete")]
+    public void PatientWithRoomPatientDeleteTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -349,8 +357,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void AppointmentStorageRegisterTest()
+    [Test, Category("Appointment"), Category("Register")]
+    public void AppointmentRegisterTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
@@ -370,8 +378,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void TherapistWithSupervisorAndAppointmentCreationTest()
+    [Test, Category("Therapist"), Category("Register")]
+    public void TherapistWithSupervisorAndAppointmentRegisterTest()
         {
             var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaaaa", ["d"]);
             var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", ["d"]);
@@ -388,8 +396,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void AppointmentStorageDeleteTest()
+    [Test, Category("Appointment"), Category("Delete")]
+    public void AppointmentDeleteTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
@@ -420,8 +428,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void TherapistWithSupervisorAndAppointmentDeletionTest()
+    [Test, Category("Therapist"), Category("Delete")]
+    public void TherapistWithSupervisorAndAppointmentDeleteTest()
     {
         var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobochkaka", ["d"]);
         var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", ["d"]);
@@ -445,8 +453,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void PatientStorageDeleteWithAppointmentTest()
+    [Test, Category("Patient"), Category("Delete")]
+    public void PatientWithAppointmentDeleteTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
@@ -476,8 +484,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void PrescriptionStorageRegisterTest()
+    [Test, Category("Prescription"), Category("Register")]
+    public void PrescriptionRegisterTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
@@ -507,8 +515,8 @@ public class Tests
         Assert.IsTrue(appointment.Prescriptions[prescription.IdPrescription].Equals(prescription));
     }
     
-    [Test]
-    public void PrescriptionStorageDeleteTest()
+    [Test, Category("Prescription"), Category("Delete")]
+    public void PrescriptionDeleteTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
@@ -549,8 +557,8 @@ public class Tests
         Assert.IsFalse(appointment.Prescriptions.ContainsKey(prescription.IdPrescription));
     }
     
-    [Test]
-    public void TherapistWithSupervisorAndAppointmentAndPrescriptionDeletionTest()
+    [Test, Category("Therapist"), Category("Delete")]
+    public void TherapistWithSupervisorAndAppointmentAndPrescriptionDeleteTest()
     {
         var therapist1 =  _personFactory.CreateNewTherapist(null, "frst", "frstovich", DateTime.Now,"korobkaaaaaaaa", ["d"]);
         var therapist2 =  _personFactory.CreateNewTherapist(therapist1, "scnd", "scndovich", DateTime.Now,"korobochka", ["D"]);
@@ -577,8 +585,9 @@ public class Tests
             Assert.That(_personStorage.Count, Is.EqualTo(1));
         });
     }
-    [Test]
-    public void AppointmentStorageDeleteWithPrescriptionTest()
+    
+    [Test, Category("Appointment"), Category("Delete")]
+    public void AppointmentWithPrescriptionDeleteTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
@@ -614,15 +623,15 @@ public class Tests
     }
     
     
-    [Test]
-    public void EquipmentStorageRegisterTest()
+    [Test, Category("Equipment"), Category("Register")]
+    public void EquipmentRegisterTest()
     {
         _equipmentFactory.CreateNewEquipment("IV stand", DateTime.Today);
         Assert.That(_equipmentStorage.Count, Is.EqualTo(1));
     }
     
-    [Test]
-    public void EquipmentStorageDeleteTest()
+    [Test, Category("Equipment"), Category("Delete")]
+    public void EquipmentDeleteTest()
     {
         var equipment = _equipmentFactory.CreateNewEquipment("IV stand", DateTime.Today);
         var room = _roomFactory.CreateNewRoom(3);
@@ -641,8 +650,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void RoomStorageDeleteWithEquipmentTest()
+    [Test, Category("Room"), Category("Delete")]
+    public void RoomWithEquipmentDeleteTest()
     {
         var room = _roomFactory.CreateNewRoom(3);
         var equipment = _equipmentFactory.CreateNewEquipment("IV stand", DateTime.Today);
@@ -663,8 +672,8 @@ public class Tests
         });
     }
     
-    [Test]
-    public void PatientEmptyNameAttributeValidationTest()
+    [Test, Category("Patient"), Category("Validation"), Category("PatientValidator")]
+    public void PatientEmptyNameValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() => _personFactory.CreateNewPatient("", "Piastri", DateTime.Now, "Melbourne, Australia",
             "cases of selfharm in the past", null));
@@ -674,8 +683,8 @@ public class Tests
             
     }
     
-    [Test]
-    public void PatientEmptySurnameAttributeValidationTest()
+    [Test, Category("Patient"), Category("Validation"), Category("PatientValidator")]
+    public void PatientEmptySurnameValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() => _personFactory.CreateNewPatient("Oscar", "", DateTime.Now, "Melbourne, Australia",
             "cases of selfharm in the past", null));
@@ -684,8 +693,9 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should be at least 2 characters long.") , Is.EqualTo(1));
             
     }
-    [Test]
-    public void PatientDeathEarlierThatBirthAttributeValidationTest()
+    
+    [Test, Category("Patient"), Category("Validation"), Category("PatientValidator")]
+    public void PatientDeathEarlierThatBirthValidationTest()
     {
         var death =  DateTime.ParseExact("25/12/1999",format,culture);
         var birth = DateTime.ParseExact("25/12/2002",format,culture);
@@ -698,8 +708,8 @@ public class Tests
             
     }
     
-    [Test]
-    public void PatientEmptyAddressAttributeValidationTest()
+    [Test, Category("Patient"), Category("Validation"), Category("PatientValidator")]
+    public void PatientEmptyAddressValidationTest()
     {
         var birth = DateTime.ParseExact("25/12/2002",format,culture);
 
@@ -711,8 +721,8 @@ public class Tests
             
     }
     
-    [Test]
-    public void PatientLongAddressAttributeValidationTest()
+    [Test, Category("Patient"), Category("Validation"), Category("PatientValidator")]
+    public void PatientLongAddressValidationTest()
     {
         var birth = DateTime.ParseExact("25/12/2002",format,culture);
 
@@ -724,10 +734,9 @@ public class Tests
             
     }
 
-    [Test]
-    public void PatientNullDateBirthAttributeValidationTest()
+    [Test, Category("Patient"), Category("Validation"), Category("PatientValidator")]
+    public void PatientNullDateBirthValidationTest()
     {
-
         var ex = Assert.Throws<ValidationException>(() => _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.MinValue, 
             "Melbourne, Australia",
             "cases of selfharm in the past", null));
@@ -739,8 +748,8 @@ public class Tests
 
     }
 
-    [Test]
-    public void DiagnosisEmptyNameAttributeValidationTest()
+    [Test, Category("Diagnosis"), Category("Validation"), Category("DiagnosisValidator")]
+    public void DiagnosisEmptyNameValidationTest()
     {
         var patient = _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
             "cases of selfharm in the past", null);
@@ -754,8 +763,8 @@ public class Tests
             
     }
     
-    [Test]
-    public void DiagnosisShortDescriptionAttributeValidationTest()
+    [Test, Category("Diagnosis"), Category("Validation"), Category("DiagnosisValidator")]
+    public void DiagnosisShortDescriptionValidationTest()
     {
         var patient = _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
             "cases of selfharm in the past", null);
@@ -768,8 +777,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void DiagnosisLongDescriptionAttributeValidationTest()
+    [Test, Category("Diagnosis"), Category("Validation"), Category("DiagnosisValidator")]
+    public void DiagnosisLongDescriptionValidationTest()
     {
         var patient = _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
             "cases of selfharm in the past", null);
@@ -783,8 +792,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void DiagnosisHealingDateBeforeDiagnosisDateAttributeValidationTest()
+    [Test, Category("Diagnosis"), Category("Validation"), Category("DiagnosisValidator")]
+    public void DiagnosisHealingDateBeforeDiagnosisDateValidationTest()
     {
         var healing = DateTime.ParseExact("25/12/1999", format, culture);
         var diag = DateTime.ParseExact("25/12/2002", format, culture);
@@ -800,8 +809,8 @@ public class Tests
     }
     
     
-    [Test]
-    public void DiagnosisHealingIsNullAttributeValidationTest()
+    [Test, Category("Diagnosis"), Category("Validation"), Category("DiagnosisValidator")]
+    public void DiagnosisHealingIsNullValidationTest()
     {
         var patient = _personFactory.CreateNewPatient("Oscar", "Piastri", DateTime.Now, "Melbourne, Australia",
             "cases of selfharm in the past", null);
@@ -811,8 +820,8 @@ public class Tests
             new[] { "swap positions" }, DateTime.Now.AddDays(1), null, true));
     }
     
-    [Test]
-    public void DiagnosisPatientIncorrectAttributeValidationTest()
+    [Test, Category("Diagnosis"), Category("Validation"), Category("DiagnosisValidator")]
+    public void DiagnosisPatientIncorrectValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() =>
         {
@@ -827,15 +836,13 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 2 characters long.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void AppointmentNullDateOfAppointmentAttributeValidationTest()
+    [Test, Category("Appointment"), Category("Validation"), Category("AppointmentValidator")]
+    public void AppointmentNullDateOfAppointmentValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
-        
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        
         var ex = Assert.Throws<ValidationException>(() => _appointmentFactory.CreateNewAppointment(therapist, patient,DateTime.MinValue, 
             "very important appointment for your live"));
 
@@ -843,18 +850,15 @@ public class Tests
         Assert.That(
             ex.Errors.Count(x => x.ErrorMessage == "Specify date of appointment."),
             Is.EqualTo(1));
-
     }
     
-    [Test]
-    public void AppointmentShortDescriptionAttributeValidationTest()
+    [Test, Category("Appointment"), Category("Validation"), Category("AppointmentValidator")]
+    public void AppointmentShortDescriptionValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["g"]);
-        
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        
         var ex = Assert.Throws<ValidationException>(() =>
             _appointmentFactory.CreateNewAppointment(therapist, patient,DateTime.Now, 
             "too short"));
@@ -863,15 +867,13 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void AppointmentLongDescriptionAttributeValidationTest()
+    [Test, Category("Appointment"), Category("Validation"), Category("AppointmentValidator")]
+    public void AppointmentLongDescriptionValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
-        
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        
         var ex = Assert.Throws<ValidationException>(() =>
             _appointmentFactory.CreateNewAppointment(therapist, patient,DateTime.Now, 
                 "The patient attended today’s session reporting ongoing symptoms of anxiety and depressive moods, which have worsened over the past month. They described feeling overwhelmed with work stress and difficulty sleeping. The patient shared a history of generalized anxiety disorder and mild depression, both of which have been managed with therapy and medication. During the session, cognitive-behavioral therapy techniques were used to address negative thought patterns. A follow-up appointment is scheduled in two weeks to reassess progress and adjust treatment as necessary."));
@@ -880,7 +882,7 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
     }
     
-    [Test]
+    [Test, Category("Appointment"), Category("Validation"), Category("AppointmentValidator")]
     public void AppointmentTherapistDoesNotExistValidationTest()
     {
         var therapist = new Therapist();
@@ -892,7 +894,6 @@ public class Tests
         
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-
         var ex = Assert.Throws<ValidationException>(() =>
             _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now,
                 "very important appointment for your live"));
@@ -901,7 +902,7 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Therapist does not exist.") , Is.EqualTo(1));
     }
     
-    [Test]
+    [Test, Category("Appointment"), Category("Validation"), Category("AppointmentValidator")]
     public void AppointmentNullPatientValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
@@ -911,7 +912,7 @@ public class Tests
                 "very important appointment for your live"));
     }
     
-    [Test]
+    [Test, Category("Appointment"), Category("Validation"), Category("AppointmentValidator")]
     public void AppointmentPatientDoesNotExistValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
@@ -932,18 +933,16 @@ public class Tests
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Patient does not exist.") , Is.EqualTo(1));
     }
-    [Test]
-    public void PrescriptionNullNameAttributeValidationTest()
+    
+    [Test, Category("Prescription"), Category("Validation"), Category("PrescriptionValidator")]
+    public void PrescriptionNullNameValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
-        
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, 
             "very important appointment for your live");
-        
         var ex = Assert.Throws<ValidationException>(() => _prescriptionFactory.CreateNewPrescription(appointment, 
             null!, 10, 0.02m, "very important prescription for your live"));
         
@@ -951,18 +950,15 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Please specify name.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void PrescriptionEmptyNameAttributeValidationTest()
+    [Test, Category("Prescription"), Category("Validation"), Category("PrescriptionValidator")]
+    public void PrescriptionEmptyNameValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
-        
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, 
             "very important appointment for your live");
-        
         var ex = Assert.Throws<ValidationException>(() => _prescriptionFactory.CreateNewPrescription(appointment, 
             "", 10, 0.02m, "very important prescription for your live"));
         
@@ -970,18 +966,15 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 1 characters long.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void PrescriptionNegativeQuantityAttributeValidationTest()
+    [Test, Category("Prescription"), Category("Validation"), Category("PrescriptionValidator")]
+    public void PrescriptionNegativeQuantityValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
-        
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, 
             "very important appointment for your live");
-        
         var ex = Assert.Throws<ValidationException>(() => _prescriptionFactory.CreateNewPrescription(appointment, 
             "Be healthy", -10, 0.02m, "very important prescription for your live"));
         
@@ -989,18 +982,15 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Quantity must be greater than or equal to 0.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void PrescriptionNegativeDosageAttributeValidationTest()
+    [Test, Category("Prescription"), Category("Validation"), Category("PrescriptionValidator")]
+    public void PrescriptionNegativeDosageValidationTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
-        
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, 
             "very important appointment for your live");
-        
         var ex = Assert.Throws<ValidationException>(() => _prescriptionFactory.CreateNewPrescription(appointment, 
             "Be healthy", 10, -0.02m, "very important prescription for your live"));
         
@@ -1008,19 +998,15 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Dosage must be greater than or equal to 0.") , Is.EqualTo(1));
     }
 
-    [Test]
-    public void PrescriptionShortDescriptionAttributeValidationTest()
+    [Test, Category("Prescription"), Category("Validation"), Category("PrescriptionValidator")]
+    public void PrescriptionShortDescriptionValidationTest()
     {
-        
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
-        
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, 
             "very important appointment for your live");
-        
         var ex = Assert.Throws<ValidationException>(() => _prescriptionFactory.CreateNewPrescription(appointment, 
             "Be healthy", 10, 0.02m, "abc"));
         
@@ -1028,19 +1014,15 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
     }
 
-    [Test]
-    public void PrescriptionLongDescriptionAttributeValidationTest()
+    [Test, Category("Prescription"), Category("Validation"), Category("PrescriptionValidator")]
+    public void PrescriptionLongDescriptionValidationTest()
     {
-        
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
             DateTime.Now,"Baker Street, 221B", ["d"]);
-        
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        
         var appointment = _appointmentFactory.CreateNewAppointment(therapist, patient, DateTime.Now, 
             "very important appointment for your live");
-        
         var ex = Assert.Throws<ValidationException>(() => _prescriptionFactory.CreateNewPrescription(appointment, 
             "Be healthy", 10, 0.02m, "Patient diagnosed with major depressive disorder and anxiety. Prescribed Sertraline 50 mg daily to improve mood and reduce anxiety, starting dose for 2 weeks, then increase to 100 mg if tolerated. Clonazepam 0.25 mg twice a day as needed for acute anxiety, max 0.5 mg per day. Melatonin 3 mg for sleep, taken before bedtime as needed. Patient advised to continue weekly therapy sessions, focus on exercise, maintain sleep hygiene, and follow a healthy diet. Return in 4 weeks for assessment. Contact clinic if severe side effects or mood changes occur."));
         
@@ -1048,14 +1030,14 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Description should be from 20 to 500 symbols long.") , Is.EqualTo(1));
     }
     
-    [Test]
+    [Test, Category("Prescription"), Category("Validation"), Category("PrescriptionValidator")]
     public void PrescriptionNullAppointmentValidationTest()
     {
         Assert.DoesNotThrow(() =>  _prescriptionFactory.CreateNewPrescription(null, 
             "Be healthy", 10, 0.02m, "very important prescription for your live"));;
     }
     
-    [Test]
+    [Test, Category("Prescription"), Category("Validation"), Category("PrescriptionValidator")]
     public void PrescriptionAppointmentDoesNotExistValidationTest()
     {
         var appointment = new Appointment();
@@ -1071,10 +1053,9 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Appointment does not exist.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void EquipmentNullNameAttributeValidationTest()
+    [Test, Category("Equipment"), Category("Validation"), Category("EquipmentValidator")]
+    public void EquipmentNullNameValidationTest()
     {
-        
         var ex = Assert.Throws<ValidationException>(() => 
             _equipmentFactory.CreateNewEquipment(null!, DateTime.Today));
         
@@ -1082,10 +1063,9 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Please specify name.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void EquipmentEmptyNameAttributeValidationTest()
+    [Test, Category("Equipment"), Category("Validation"), Category("EquipmentValidator")]
+    public void EquipmentEmptyNameValidationTest()
     {
-        
         var ex = Assert.Throws<ValidationException>(() => 
             _equipmentFactory.CreateNewEquipment("", DateTime.Today));
         
@@ -1093,8 +1073,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 1 characters long.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void EquipmentNullExpirationDateAttributeValidationTest()
+    [Test, Category("Equipment"), Category("Validation"), Category("EquipmentValidator")]
+    public void EquipmentNullExpirationDateValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() => 
             _equipmentFactory.CreateNewEquipment("Some stuff", DateTime.MinValue));
@@ -1104,8 +1084,8 @@ public class Tests
             Is.EqualTo(1));
     }
     
-    [Test]
-    public void RoomNegativeCapacityAttributeValidationTest()
+    [Test, Category("Room"), Category("Validation"), Category("RoomValidator")]
+    public void RoomNegativeCapacityValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() => _roomFactory.CreateNewRoom(-3));
         
@@ -1113,14 +1093,12 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Capacity must be greater than or equal to 0.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void RoomPatientNullDatePlacedAttributeValidationTest()
+    [Test, Category("RoomPatient"), Category("Validation"), Category("RoomPatientValidator")]
+    public void RoomPatientNullDatePlacedValidationTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        
         var room = _roomFactory.CreateNewRoom(3);
-        
         var ex = Assert.Throws<ValidationException>(() => 
             _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.MinValue, null));
 
@@ -1129,17 +1107,14 @@ public class Tests
             Is.EqualTo(1));
     }
     
-    [Test]
-    public void RoomPatientDatePlacedAfterDateDischargedAttributeValidationTest()
+    [Test, Category("RoomPatient"), Category("Validation"), Category("RoomPatientValidator")]
+    public void RoomPatientDatePlacedAfterDateDischargedValidationTest()
     {
         var discharged = DateTime.ParseExact("25/12/1999", format, culture);
         var placed = DateTime.ParseExact("25/12/2002", format, culture);
-        
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-        
         var room = _roomFactory.CreateNewRoom(3);
-        
         var ex = Assert.Throws<ValidationException>(() => 
             _roomPatientFactory.CreateNewRoomPatient(room, patient, placed, discharged));
         
@@ -1148,7 +1123,7 @@ public class Tests
             x.ErrorMessage == "Date of being placed cannot be earlier that date of being discharged.") , Is.EqualTo(1));
     }
     
-    [Test]
+    [Test, Category("RoomPatient"), Category("Validation"), Category("RoomPatientValidator")]
     public void RoomPatientPatientDoesNotExistValidationTest()
     {
         var patient = new Patient();
@@ -1159,7 +1134,6 @@ public class Tests
         patient.Anamnesis = "Depression";
         
         var room = _roomFactory.CreateNewRoom(3);
-
         var ex = Assert.Throws<ValidationException>(() =>
             _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, null));
         
@@ -1168,25 +1142,22 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Patient does not exist.") , Is.EqualTo(1));
     }
     
-    [Test]
+    [Test, Category("RoomPatient"), Category("Validation"), Category("RoomPatientValidator")]
     public void RoomPatientRoomDoesNotExistValidationTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
             "Baker Street, 221B", "Depression", null);
-
         var room = new Room();
         room.Capacity = 3;
-
         var ex = Assert.Throws<ValidationException>(() =>
             _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, null));
-        
         
         Assert.That(ex.Errors.Count() , Is.EqualTo(1));
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Room does not exist.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void EmployeeNameTest()
+    [Test, Category("Employee"), Category("Validation"), Category("EmployeeValidator")]
+    public void EmployeeShortNameValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() => 
             _personFactory.CreateNewNurse(null, "1", "helpovich", DateTime.Now, "korobochka_lesnaya"));
@@ -1194,8 +1165,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name should be at least 2 characters long.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void EmployeeSurnameTest()
+    [Test, Category("Employee"), Category("Validation"), Category("EmployeeValidator")]
+    public void EmployeeShortSurnameValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() =>
             _personFactory.CreateNewNurse(null, "1", "2", DateTime.Now, "korobochka"));
@@ -1204,8 +1175,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname should be at least 2 characters long.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void EmployeeBDayTest()
+    [Test, Category("Employee"), Category("Validation"), Category("EmployeeValidator")]
+    public void EmployeeNullDateOfBirthValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() =>
             _personFactory.CreateNewNurse(null, "1", "2",DateTime.MinValue, "korobochka"));
@@ -1215,8 +1186,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Specify date of birth") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void EmployeeAddressTest()
+    [Test, Category("Employee"), Category("Validation"), Category("EmployeeValidator")]
+    public void EmployeeShortAddressValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() =>
             _personFactory.CreateNewNurse(null, "1", "2",DateTime.MinValue, "korobka"));
@@ -1227,8 +1198,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Address must be of length from 10 to 70 symbols.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void TherapistQualificationsTest()
+    [Test, Category("Therapist"), Category("Validation"), Category("TherapistValidator")]
+    public void TherapistEmptyQualificationsValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() =>
             _personFactory.CreateNewTherapist(null, "1", "2",DateTime.MinValue, "korobka",[]));
@@ -1240,8 +1211,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Therapist must have at least one qualification.") , Is.EqualTo(1));
     }
 
-    [Test]
-    public void FakeSupervisorTest()
+    [Test, Category("Employee"), Category("Validation"), Category("EmployeeValidator")]
+    public void EmployeeSupervisorDoesNotExistValidationTest()
     {
         var fake = new Therapist();
         fake.IdPerson = new Guid();
@@ -1267,8 +1238,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x=>x.ErrorMessage=="No such employee found."),Is.EqualTo(1));
     }
     
-    [Test]
-    public void TherapistNullQualificationsTest()
+    [Test, Category("Therapist"), Category("Validation"), Category("TherapistValidator")]
+    public void TherapistNullQualificationsValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() =>
             _personFactory.CreateNewTherapist(null, "1", "2",DateTime.MinValue, "korobka",null!));
@@ -1280,15 +1251,15 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Therapist must have at least one qualification.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void EmployeeNullSupervisorTest()
+    [Test, Category("Employee"), Category("Validation"), Category("EmployeeValidator")]
+    public void EmployeeNullSupervisorValidationTest()
     {
         Assert.DoesNotThrow(() =>
             _personFactory.CreateNewTherapist(null, "12", "22",DateTime.Now, "korobochka",["medal"]));
     }
     
-    [Test]
-    public void EmployeeNullNameTest()
+    [Test, Category("Employee"), Category("Validation"), Category("EmployeeValidator")]
+    public void EmployeeNullNameValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() =>
             _personFactory.CreateNewNurse(null, null!, "helpovich", DateTime.Now, "korobochka_lesnaya"));
@@ -1296,8 +1267,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Name cannot be null.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void EmployeeNullSurnameTest()
+    [Test, Category("Employee"), Category("Validation"), Category("EmployeeValidator")]
+    public void EmployeeNullSurnameValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() =>
             _personFactory.CreateNewNurse(null, null!, null!, DateTime.Now, "korobochka_lesnaya"));
@@ -1306,8 +1277,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Surname cannot be null.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void EmployeeNullAddressTest()
+    [Test, Category("Employee"), Category("Validation"), Category("EmployeeValidator")]
+    public void EmployeeNullAddressValidationTest()
     {
         var ex = Assert.Throws<ValidationException>(() =>
             _personFactory.CreateNewNurse(null, null!, null!, DateTime.Now, null!));
@@ -1317,33 +1288,8 @@ public class Tests
         Assert.That(ex.Errors.Count(x => x.ErrorMessage == "Address cannot be null.") , Is.EqualTo(1));
     }
     
-    [Test]
-    public void NurseConnectionsTest()
-    {
-        var nurse =
-            _personFactory.CreateNewNurse(null, "horoshii", "doctor", DateTime.Now, "korobochka");
-        var room1 = _roomFactory.CreateNewRoom(3);
-        var room2 = _roomFactory.CreateNewRoom(2);
-        var room3 = _roomFactory.CreateNewRoom(1);
-        
-        nurse.AddRoom(room1);
-        nurse.AddRoom(room2);
-        nurse.AddRoom(room3);
-        _storageManager.Serialize();
-        _personStorage.Delete(nurse);
-        _roomStorage.Delete(room2);
-        _roomStorage.Delete(room1);
-        _roomStorage.Delete(room3);
-        _storageManager.Deserialize();
-        
-        Assert.That((_personStorage.FindBy(x=>x.IdPerson==nurse.IdPerson).First()as Nurse)?.Rooms.Count,Is.EqualTo(3));
-        Assert.That((_roomStorage.FindBy(x=>x.IdRoom==room1.IdRoom).First())?.Nurses.Count,Is.EqualTo(1));
-        Assert.That((_roomStorage.FindBy(x=>x.IdRoom==room2.IdRoom).First())?.Nurses.Count,Is.EqualTo(1));
-        Assert.That((_roomStorage.FindBy(x=>x.IdRoom==room3.IdRoom).First())?.Nurses.Count,Is.EqualTo(1));
-    }
-    
-    [Test]
-    public void NurseConnectionsNonDeletedTest()
+    [Test, Category("Nurse"), Category("Serialize")]
+    public void NurseSerializeTest()
     {
         var nurse =
             _personFactory.CreateNewNurse(null, "horoshii", "doctor", DateTime.Now, "korobochka");
@@ -1365,8 +1311,8 @@ public class Tests
         Assert.That((_roomStorage.FindBy(x=>x.IdRoom==room3.IdRoom).First())?.Nurses.Count,Is.EqualTo(1));
     }
     
-    [Test]
-    public void TherapistConnectionsNonDeletedTest()
+    [Test, Category("Therapist"), Category("Serialize")]
+    public void TherapistSerializeTest()
     {
         var therapist =
             _personFactory.CreateNewTherapist(null, "horoshii", "doctor", DateTime.Now, "korobochka", ["d"]);
@@ -1390,7 +1336,7 @@ public class Tests
         Assert.That((_personStorage.FindBy(x=>x.IdPerson==patient3.IdPerson).First()as Patient)?.Therapists.Count,Is.EqualTo(1));
     }
     
-    [Test]
+    [Test, Category("Appointment"), Category("Serialize")]
     public void AppointmentSerializeTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
@@ -1420,7 +1366,7 @@ public class Tests
             .FindBy(x => x.IdTherapist == therapist.IdPerson && x.IdPatient == patient.IdPerson).ToList().Count, Is.EqualTo(2));
     }
     
-    [Test]
+    [Test, Category("Prescription"), Category("Serialize")]
     public void PrescriptionSerializeTest()
     {
         var therapist =  _personFactory.CreateNewTherapist(null, "Charles", "Leclerc", 
@@ -1454,7 +1400,7 @@ public class Tests
             .FindBy(x => x.IdAppointment == appointment.IdAppointment).ToList().Count, Is.EqualTo(2));
     }
     
-    [Test]
+    [Test, Category("Equipment"), Category("Serialize")]
     public void EquipmentSerializeTest()
     {
         var equipment1 = _equipmentFactory.CreateNewEquipment("IV stand", DateTime.Today);
@@ -1480,7 +1426,7 @@ public class Tests
             .FindBy(x => x.IdRoom == room.IdRoom).ToList().Count, Is.EqualTo(2));
     }
     
-    [Test]
+    [Test, Category("RoomPatient"), Category("Serialize")]
     public void RoomPatientSerializeTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
@@ -1506,7 +1452,7 @@ public class Tests
             .FindBy(x => x.IdRoom == room.IdRoom && x.IdPatient == patient.IdPerson).ToList().Count, Is.EqualTo(1));
     }
 
-    [Test]
+    [Test, Category("Diagnosis"), Category("Serialize")]
     public void DiagnosisSerializeTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
@@ -1529,7 +1475,7 @@ public class Tests
         Assert.That(_diagnosisStorage.FindBy(x => x.IdPatient == patient.IdPerson).ToList().Count, Is.EqualTo(2));
     }
     
-    [Test]
+    [Test, Category("Serialize")]
     public void StorageInnerSerializeTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
@@ -1545,7 +1491,7 @@ public class Tests
         var res = _diagnosisStorage.FindBy(d => true);
     }
     
-    [Test]
+    [Test, Category("Serialize")]
     public void BigManagerSerializeTest()
     {
         var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,

@@ -22,6 +22,6 @@ public class Nurse:Employee
     public void AddRoom(Room room)
     {
         Rooms.Add(room);
-        IdsRooms.Add(room.IdRoom);
+        IdsRooms.Add(room.Id);
     }
 }

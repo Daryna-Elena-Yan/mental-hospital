@@ -32,10 +32,10 @@ public class RoomPatientValidator : AbstractValidator<RoomPatient>
     }
     private bool DoesRoomExist(Room? room )
     {
-        return room is null ? true : _roomStorage.FindBy(x => x.IdRoom == room.IdRoom).Any();
+        return room is null ? true : _roomStorage.FindBy(x => x.Id == room.Id).Any();
     } 
     private bool DoesPatientExist(Patient? patient)
     {
-        return patient is null ? true : _personStorage.FindBy(x => x.IdPerson == patient.IdPerson).Any();
+        return patient is null ? true : _personStorage.FindBy(x => x.Id == patient.Id).Any();
     } 
 }

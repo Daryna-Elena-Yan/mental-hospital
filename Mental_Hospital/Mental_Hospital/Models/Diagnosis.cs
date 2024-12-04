@@ -17,7 +17,7 @@ public abstract class Diagnosis : IEntity
     private Patient _patient;
     
 
-    public Guid IdDisorder { get; set; } 
+    public Guid Id { get; set; } 
     public virtual string NameOfDisorder { get; set; }
     public virtual string Description { get; set; }
     public DateTime DateOfDiagnosis { get; set; }
@@ -31,7 +31,7 @@ public abstract class Diagnosis : IEntity
         get => _patient;
         set
         {
-            IdPatient = value?.IdPerson;
+            IdPatient = value?.Id;
             _patient = value;
         }
     }

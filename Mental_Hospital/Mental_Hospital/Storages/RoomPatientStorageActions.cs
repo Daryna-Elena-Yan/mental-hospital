@@ -25,11 +25,11 @@ public class RoomPatientStorageActions : IStorageAction<RoomPatient>
 
     public void OnRestore(RoomPatient item)
     {
-        var room = _roomStorage.FindBy(x => x.IdRoom == item.IdRoom).First();
+        var room = _roomStorage.FindBy(x => x.Id == item.IdRoom).First();
         item.Room = room;
         room.RoomPatients.Add(item);
         
-        var patient = _personStorage.FindBy(x => x.IdPerson == item.IdPatient).First() as Patient;
+        var patient = _personStorage.FindBy(x => x.Id == item.IdPatient).First() as Patient;
         item.Patient = patient!;
         patient!.RoomPatients.Add(item);
     }

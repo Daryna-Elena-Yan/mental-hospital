@@ -2,7 +2,8 @@
 
 namespace Mental_Hospital.Models;
 
-public class RoomPatient : IEntity
+public class RoomPatient  : IEntity
+//TODO another type of , not IEntity 
 {
     private Room _room = null!;
     private Patient _patient = null!;
@@ -18,7 +19,7 @@ public class RoomPatient : IEntity
         get => _room;
         set
         {
-            IdRoom = value.IdRoom;
+            IdRoom = value.Id;
             _room = value;
         }
     }
@@ -29,8 +30,10 @@ public class RoomPatient : IEntity
         get => _patient;
         set
         {
-            IdPatient = value.IdPerson;
+            IdPatient = value.Id;
             _patient = value;
         }
     }
+
+    public Guid Id { get; } = new Guid();
 }

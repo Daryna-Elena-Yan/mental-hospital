@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Mental_Hospital.Collections;
 using Mental_Hospital.Models;
 using Mental_Hospital.Storages;
 using Mental_Hospital.Validators;
@@ -27,7 +28,7 @@ public class PersonFactory : IFactory
         string anamnesis, DateTime? dateOfDeath)
     {
         var patient = _provider.GetRequiredService<Patient>(); //to create inside DI container
-        patient.IdPerson = Guid.NewGuid();
+        patient.Id = Guid.NewGuid();
         patient.Name = name;
         patient.Surname = surname;
         patient.DateOfBirth = dateOfBirth;
@@ -42,7 +43,7 @@ public class PersonFactory : IFactory
     public Nurse CreateNewNurse(Employee? supervisor, string name, string surname, DateTime dateOfBirth, string address)
     {
         var nurse = _provider.GetRequiredService<Nurse>();
-        nurse.IdPerson = Guid.NewGuid();
+        nurse.Id = Guid.NewGuid();
         nurse.Name = name;
         nurse.Surname = surname;
         nurse.Bonus = 0;
@@ -61,7 +62,7 @@ public class PersonFactory : IFactory
         IEnumerable<string> qualifications)
     {
         var therapist = _provider.GetRequiredService<Therapist>();
-        therapist.IdPerson = Guid.NewGuid();
+        therapist.Id = Guid.NewGuid();
         therapist.Name = name;
         therapist.Surname = surname;
         therapist.Bonus = 0;
@@ -77,6 +78,8 @@ public class PersonFactory : IFactory
         {
             therapist.Qualifications.Add(q);
         }}
+
+        therapist.Patients = new AssociationCollection<Patient>();
 
         _therapistValidator.ValidateAndThrow(therapist);
         _personStorage.RegisterNew(therapist);

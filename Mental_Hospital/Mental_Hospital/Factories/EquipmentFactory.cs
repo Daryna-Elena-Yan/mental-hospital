@@ -22,7 +22,7 @@ public class EquipmentFactory : IFactory
     public Equipment CreateNewEquipment(string name, DateTime expirationDate)
     {
         var equipment = _provider.GetRequiredService<Equipment>();
-        equipment.IdEquipment = Guid.NewGuid();
+        equipment.Id = Guid.NewGuid();
         equipment.Name = name;
         equipment.ExpirationDate = expirationDate;
         

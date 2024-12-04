@@ -4,7 +4,7 @@ namespace Mental_Hospital.Models;
 
 public class Room : IEntity
 {
-    public Guid IdRoom { get; set; } 
+    public Guid Id { get; set; } 
     public int Capacity { get; set; }
     [JsonIgnore]
     public virtual ICollection<Nurse> Nurses { get; } = [];

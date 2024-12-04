@@ -35,7 +35,7 @@ public class NurseStorageActions:IStorageAction<Nurse>
 
     public void OnRestore(Nurse item)
     {
-        var foundPerson = _personStorage.FindBy(x => x.IdPerson.Equals(item.IdSupervisor)).FirstOrDefault();
+        var foundPerson = _personStorage.FindBy(x => x.Id.Equals(item.IdSupervisor)).FirstOrDefault();
         if (foundPerson is not null)
         {
             var employee = foundPerson as Employee;
@@ -46,7 +46,7 @@ public class NurseStorageActions:IStorageAction<Nurse>
            
         foreach (var rid in item.IdsRooms)
         {
-            var room = _roomStorage.FindBy(x => x.IdRoom == rid).FirstOrDefault();
+            var room = _roomStorage.FindBy(x => x.Id == rid).FirstOrDefault();
                 item.Rooms.Add(room);
                 room.Nurses.Add(item);
         }

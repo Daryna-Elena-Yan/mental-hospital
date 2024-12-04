@@ -24,7 +24,7 @@ public class PrescriptionFactory : IFactory
         // TODO check if appointment exists, if not return null 
         
         var prescription = _provider.GetRequiredService<Prescription>();
-        prescription.IdPrescription = Guid.NewGuid();
+        prescription.Id = Guid.NewGuid();
         prescription.Name = name;
         prescription.Quantity = quantity;
         prescription.Dosage = dosage;

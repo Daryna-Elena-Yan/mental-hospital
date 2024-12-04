@@ -22,7 +22,7 @@ public class RoomFactory : IFactory
     public Room CreateNewRoom(int capacity)
     {
         var room = _provider.GetRequiredService<Room>();
-        room.IdRoom = Guid.NewGuid();
+        room.Id = Guid.NewGuid();
         room.Capacity = capacity;
         
         _validator.ValidateAndThrow(room);

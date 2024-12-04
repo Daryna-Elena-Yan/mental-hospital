@@ -22,7 +22,7 @@ public class AppointmentFactory : IFactory
     public Appointment CreateNewAppointment(Therapist therapist, Patient? patient, DateTime dateOfAppointment, string description)
     {
         var appointment = _provider.GetRequiredService<Appointment>();
-        appointment.IdAppointment = Guid.NewGuid();
+        appointment.Id = Guid.NewGuid();
         appointment.DateOfAppointment = dateOfAppointment;
         appointment.Description = description;
         appointment.Therapist = therapist;
@@ -36,7 +36,7 @@ public class AppointmentFactory : IFactory
     public Appointment CreateAppointmentCopy(Appointment appointment)
     {
         var appointmentCopy = _provider.GetRequiredService<Appointment>();
-        appointmentCopy.IdAppointment = appointment.IdAppointment;
+        appointmentCopy.Id = appointment.Id;
         appointmentCopy.DateOfAppointment = appointment.DateOfAppointment;
         appointmentCopy.Description = appointment.Description;
         appointmentCopy.Therapist = appointment.Therapist;

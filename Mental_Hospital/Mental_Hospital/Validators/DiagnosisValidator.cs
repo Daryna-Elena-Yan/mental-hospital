@@ -23,7 +23,7 @@ public class DiagnosisValidator : AbstractValidator<Diagnosis>
 
     private bool DoesPatientExist(Patient patient)
     {
-       return _personStorage.FindBy(x => x.IdPerson == patient.IdPerson).Any();
+       return _personStorage.FindBy(x => x.Id == patient.Id).Any();
     }
 
     private bool IsHealingDateAfterDiagnosing(DateTime? healing, DateTime diagnosing)

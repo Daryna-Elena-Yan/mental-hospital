@@ -5,7 +5,7 @@ namespace Mental_Hospital.Models;
 
 public class Appointment : IEntity
 {
-    public Guid IdAppointment { get; set; } 
+    public Guid Id { get; set; } 
     public DateTime DateOfAppointment { get; set; }
     public string Description { get; set; }
     public Guid? IdPatient { get; set;  }
@@ -17,7 +17,7 @@ public class Appointment : IEntity
         get => _patient;
         set
         {
-            IdPatient = value?.IdPerson;
+            IdPatient = value?.Id;
             _patient = value;
         }
     }
@@ -28,7 +28,7 @@ public class Appointment : IEntity
         get => _therapist;
         set
         {
-            IdTherapist = value.IdPerson;
+            IdTherapist = value.Id;
             _therapist = value;
         }
     }

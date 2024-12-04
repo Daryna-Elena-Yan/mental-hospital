@@ -48,7 +48,7 @@ public class TherapistStorageActions : IStorageAction<Therapist>
 
     public void OnRestore(Therapist item)
     {
-        var foundPerson = _personStorage.FindBy(x => x.IdPerson == item.IdSupervisor).FirstOrDefault();
+        var foundPerson = _personStorage.FindBy(x => x.Id == item.IdSupervisor).FirstOrDefault();
         if (foundPerson is not null)
         {
             var supervisor = foundPerson as Therapist;
@@ -56,13 +56,13 @@ public class TherapistStorageActions : IStorageAction<Therapist>
             supervisor.Subordinates.Add(item);
             
         }
-                
-        foreach (var id in item.IdsPatients)
+        
+        item.Patients.RestoreObjects(id =>
         {
-            var patient = (Patient)_personStorage.FindBy(x => x.IdPerson.Equals(id)).First();
+            var patient = (Patient)_personStorage.FindBy(x => x.Id == id).First();
             patient.Therapists.Add(item);
-            item.Patients.Add(patient);
-        }
+            return patient;
+        });
     }
 }
     

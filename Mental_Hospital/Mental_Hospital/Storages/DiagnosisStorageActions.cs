@@ -27,7 +27,7 @@ public class DiagnosisStorageActions : IStorageAction<Diagnosis>
 
     public void OnRestore(Diagnosis item)
     {
-        var patient = _personStorage.FindBy(x => x.IdPerson == item.IdPatient).First() as Patient;
+        var patient = _personStorage.FindBy(x => x.Id == item.IdPatient).First() as Patient;
         item.Patient = patient!;
         patient!.Diagnoses.Add(item);
     }

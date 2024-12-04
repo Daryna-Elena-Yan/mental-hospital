@@ -32,6 +32,6 @@ public class EmployeeValidator : AbstractValidator<Employee>
     }
     private bool DoesEmployeeExist(Employee? employee)
     {
-        return employee is null ? true : _personStorage.FindBy(x => x.IdPerson == employee.IdPerson).Any();
+        return employee is null ? true : _personStorage.FindBy(x => x.Id == employee.Id).Any();
     } 
 }

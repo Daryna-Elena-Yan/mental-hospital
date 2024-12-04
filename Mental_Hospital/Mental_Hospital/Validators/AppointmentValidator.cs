@@ -28,10 +28,10 @@ public class AppointmentValidator : AbstractValidator<Appointment>
     }
     private bool DoesTherapistExist(Therapist? therapist)
     {
-        return therapist is null ? true : _personStorage.FindBy(x => x.IdPerson == therapist.IdPerson).Any();
+        return therapist is null ? true : _personStorage.FindBy(x => x.Id == therapist.Id).Any();
     } 
     private bool DoesPatientExist(Patient patient)
     {
-        return _personStorage.FindBy(x => x.IdPerson == patient.IdPerson).Any();
+        return _personStorage.FindBy(x => x.Id == patient.Id).Any();
     } 
 }

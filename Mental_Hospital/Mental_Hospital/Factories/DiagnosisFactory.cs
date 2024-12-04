@@ -117,7 +117,7 @@ public class DiagnosisFactory : IFactory
     private void SetDiagnosis(Diagnosis diagnosis, Patient patient, string nameOfDisorder, string description,
         DateTime dateOfDiagnosis, DateTime? dateOfHealing)
     {
-        diagnosis.IdDisorder = Guid.NewGuid();
+        diagnosis.Id = Guid.NewGuid();
         diagnosis.Description = description;
         diagnosis.NameOfDisorder = nameOfDisorder;
         diagnosis.DateOfDiagnosis = dateOfDiagnosis;

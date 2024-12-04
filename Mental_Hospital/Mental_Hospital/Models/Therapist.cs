@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Mental_Hospital.Collections;
 
 namespace Mental_Hospital.Models;
 
@@ -9,21 +10,15 @@ public class Therapist : Employee
     public new static double OvertimePaidPerHourInZl=70;
     
     public List<string> Qualifications { get; set; } = [];
-    public ICollection<Guid> IdsPatients{ get; set; }= [];
     
     [JsonIgnore]
     public virtual ICollection<Appointment> Appointments { get; set; } = [];
     
-    [JsonIgnore]
-    public virtual ICollection<Patient> Patients { get; set; } =[];
+    [JsonConverter(typeof(AssociationCollectionJsonConverter<Patient>))]
+    public AssociationCollection<Patient> Patients { get; set; }
     public override void RecalculateSalary()
     {
         this.Salary=this.Bonus+BasicSalaryInZl+this.OvertimePerMonth*OvertimePaidPerHourInZl;
     }
     
-    public void AddPatient(Patient patient)
-    {
-        Patients.Add(patient);
-        IdsPatients.Add(patient.IdPerson);
-    }
 }

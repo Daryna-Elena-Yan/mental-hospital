@@ -44,7 +44,7 @@ public class StorageManager
     }
     public  void Deserialize()
     {
-        var dataList =JsonSerializer.Deserialize<List<SerializeItem>>(GetJsonString() ?? string.Empty);
+        var dataList = JsonSerializer.Deserialize<List<SerializeItem>>(GetJsonString() ?? string.Empty);
         foreach (var serializeItem in dataList)
         {
             _storages[Type.GetType(serializeItem.TypeName)].Deserialize(serializeItem.ContentJson);

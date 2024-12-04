@@ -53,14 +53,12 @@ public class Storage<T> : IStorage
     {
         foreach ( dynamic obj in _list)
         {
-            var type = obj.GetType();
             RestoreObjectConnections(obj);
         }
     }
 
     private void RestoreObjectConnections<TS>(TS t) where TS : T
     {
-        var tsType = typeof(TS);
         var storageAction = _serviceProvider.GetService<IStorageAction<TS>>();
         if (storageAction is not null)
             storageAction?.OnRestore(t); 

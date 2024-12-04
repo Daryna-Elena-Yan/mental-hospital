@@ -16,7 +16,7 @@ public abstract class Employee :Person
     public Guid? IdSupervisor{ get; set;  }
     
     [JsonIgnore]
-    public virtual ICollection<Employee> Subordinates { get; set; } = [];
+    public virtual ICollection<Employee> Subordinates { get; } = [];
 
     [JsonIgnore]
     public virtual Employee? Supervisor
@@ -24,7 +24,7 @@ public abstract class Employee :Person
         get => _supervisor;
         set
         {
-            IdSupervisor = value?.IdPerson;
+            IdSupervisor = value?.Id;
             _supervisor = value;
         }
     }

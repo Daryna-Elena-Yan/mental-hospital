@@ -26,6 +26,6 @@ public class PrescriptionValidator : AbstractValidator<Prescription>
     }
     private bool DoesAppointmentExist(Appointment appointment)
     {
-        return _appointmentStorage.FindBy(x => x.IdAppointment == appointment.IdAppointment).Any();
+        return _appointmentStorage.FindBy(x => x.Id == appointment.Id).Any();
     } 
 }

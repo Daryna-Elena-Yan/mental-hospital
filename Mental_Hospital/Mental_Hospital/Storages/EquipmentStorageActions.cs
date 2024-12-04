@@ -22,7 +22,7 @@ public class EquipmentStorageActions: IStorageAction<Equipment>
 
     public void OnRestore(Equipment item)
     {
-        var room = _roomStorage.FindBy(x => x.IdRoom == item.IdRoom).First();
+        var room = _roomStorage.FindBy(x => x.Id == item.IdRoom).First();
         item.Room = room;
         room.Equipments.Add(item);
     }

@@ -5,7 +5,7 @@ namespace Mental_Hospital.Models;
 public class Equipment : IEntity
 {
     private Room? _room;
-    public Guid IdEquipment { get; set; } 
+    public Guid Id { get; set; } 
     public string Name { get; set; }
     public DateTime ExpirationDate { get; set; }
     public Guid? IdRoom{ get; set;  }
@@ -16,7 +16,7 @@ public class Equipment : IEntity
         get => _room;
         set
         {
-            IdRoom = value?.IdRoom;
+            IdRoom = value?.Id;
             _room = value;
         }
     }

@@ -28,9 +28,22 @@ public class AppointmentFactory : IFactory
         appointment.Therapist = therapist;
         appointment.Patient = patient;
         
-        _validator.ValidateAndThrow(appointment);
         _storage.RegisterNew(appointment);
         
         return appointment;
     }
+
+    public Appointment CreateAppointmentCopy(Appointment appointment)
+    {
+        var appointmentCopy = _provider.GetRequiredService<Appointment>();
+        appointmentCopy.IdAppointment = appointment.IdAppointment;
+        appointmentCopy.DateOfAppointment = appointment.DateOfAppointment;
+        appointmentCopy.Description = appointment.Description;
+        appointmentCopy.Therapist = appointment.Therapist;
+        appointmentCopy.Patient = appointment.Patient;
+
+        return appointmentCopy;
+    }
+    
+    
 }

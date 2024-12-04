@@ -19,6 +19,7 @@ public static class ServiceCollectionExtensions
         RegisterModels(serviceCollection);
         RegisterStorages(serviceCollection);
         RegisterStorageActions(serviceCollection);
+        //RegisterValidators(serviceCollection);
         serviceCollection.AddValidatorsFromAssemblyContaining<DiagnosisValidator>();  //adds all validators!!!
         serviceCollection.AddSingleton<StorageManager>();
         
@@ -38,6 +39,7 @@ public static class ServiceCollectionExtensions
            
         }
     }
+    
 
     private static void RegisterStorages(ServiceCollection serviceCollection)
     {

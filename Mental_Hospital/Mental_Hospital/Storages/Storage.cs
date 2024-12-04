@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
+using FluentValidation;
 using Mental_Hospital.Models;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,12 +18,17 @@ public class Storage<T> : IStorage
     
     public void RegisterNew<TS>(TS t) where TS:T
     {
+        var validator = _serviceProvider.GetService<IValidator<TS>>();
+        if (validator is not null)
+            validator?.ValidateAndThrow(t);
+        else
+            _serviceProvider.GetService<IValidator<T>>()?.ValidateAndThrow(t);
+        
         var storageAction = _serviceProvider.GetService<IStorageAction<TS>>();
         if (storageAction is not null)
             storageAction?.OnAdd(t);
         else
             _serviceProvider.GetService<IStorageAction<T>>()?.OnAdd(t);
-       
         
         // if sp wont find service registration, nothong will be called
         _list.Add(t);
@@ -37,6 +43,12 @@ public class Storage<T> : IStorage
             _serviceProvider.GetService<IStorageAction<T>>()?.OnDelete(t);
         
         _list.Remove(t);
+    }
+    
+    public void Update<TS>(TS tOld, TS tNew) where TS:T
+    {
+        RegisterNew(tNew);
+        Delete(tOld);
     }
 
     public string Serialize()

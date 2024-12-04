@@ -36,7 +36,7 @@ public class AppointmentFactory : IFactory
     public Appointment CreateAppointmentCopy(Appointment appointment)
     {
         var appointmentCopy = _provider.GetRequiredService<Appointment>();
-        appointmentCopy.IdAppointment = appointment.IdAppointment;
+        appointmentCopy.Id = appointment.Id;
         appointmentCopy.DateOfAppointment = appointment.DateOfAppointment;
         appointmentCopy.Description = appointment.Description;
         appointmentCopy.Therapist = appointment.Therapist;

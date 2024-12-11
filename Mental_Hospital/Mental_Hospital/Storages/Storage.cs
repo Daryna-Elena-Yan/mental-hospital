@@ -77,9 +77,11 @@ public class Storage<T> : IStorage
         else
             _serviceProvider.GetService<IStorageAction<T>>()?.OnRestore(t);
     }
-
-
+    
     public IEnumerable<T> FindBy(Func<T, bool> predicate) => _list.Where(predicate);
+    //return shallow copy with/without associationCollection?
+    //if with -> make sure associationCollection is not editable
+    //else -> use reflection only for fields?
     public int Count => _list.Count;
     
 }

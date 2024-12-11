@@ -35,6 +35,7 @@ public class PersonFactory : IFactory
         patient.Address = address;
         patient.Anamnesis = anamnesis;
         patient.DateOfDeath = dateOfDeath;
+        patient.Diagnoses = new AssociationCollection<Diagnosis>(_provider);
         _patientValidator.ValidateAndThrow(patient);
         _personStorage.RegisterNew(patient);
         
@@ -79,7 +80,7 @@ public class PersonFactory : IFactory
             therapist.Qualifications.Add(q);
         }}
 
-        therapist.Patients = new AssociationCollection<Patient>();
+        therapist.Patients = new AssociationCollection<Patient>(_provider);
 
         _therapistValidator.ValidateAndThrow(therapist);
         _personStorage.RegisterNew(therapist);

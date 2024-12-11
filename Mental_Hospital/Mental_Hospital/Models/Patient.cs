@@ -9,7 +9,7 @@ public class Patient : Person
     public DateTime? DateOfDeath { get; set; }
 
     [JsonIgnore]
-    public virtual AssociationCollection<Diagnosis> Diagnoses { get; } = new AssociationCollection<Diagnosis>();
+    public virtual AssociationCollection<Diagnosis> Diagnoses { get; set; }
     
     [JsonIgnore]
     public virtual ICollection<Appointment> Appointments { get; } = [];

@@ -57,6 +57,9 @@ public class TherapistStorageActions : IStorageAction<Therapist>
             
         }
         
+        
+        
+        
         item.Patients.RestoreObjects(id =>
         {
             var patient = (Patient)_personStorage.FindBy(x => x.Id == id).First();

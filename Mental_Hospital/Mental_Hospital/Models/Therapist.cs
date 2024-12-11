@@ -13,12 +13,9 @@ public class Therapist : Employee
     
     [JsonIgnore]
     public virtual ICollection<Appointment> Appointments { get; set; } = [];
-    
-    [JsonConverter(typeof(AssociationCollectionJsonConverter<Patient>))]
     public AssociationCollection<Patient> Patients { get; set; }
     public override void RecalculateSalary()
     {
         this.Salary=this.Bonus+BasicSalaryInZl+this.OvertimePerMonth*OvertimePaidPerHourInZl;
     }
-    
 }

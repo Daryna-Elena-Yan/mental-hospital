@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Mental_Hospital.Models;
+using Mental_Hospital.Storages;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mental_Hospital.Collections;
 
@@ -10,14 +12,15 @@ namespace Mental_Hospital.Collections;
 
 public class AssociationCollection<T> : ICollection<T> where T : IEntity
 {
+    private readonly IServiceProvider _serviceProvider;
     private List<Guid> _ids = [];
     
     [JsonIgnore]
-    private List<T> _list = [];
+    private List<T> _objects = [];
 
-    public AssociationCollection()
+    public AssociationCollection(IServiceProvider serviceProvider)
     {
-        
+        _serviceProvider = serviceProvider;
     }
 
     public AssociationCollection(List<Guid>? deserialize)
@@ -27,7 +30,7 @@ public class AssociationCollection<T> : ICollection<T> where T : IEntity
 
     public IEnumerator<T> GetEnumerator()
     {
-        return _list.GetEnumerator();
+        return _objects.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -35,33 +38,45 @@ public class AssociationCollection<T> : ICollection<T> where T : IEntity
         return GetEnumerator();
     }
 
-    public void Add(T item)
+    public void Add(T item) 
     {
-        _list.Add(item);
+        var storageAction = _serviceProvider.GetService<IAssociationAction<T>>();
+        storageAction?.OnAdd(item); 
+        
+        _objects.Add(item);
         _ids.Add(item.Id);
     }
-    
 
     public void Clear()
     {
-        _list.Clear();
+        var storageAction = _serviceProvider.GetService<IAssociationAction<T>>();
+        foreach (var obj in _objects)
+        {       
+            storageAction?.OnClear(obj); 
+        }
+        
+        
+        _objects.Clear();
         _ids.Clear();
     }
 
     public bool Contains(T item)
     {
-        return _list.Contains(item);
+        return _objects.Contains(item);
     }
 
     public void CopyTo(T[] array, int arrayIndex)
     {
-        _list.CopyTo(array, arrayIndex);
+        _objects.CopyTo(array, arrayIndex);
         //TODO copy indexes as well  _ids.CopyTo(, arrayIndex);
     }
 
     public bool Remove(T item)
     {
-        _list.Remove(item);
+        var storageAction = _serviceProvider.GetService<IAssociationAction<T>>();
+        storageAction?.OnDelete(item); 
+        
+        _objects.Remove(item);
         return _ids.Remove(item.Id);
     }
     
@@ -69,12 +84,12 @@ public class AssociationCollection<T> : ICollection<T> where T : IEntity
     {
         foreach (var id in _ids)
         {
-            _list.Add(func(id));
+            _objects.Add(func(id));
         }
     }
 
     public List<Guid> GetIds => _ids;
-    public int Count => _list.Count;
+    public int Count => _objects.Count;
     public bool IsReadOnly => false;
 }
 

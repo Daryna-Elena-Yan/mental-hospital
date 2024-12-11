@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Mental_Hospital.Collections;
 using Mental_Hospital.Factories;
 using Mental_Hospital.Models;
 using Mental_Hospital.Models.Light;
@@ -19,11 +20,26 @@ public static class ServiceCollectionExtensions
         RegisterModels(serviceCollection);
         RegisterStorages(serviceCollection);
         RegisterStorageActions(serviceCollection);
+        RegisterAssociationActions(serviceCollection);
         //RegisterValidators(serviceCollection);
         serviceCollection.AddValidatorsFromAssemblyContaining<DiagnosisValidator>();  //adds all validators!!!
         serviceCollection.AddSingleton<StorageManager>();
         
         return serviceCollection;
+    }
+
+    private static void RegisterAssociationActions(ServiceCollection serviceCollection)
+    {
+        var type = typeof(IAssociationAction<>);
+        var actionTypes = type.Assembly.GetTypes()
+            .Where(p => p.GetInterfaces().Any(x => x.IsGenericType &&
+                                                   x.GetGenericTypeDefinition() == typeof(IAssociationAction<>)));
+        foreach (var actionType in actionTypes)
+        {
+            var makeGenericType = actionType.GetInterfaces().First();  
+            serviceCollection.AddSingleton(makeGenericType, actionType);
+           
+        }
     }
 
     private static void RegisterStorageActions(ServiceCollection serviceCollection)

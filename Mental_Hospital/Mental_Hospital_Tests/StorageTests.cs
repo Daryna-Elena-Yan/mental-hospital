@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Security.AccessControl;
 using FluentValidation;
 using Mental_Hospital;
+using Mental_Hospital.Collections;
 using Mental_Hospital.Factories;
 using Mental_Hospital.Models;
 using Mental_Hospital.Models.Light;
@@ -33,6 +34,7 @@ public class Tests
     private Storage<Prescription> _prescriptionStorage;
     private StorageManager _storageManager;
     private Storage<Person> _personStorage;
+    private ServiceProvider _provider;
 
     [SetUp]
     public void Setup()
@@ -40,26 +42,32 @@ public class Tests
         // Initialize DI container
         var services = new ServiceCollection();
         services.MentalHospitalSetup();
-        var provider = services.BuildServiceProvider();
+        _provider = services.BuildServiceProvider();
 
         // Get service instances for tests
-        _personFactory = provider.GetRequiredService<PersonFactory>();
-        _diagnosisFactory = provider.GetRequiredService<DiagnosisFactory>();
-        _appointmentFactory = provider.GetRequiredService<AppointmentFactory>();
-        _equipmentFactory = provider.GetRequiredService<EquipmentFactory>();
-        _roomFactory = provider.GetRequiredService<RoomFactory>();
-        _roomPatientFactory = provider.GetRequiredService<RoomPatientFactory>();
-        _prescriptionFactory = provider.GetRequiredService<PrescriptionFactory>();
+        _personFactory = _provider.GetRequiredService<PersonFactory>();
+        _diagnosisFactory = _provider.GetRequiredService<DiagnosisFactory>();
+        _appointmentFactory = _provider.GetRequiredService<AppointmentFactory>();
+        _equipmentFactory = _provider.GetRequiredService<EquipmentFactory>();
+        _roomFactory = _provider.GetRequiredService<RoomFactory>();
+        _roomPatientFactory = _provider.GetRequiredService<RoomPatientFactory>();
+        _prescriptionFactory = _provider.GetRequiredService<PrescriptionFactory>();
         
-        _personStorage = provider.GetRequiredService<Storage<Person>>();
-        _diagnosisStorage = provider.GetRequiredService<Storage<Diagnosis>>();
-        _appointmentStorage = provider.GetRequiredService<Storage<Appointment>>();
-        _equipmentStorage = provider.GetRequiredService<Storage<Equipment>>();
-        _roomStorage = provider.GetRequiredService<Storage<Room>>();
-        _roomPatientStorage = provider.GetRequiredService<Storage<RoomPatient>>();
-        _prescriptionStorage = provider.GetRequiredService<Storage<Prescription>>();
+        _personStorage = _provider.GetRequiredService<Storage<Person>>();
+        _diagnosisStorage = _provider.GetRequiredService<Storage<Diagnosis>>();
+        _appointmentStorage = _provider.GetRequiredService<Storage<Appointment>>();
+        _equipmentStorage = _provider.GetRequiredService<Storage<Equipment>>();
+        _roomStorage = _provider.GetRequiredService<Storage<Room>>();
+        _roomPatientStorage = _provider.GetRequiredService<Storage<RoomPatient>>();
+        _prescriptionStorage = _provider.GetRequiredService<Storage<Prescription>>();
 
-        _storageManager = provider.GetRequiredService<StorageManager>();
+        _storageManager = _provider.GetRequiredService<StorageManager>();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _provider.Dispose();
     }
 
     [Test, Category("Patient"), Category("Register")]
@@ -1220,7 +1228,7 @@ public class Tests
         fake.Bonus = 0;
         fake.DateOfBirth = DateTime.Now;
         fake.OvertimePerMonth = 0;
-        fake.Patients = [];
+        fake.Patients = new AssociationCollection<Patient>(_provider);
         fake.Qualifications = [];
         fake.Address = "korobishcheee";
         fake.Name = "cccc";
@@ -1561,6 +1569,25 @@ public class Tests
         Assert.That(foundAppoint?.Patient?.Id , Is.EqualTo(foundPatient?.Id));
          foundPrescr = _prescriptionStorage.FindBy(x => x.Id == prescr.Id).First();
         Assert.That(foundPrescr?.IdAppointment , Is.EqualTo(foundAppoint?.Id));
+        
+    }
+
+
+    [Test, Category("Association")]
+    public void DeleteDiagnosisFromPatientAssociationTest()
+    {
+        var patient =  _personFactory.CreateNewPatient("Charles", "Leclerc", DateTime.Now,
+            "Baker Street, 221B", "Depression", null);
+        var diagnosis = _diagnosisFactory.CreateNewLightAnxiety
+            (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null, true);
+        var diagnosis2 = _diagnosisFactory.CreateNewSevereAnxiety
+        (patient, "anexity", "severe cases of bad luck in the past", new string[0], DateTime.Now, null,
+            LevelOfDanger.High, true);
+        Assert.That(patient.Diagnoses.Count , Is.EqualTo(2));
+
+        patient.Diagnoses.Remove(diagnosis2);
+        Assert.That(patient.Diagnoses.Count , Is.EqualTo(1));
+        Assert.That(_diagnosisStorage.FindBy(x => x.Id == diagnosis2.Id) , Is.Empty);
         
     }
 }

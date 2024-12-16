@@ -84,7 +84,7 @@ public class Storage<T> : IStorage where T : IEntity
         foreach (var propertyInfo in collections)
         {
             var collection = (IAssociationCollection)propertyInfo.GetMethod.Invoke(t, null);
-            collection.RestoreObjects(_serviceProvider);
+            collection.RestoreObjects(t, _serviceProvider);
         }
 
         var propIdReferences = typeof(TS).GetProperties(BindingFlags.Instance | BindingFlags.Public)

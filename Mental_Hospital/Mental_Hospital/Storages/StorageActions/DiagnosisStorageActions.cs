@@ -28,13 +28,6 @@ public class DiagnosisStorageActions : IStorageAction<Diagnosis>
         patient.Diagnoses.Add(item);
     }
 
-    public void OnRestore(Diagnosis item)
-    {
-        var patient = _personStorage.FindBy(x => x.Id == item.IdPatient).First() as Patient;
-        item.Patient = patient!;
-        if (patient!.Diagnoses is null)
-            patient.Diagnoses = new AssociationCollection<Diagnosis>(_provider);
-        patient.Diagnoses.Add(item);
-    }
+
 
 }

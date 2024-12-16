@@ -25,12 +25,12 @@ public class RoomFactory : IFactory
         var room = _provider.GetRequiredService<Room>();
         room.Id = Guid.NewGuid();
         room.Capacity = capacity;
-        room.Nurses = new AssociationCollection<Nurse>(_provider);
-        room.RoomPatients = new AssociationCollection<RoomPatient>(_provider);
-        room.Equipments = new AssociationCollection<Equipment>(_provider);
+        room.Nurses = new AssociationCollection<Nurse>(room, _provider);
+        room.RoomPatients = new AssociationCollection<RoomPatient>(room, _provider);
+        room.Equipments = new AssociationCollection<Equipment>(room, _provider);
         _validator.ValidateAndThrow(room);
         _storage.RegisterNew(room);
-        
+
         return room;
     }
 }

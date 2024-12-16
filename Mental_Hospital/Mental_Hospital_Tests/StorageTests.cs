@@ -1224,11 +1224,11 @@ public class Tests
     {
         var fake = new Therapist();
         fake.Id = new Guid();
-        fake.Appointments = new AssociationCollection<Appointment>(_provider);
+        fake.Appointments = new AssociationCollection<Appointment>(fake,_provider);
         fake.Bonus = 0;
         fake.DateOfBirth = DateTime.Now;
         fake.OvertimePerMonth = 0;
-        fake.Patients = new AssociationCollection<Patient>(_provider);
+        fake.Patients = new AssociationCollection<Patient>(fake,_provider);
         fake.Qualifications = [];
         fake.Address = "korobishcheee";
         fake.Name = "cccc";
@@ -1514,13 +1514,13 @@ public class Tests
         var thersp = _personFactory.CreateNewTherapist(null, "Max", "Verstappen", DateTime.Now, "Melbourne, Australia",
             new[] { "finished high school" });
         thersp.Patients.Add(patient);
-        patient.Therapists.Add(thersp);
+        // patient.Therapists.Add(thersp);
         var nurse = _personFactory.CreateNewNurse(null, "Pomogite", "Pomogovich", DateTime.Now, "Korobusikaaaa");
         var nurse2 = _personFactory.CreateNewNurse(thersp, "Lewis", "Hamilton", DateTime.Now, "Monte-Carlo, Monaco");
         
         room.Nurses.Add(nurse);
         //TODO change when AssociationCollections are Implemented
-        nurse.Rooms.Add(room);
+        //nurse.Rooms.Add(room);
         var rp = _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, DateTime.Now.AddDays(2));
         var appoint =
             _appointmentFactory.CreateNewAppointment(thersp, patient, DateTime.Now,

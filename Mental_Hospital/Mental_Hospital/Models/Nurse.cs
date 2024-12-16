@@ -3,6 +3,7 @@ using Mental_Hospital.Collections;
 
 namespace Mental_Hospital.Models;
 
+
 public class Nurse:Employee
 {
 

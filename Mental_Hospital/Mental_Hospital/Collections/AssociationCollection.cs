@@ -8,16 +8,26 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Mental_Hospital.Collections;
 
-
-
-public class AssociationCollection<T> : ICollection<T> where T : IEntity
+public interface IAssociationCollection
 {
-    private readonly IServiceProvider _serviceProvider;
+    void RestoreObjects(IServiceProvider serviceProvider);
+
+
+}
+
+public class AssociationCollection<T> : IAssociationCollection, ICollection<T> where T : IEntity
+{
+    [JsonIgnore]
+    private IServiceProvider _serviceProvider;
     private List<Guid> _ids = [];
     
     [JsonIgnore]
-    private List<T> _objects = [];
+    private List<T> _objects = [];  
 
+    public Action<T>? OnDelete { get; set; }
+    public Action<T>? OnAdd { get; set; }
+    
+    
     public AssociationCollection(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
@@ -40,12 +50,12 @@ public class AssociationCollection<T> : ICollection<T> where T : IEntity
 
     public void Add(T item) 
     {
-        var storageAction = _serviceProvider.GetService<IAssociationAction<T>>();
-        storageAction?.OnAdd(item); 
+        OnAdd?.Invoke(item);  
         
         _objects.Add(item);
         _ids.Add(item.Id);
     }
+    
 
     public void Clear()
     {
@@ -80,11 +90,17 @@ public class AssociationCollection<T> : ICollection<T> where T : IEntity
         return _ids.Remove(item.Id);
     }
     
-    public void RestoreObjects(Func<Guid, T> func)
+    public void RestoreObjects(IServiceProvider serviceProvider)
     {
+        _objects.Clear();
+        _serviceProvider = serviceProvider;
+        
+        var type = typeof(T);
+        var storage = _serviceProvider.FindStorage(type);
+      
         foreach (var id in _ids)
         {
-            _objects.Add(func(id));
+            _objects.Add((T)storage.GetById(id));
         }
     }
 

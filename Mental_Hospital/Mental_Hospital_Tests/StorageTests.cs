@@ -1224,7 +1224,7 @@ public class Tests
     {
         var fake = new Therapist();
         fake.Id = new Guid();
-        fake.Appointments = [];
+        fake.Appointments = new AssociationCollection<Appointment>(_provider);
         fake.Bonus = 0;
         fake.DateOfBirth = DateTime.Now;
         fake.OvertimePerMonth = 0;
@@ -1303,9 +1303,12 @@ public class Tests
         var room2 = _roomFactory.CreateNewRoom(2);
         var room3 = _roomFactory.CreateNewRoom(1);
         
-        nurse.AddRoom(room1);
-        nurse.AddRoom(room2);
-        nurse.AddRoom(room3);
+        nurse.Rooms.Add(room1);
+        nurse.Rooms.Add(room2);
+        nurse.Rooms.Add(room3);
+        
+        room3.Nurses.Add(nurse);
+        
         _storageManager.Serialize();
         _storageManager.Deserialize();
         Assert.That(_personStorage.Count,Is.EqualTo(1));
@@ -1514,8 +1517,10 @@ public class Tests
         patient.Therapists.Add(thersp);
         var nurse = _personFactory.CreateNewNurse(null, "Pomogite", "Pomogovich", DateTime.Now, "Korobusikaaaa");
         var nurse2 = _personFactory.CreateNewNurse(thersp, "Lewis", "Hamilton", DateTime.Now, "Monte-Carlo, Monaco");
+        
         room.Nurses.Add(nurse);
-        nurse.AddRoom(room);
+        //TODO change when AssociationCollections are Implemented
+        nurse.Rooms.Add(room);
         var rp = _roomPatientFactory.CreateNewRoomPatient(room, patient, DateTime.Now, DateTime.Now.AddDays(2));
         var appoint =
             _appointmentFactory.CreateNewAppointment(thersp, patient, DateTime.Now,

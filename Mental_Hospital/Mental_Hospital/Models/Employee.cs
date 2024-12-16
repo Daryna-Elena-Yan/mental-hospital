@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Mental_Hospital.Collections;
 
 namespace Mental_Hospital.Models;
 
@@ -15,8 +16,8 @@ public abstract class Employee :Person
     public DateTime? DateFired { get; set; }
     public Guid? IdSupervisor{ get; set;  }
     
-    [JsonIgnore]
-    public virtual ICollection<Employee> Subordinates { get; } = [];
+    [JsonConverter(typeof(AssociationCollectionJsonConverter<Employee>))]
+    public virtual AssociationCollection<Employee> Subordinates { get; set; }
 
     [JsonIgnore]
     public virtual Employee? Supervisor

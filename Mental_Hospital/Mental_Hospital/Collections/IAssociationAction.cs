@@ -6,6 +6,4 @@ public interface IAssociationAction<T> where T : IEntity
 {
     public void OnAdd(T item);
     public void OnDelete(T item);
-    public void OnClear(T item);
-
 }

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Mental_Hospital.Collections;
 using Mental_Hospital.Models;
 using Mental_Hospital.Storages;
 using Mental_Hospital.Validators;
@@ -24,7 +25,9 @@ public class RoomFactory : IFactory
         var room = _provider.GetRequiredService<Room>();
         room.Id = Guid.NewGuid();
         room.Capacity = capacity;
-        
+        room.Nurses = new AssociationCollection<Nurse>(_provider);
+        room.RoomPatients = new AssociationCollection<RoomPatient>(_provider);
+        room.Equipments = new AssociationCollection<Equipment>(_provider);
         _validator.ValidateAndThrow(room);
         _storage.RegisterNew(room);
         

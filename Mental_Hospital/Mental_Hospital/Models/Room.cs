@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Mental_Hospital.Collections;
 
 namespace Mental_Hospital.Models;
 
@@ -6,12 +7,12 @@ public class Room : IEntity
 {
     public Guid Id { get; set; } 
     public int Capacity { get; set; }
-    [JsonIgnore]
-    public virtual ICollection<Nurse> Nurses { get; } = [];
+    [JsonConverter(typeof(AssociationCollectionJsonConverter<Nurse>))]
+    public virtual AssociationCollection<Nurse> Nurses { get; set; } 
     
-    [JsonIgnore]
-    public virtual ICollection<Equipment> Equipments { get; } =[];
+    [JsonConverter(typeof(AssociationCollectionJsonConverter<Equipment>))]
+    public virtual AssociationCollection<Equipment> Equipments { get; set; }
     
-    [JsonIgnore]
-    public virtual ICollection<RoomPatient> RoomPatients { get; } = [];
+    [JsonConverter(typeof(AssociationCollectionJsonConverter<RoomPatient>))]
+    public virtual AssociationCollection<RoomPatient> RoomPatients { get; set; } 
 }

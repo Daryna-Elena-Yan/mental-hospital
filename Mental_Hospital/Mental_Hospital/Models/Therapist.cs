@@ -11,8 +11,10 @@ public class Therapist : Employee
     
     public List<string> Qualifications { get; set; } = [];
     
-    [JsonIgnore]
-    public virtual ICollection<Appointment> Appointments { get; set; } = [];
+    [JsonConverter(typeof(AssociationCollectionJsonConverter<Appointment>))]
+    public virtual AssociationCollection<Appointment> Appointments { get; set; }
+    
+    [JsonConverter(typeof(AssociationCollectionJsonConverter<Patient>))]
     public AssociationCollection<Patient> Patients { get; set; }
     public override void RecalculateSalary()
     {

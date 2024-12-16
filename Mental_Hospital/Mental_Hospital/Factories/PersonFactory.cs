@@ -36,6 +36,9 @@ public class PersonFactory : IFactory
         patient.Anamnesis = anamnesis;
         patient.DateOfDeath = dateOfDeath;
         patient.Diagnoses = new AssociationCollection<Diagnosis>(_provider);
+        patient.Appointments = new AssociationCollection<Appointment>(_provider);
+        patient.RoomPatients = new AssociationCollection<RoomPatient>(_provider);
+        patient.Therapists = new AssociationCollection<Therapist>(_provider);
         _patientValidator.ValidateAndThrow(patient);
         _personStorage.RegisterNew(patient);
         
@@ -51,6 +54,8 @@ public class PersonFactory : IFactory
         nurse.OvertimePerMonth = 0;
         nurse.Address = address;
         nurse.Supervisor = supervisor;
+        nurse.Subordinates = new AssociationCollection<Employee>(_provider);
+        nurse.Rooms = new AssociationCollection<Room>(_provider);
         nurse.DateFired = null;
         nurse.DateHired=DateTime.Today;
         nurse.DateOfBirth = dateOfBirth;
@@ -70,6 +75,8 @@ public class PersonFactory : IFactory
         therapist.OvertimePerMonth = 0;
         therapist.Address = address;
         therapist.Supervisor = supervisor;
+        therapist.Subordinates = new AssociationCollection<Employee>(_provider);
+        therapist.Appointments = new AssociationCollection<Appointment>(_provider);
         therapist.DateFired = null;
         therapist.DateHired=DateTime.Today;
         therapist.DateOfBirth = dateOfBirth;

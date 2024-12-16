@@ -44,7 +44,7 @@ public class NurseStorageActions:IStorageAction<Nurse>
         }
           
            
-        foreach (var rid in item.IdsRooms)
+        foreach (var rid in item.Rooms.GetIds)
         {
             var room = _roomStorage.FindBy(x => x.Id == rid).FirstOrDefault();
                 item.Rooms.Add(room);

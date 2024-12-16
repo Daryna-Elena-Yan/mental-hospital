@@ -56,16 +56,7 @@ public class TherapistStorageActions : IStorageAction<Therapist>
             supervisor.Subordinates.Add(item);
             
         }
-        
-        
-        
-        
-        item.Patients.RestoreObjects(id =>
-        {
-            var patient = (Patient)_personStorage.FindBy(x => x.Id == id).First();
-            patient.Therapists.Add(item);
-            return patient;
-        });
+
     }
 }
     

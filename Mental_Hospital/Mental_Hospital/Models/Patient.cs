@@ -8,17 +8,17 @@ public class Patient : Person
     public string Anamnesis { get; set; }
     public DateTime? DateOfDeath { get; set; }
 
-    [JsonIgnore]
+    [JsonConverter(typeof(AssociationCollectionJsonConverter<Diagnosis>))]
     public virtual AssociationCollection<Diagnosis> Diagnoses { get; set; }
     
-    [JsonIgnore]
-    public virtual ICollection<Appointment> Appointments { get; } = [];
+    [JsonConverter(typeof(AssociationCollectionJsonConverter<Appointment>))]
+    public virtual AssociationCollection<Appointment> Appointments { get; set; }
     
-    [JsonIgnore]
-    public virtual ICollection<RoomPatient> RoomPatients { get; } = [];
+    [JsonConverter(typeof(AssociationCollectionJsonConverter<RoomPatient>))]
+    public virtual AssociationCollection<RoomPatient> RoomPatients { get; set; } 
     
-    [JsonIgnore]
-    public virtual ICollection<Therapist> Therapists{ get; }= [];
+    [JsonConverter(typeof(AssociationCollectionJsonConverter<Therapist>))]
+    public virtual AssociationCollection<Therapist> Therapists{ get; set;}
     
     
 }

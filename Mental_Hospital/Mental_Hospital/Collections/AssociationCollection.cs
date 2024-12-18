@@ -9,10 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Mental_Hospital.Collections;
 
-public interface IAssociationCollection
-{
-    void RestoreObjects(IEntity parent, IServiceProvider serviceProvider);
-}
+
 
 public class AssociationCollection<T> : IAssociationCollection, ICollection<T> where T : IEntity
 {

@@ -7,11 +7,7 @@ using Mental_Hospital.Models;
 using Microsoft.Extensions.DependencyInjection;
 namespace Mental_Hospital.Collections;
 
-public interface IAssociationDictionary
-{
-    void RestoreObjects(IEntity parent, IServiceProvider serviceProvider);
-}
-public class AssociationDictionary<T> : IAssociationDictionary,IDictionary<Guid,T> where T : IEntity
+public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,T> where T : IEntity
 {
     [JsonIgnore]
     private IEntity _parent;

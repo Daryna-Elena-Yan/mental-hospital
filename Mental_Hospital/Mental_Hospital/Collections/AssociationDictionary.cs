@@ -138,7 +138,7 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
             
         foreach (var propertyInfo in propReferences)
         {
-            propertyInfo.SetMethod.Invoke(item.Value,null);
+            propertyInfo.SetMethod.Invoke(item.Value,new []{(object)null});
         }
         Keys.Remove(item.Key);
         Values.Remove(item.Value);
@@ -223,7 +223,7 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
             
         foreach (var propertyInfo in propReferences)
         {
-            propertyInfo.SetMethod.Invoke(item,null);
+            propertyInfo.SetMethod.Invoke(item, new [] { (object)null });
         }
         Keys.Remove(key);
         Values.Remove(item);

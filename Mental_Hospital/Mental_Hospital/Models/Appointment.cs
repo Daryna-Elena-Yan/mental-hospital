@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Mental_Hospital.Collections;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace Mental_Hospital.Models;
@@ -32,10 +33,8 @@ public class Appointment : IEntity
             _therapist = value;
         }
     }
-
-    [JsonIgnore]
-    public Dictionary<Guid, Prescription> Prescriptions { get; set; } = new ();
-
+    [JsonConverter(typeof(AssociationDictionaryJsonConverter<Prescription>))]
+    public virtual AssociationDictionary<Prescription> Prescriptions { get; set; }
     private Patient? _patient;
     private Therapist _therapist = null!;
 }

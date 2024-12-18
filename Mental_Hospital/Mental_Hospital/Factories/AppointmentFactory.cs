@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Mental_Hospital.Collections;
 using Mental_Hospital.Models;
 using Mental_Hospital.Storages;
 using Mental_Hospital.Validators;
@@ -27,7 +28,7 @@ public class AppointmentFactory : IFactory
         appointment.Description = description;
         appointment.Therapist = therapist;
         appointment.Patient = patient;
-        
+        appointment.Prescriptions = new AssociationDictionary<Prescription>(appointment, _provider);
         _storage.RegisterNew(appointment);
         
         return appointment;

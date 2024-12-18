@@ -89,10 +89,10 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
 
     public void Clear()
     {
-        var storageAction = _serviceProvider.GetService<IAssociationAction<T>>();
+       
         foreach (var obj in Values)
         {
-            storageAction?.OnDelete(obj);
+            
         }    
     }
 

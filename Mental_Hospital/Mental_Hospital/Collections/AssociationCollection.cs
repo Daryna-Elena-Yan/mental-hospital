@@ -22,9 +22,6 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
 
     [JsonIgnore] private List<T> _objects = [];
 
-    public Action<T>? OnDelete { get; set; }
-    public Action<T>? OnAdd { get; set; }
-
 
     public AssociationCollection(IEntity parent, IServiceProvider serviceProvider)
     {
@@ -80,10 +77,10 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
 
     public void Clear()
     {
-        var storageAction = _serviceProvider.GetService<IAssociationAction<T>>();
+        
         foreach (var obj in _objects)
         {
-            storageAction?.OnDelete(obj);
+           
         }
 
 
@@ -103,8 +100,8 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
 
     public bool Remove(T item)
     {
-        var storageAction = _serviceProvider.GetService<IAssociationAction<T>>();
-        storageAction?.OnDelete(item);
+       
+        //storageAction?.OnDelete(item);
 
         _objects.Remove(item);
         return _ids.Remove(item.Id);

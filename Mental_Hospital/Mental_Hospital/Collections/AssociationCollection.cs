@@ -19,7 +19,8 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
     [JsonIgnore]
     private IEntity _parent;
 
-    [JsonIgnore] private IServiceProvider _serviceProvider;
+    [JsonIgnore] 
+    private IServiceProvider _serviceProvider;
     private List<Guid> _ids = [];
 
     [JsonIgnore] private List<T> _objects = [];
@@ -101,7 +102,6 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
     public void CopyTo(T[] array, int arrayIndex)
     {
         _objects.CopyTo(array, arrayIndex);
-        //TODO copy indexes as well  _ids.CopyTo(, arrayIndex);
     }
 
     public bool Remove(T item)

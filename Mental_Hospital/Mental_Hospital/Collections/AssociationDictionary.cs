@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Mental_Hospital.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -254,5 +255,22 @@ public class AssociationDictionary<T> : IAssociationDictionary,IDictionary<Guid,
         }
     }
     public ICollection<Guid> Keys { get; }=new List<Guid>();
-    public ICollection<T> Values { get; }=new List<T>();
+   [JsonIgnore]
+   public ICollection<T> Values { get; }=new List<T>();
+}
+public class AssociationDictionaryJsonConverter<T> : JsonConverter<AssociationDictionary<T>> where T : IEntity
+{
+    public override AssociationDictionary<T> Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options) =>
+        new(JsonSerializer.Deserialize<List<Guid>>(reader.GetString() ?? string.Empty, options));
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        AssociationDictionary<T> dictionary,
+        JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(JsonSerializer.Serialize(dictionary.Keys, options));
+    }
 }

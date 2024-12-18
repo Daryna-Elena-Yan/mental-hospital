@@ -84,7 +84,7 @@ public class Storage<T> : IStorage where T : IEntity
     {
         var collections = typeof(TS).GetProperties(BindingFlags.Instance|BindingFlags.Public)
             .Where(c => c.PropertyType.IsGenericType
-                        && c.PropertyType.GetGenericTypeDefinition() == typeof(AssociationCollection<>));
+                        && c.PropertyType.GetInterfaces().Contains(typeof(IAssociationCollection)));
 
         foreach (var propertyInfo in collections)
         {

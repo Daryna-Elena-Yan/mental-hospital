@@ -9,6 +9,7 @@ public class Patient : Person
     public DateTime? DateOfDeath { get; set; }
 
     [JsonConverter(typeof(AssociationCollectionJsonConverter<Diagnosis>))]
+    [Composition]
     public virtual AssociationCollection<Diagnosis> Diagnoses { get; set; }
     
     [JsonConverter(typeof(AssociationCollectionJsonConverter<Appointment>))]

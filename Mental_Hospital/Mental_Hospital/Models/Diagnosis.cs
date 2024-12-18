@@ -16,7 +16,6 @@ public abstract class Diagnosis : IEntity
 {
     private Patient _patient;
     
-
     public Guid Id { get; set; } 
     public virtual string NameOfDisorder { get; set; }
     public virtual string Description { get; set; }
@@ -26,7 +25,7 @@ public abstract class Diagnosis : IEntity
     
 
     [JsonIgnore]
-    public virtual Patient Patient
+    public Patient Patient
     {
         get => _patient;
         set

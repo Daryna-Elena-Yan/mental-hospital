@@ -63,10 +63,18 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
             var addMethod = collectionType.GetMethod("Add", BindingFlags.Instance | BindingFlags.Public);
             addMethod.Invoke(collection, new[] { _parent });
         }
+        
+        var propReferences = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .Where(p => p.Name==_parent.GetType().Name);
+            
+        foreach (var propertyInfo in propReferences)
+        {
+            var instance = Convert.ChangeType(propertyInfo.GetMethod.Invoke(item, null),_parent.GetType());
+            propertyInfo.SetMethod.Invoke(item,  new [] {instance});
+        }
 
         //   Nurse.Rooms.Add(room);
-//Room room = item as Room;
-
+        //Room room = item as Room;
         //room.Nurses.Add(_parent);
 
 
@@ -100,9 +108,51 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
 
     public bool Remove(T item)
     {
-       
-        //storageAction?.OnDelete(item);
+        if (!_ids.Contains(item.Id))
+            return false;
+        var dictionaryType = typeof(AssociationDictionary<>).MakeGenericType(_parent.GetType());
+        var dictionaryProp = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .FirstOrDefault(c => c.PropertyType == dictionaryType);
+        if (dictionaryProp != null)
+        {
+            var dictionary = dictionaryProp.GetMethod.Invoke(item, null);
 
+            var removeMethod = dictionaryType.GetMethod("Remove", BindingFlags.Instance | BindingFlags.Public);
+            var keyValuePairType = typeof(KeyValuePair<,>).MakeGenericType(typeof(Guid), _parent.GetType());
+            var keyValuePair = Activator.CreateInstance(keyValuePairType, _parent.Id, _parent);            
+            removeMethod.Invoke(dictionary, new[] { keyValuePair });
+        }  
+        
+        var compositionAttr = _parent.GetType().GetProperties().FirstOrDefault(x => x.GetCustomAttribute<CompositionAttribute>() != null);
+        
+        var collectionType = typeof(AssociationCollection<>).MakeGenericType(_parent.GetType());
+        var collectionProp = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .FirstOrDefault(c => c.PropertyType == collectionType);
+        if (collectionProp != null)
+        {
+            
+            if (compositionAttr != null)
+            {
+               var storage = _serviceProvider.FindStorage(typeof(T));
+               storage.DeleteById(item.Id);
+            }
+            var collection = collectionProp.GetMethod.Invoke(item, null);
+
+            var removeMethod = collectionType.GetMethod("Remove", BindingFlags.Instance | BindingFlags.Public);
+            removeMethod.Invoke(collection, new[] { _parent });
+        }
+        var propReferences = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .Where(p => p.Name==_parent.GetType().Name);
+            
+        foreach (var propertyInfo in propReferences)
+        {
+            if (compositionAttr != null)
+            {
+                var storage = _serviceProvider.FindStorage(typeof(T));
+                storage.DeleteById(item.Id);
+            }
+            propertyInfo.SetMethod.Invoke(item,new []{(object)null});
+        }
         _objects.Remove(item);
         return _ids.Remove(item.Id);
     }

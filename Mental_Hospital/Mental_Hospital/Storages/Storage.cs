@@ -75,6 +75,11 @@ public class Storage<T> : IStorage where T : IEntity
         return _list.FirstOrDefault(x => x.Id == id);
     }
 
+    public void DeleteById(Guid id)
+    {
+         _list.RemoveAll(x => x.Id == id);
+    }
+
     private void RestoreObjectConnections<TS>(TS t) where TS : T
     {
         var collections = typeof(TS).GetProperties(BindingFlags.Instance|BindingFlags.Public)

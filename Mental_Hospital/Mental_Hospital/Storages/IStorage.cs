@@ -8,4 +8,6 @@ public interface IStorage
 
     public object? GetById(Guid id);
 
+    public void DeleteById(Guid id);
+
 }

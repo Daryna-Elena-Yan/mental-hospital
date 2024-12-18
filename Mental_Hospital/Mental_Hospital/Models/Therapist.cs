@@ -12,6 +12,7 @@ public class Therapist : Employee
     public List<string> Qualifications { get; set; } = [];
     
     [JsonConverter(typeof(AssociationCollectionJsonConverter<Appointment>))]
+    [Composition]
     public virtual AssociationCollection<Appointment> Appointments { get; set; }
     
     [JsonConverter(typeof(AssociationCollectionJsonConverter<Patient>))]

@@ -54,6 +54,7 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
             return;    
         Values.Add(item.Value);
         Keys.Add(item.Key);
+        //Береженого бог бережет @ Ян
         var dictionaryType = typeof(AssociationDictionary<>).MakeGenericType(_parent.GetType());
         var dictionaryProp = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .FirstOrDefault(c => c.PropertyType == dictionaryType);
@@ -66,6 +67,8 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
             var keyValuePair = Activator.CreateInstance(keyValuePairType, _parent.Id, _parent);            
             addMethod.Invoke(dictionary, new[] { keyValuePair });
         }
+        //конец цитаты
+        
         var collectionType = typeof(AssociationCollection<>).MakeGenericType(_parent.GetType());
 
         var collectionProp = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
@@ -122,12 +125,18 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
             var keyValuePair = Activator.CreateInstance(keyValuePairType, _parent.Id, _parent);            
             removeMethod.Invoke(dictionary, new[] { keyValuePair });
         }  
+        var compositionAttr = _parent.GetType().GetProperties().FirstOrDefault(x => x.GetCustomAttribute<CompositionAttribute>() != null);
         var collectionType = typeof(AssociationCollection<>).MakeGenericType(_parent.GetType());
 
         var collectionProp = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .FirstOrDefault(c => c.PropertyType == collectionType);
         if (collectionProp != null)
         {
+            if (compositionAttr != null)
+            {
+                var storage = _serviceProvider.FindStorage(typeof(T));
+                storage.DeleteById(item.Key);
+            }
             var collection = collectionProp.GetMethod.Invoke(item.Value, null);
 
             var removeMethod = collectionType.GetMethod("Remove", BindingFlags.Instance | BindingFlags.Public);
@@ -138,6 +147,11 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
             
         foreach (var propertyInfo in propReferences)
         {
+            if (compositionAttr != null)
+            {
+                var storage = _serviceProvider.FindStorage(typeof(T));
+                storage.DeleteById(item.Key);
+            }
             propertyInfo.SetMethod.Invoke(item.Value,new []{(object)null});
         }
         Keys.Remove(item.Key);

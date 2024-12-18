@@ -29,7 +29,7 @@ public class Appointment : IEntity
         get => _therapist;
         set
         {
-            IdTherapist = value.Id;
+            IdTherapist = value?.Id;
             _therapist = value;
         }
     }

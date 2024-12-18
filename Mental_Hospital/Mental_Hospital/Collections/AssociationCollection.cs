@@ -110,6 +110,7 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
     {
         if (!_ids.Contains(item.Id))
             return false;
+        _ids.Remove(item.Id);
         var dictionaryType = typeof(AssociationDictionary<>).MakeGenericType(_parent.GetType());
         var dictionaryProp = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .FirstOrDefault(c => c.PropertyType == dictionaryType);
@@ -151,10 +152,15 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
                 var storage = _serviceProvider.FindStorage(typeof(T));
                 storage.DeleteById(item.Id);
             }
-            propertyInfo.SetMethod.Invoke(item,new []{(object)null});
+            else
+            {
+                propertyInfo.SetMethod.Invoke(item,new []{(object)null});
+            }
+            
         }
-        _objects.Remove(item);
-        return _ids.Remove(item.Id);
+
+        
+        return _objects.Remove(item);
     }
 
     public void RestoreObjects(IEntity parent, IServiceProvider serviceProvider)

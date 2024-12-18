@@ -249,7 +249,7 @@ public class Tests
         Assert.That(_personStorage.Count,Is.EqualTo(1));
         var room =_roomFactory.CreateNewRoom(3);
         nurse.Rooms.Add(room);
-        room.Nurses.Add(nurse);
+        //room.Nurses.Add(nurse);
 
         Assert.That(nurse.Rooms.Count,Is.EqualTo(1));
         Assert.That(room.Nurses.Count,Is.EqualTo(1));

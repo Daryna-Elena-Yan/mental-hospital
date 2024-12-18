@@ -19,7 +19,7 @@ public class RoomPatient  : IEntity
         get => _room;
         set
         {
-            IdRoom = value.Id;
+            IdRoom = value?.Id;
             _room = value;
         }
     }
@@ -30,7 +30,7 @@ public class RoomPatient  : IEntity
         get => _patient;
         set
         {
-            IdPatient = value.Id;
+            IdPatient = value?.Id;
             _patient = value;
         }
     }

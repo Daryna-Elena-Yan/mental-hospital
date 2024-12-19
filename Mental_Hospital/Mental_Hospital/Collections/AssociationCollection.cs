@@ -83,7 +83,15 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
         foreach (var propertyInfo in propReferences)
         {
             var instance = Convert.ChangeType(propertyInfo.GetMethod.Invoke(item, null),_parent.GetType());
-            propertyInfo.SetMethod.Invoke(item,  new [] {instance});
+            if (instance != null)
+            {
+                var value = (IEntity)propertyInfo.GetValue(item, null);
+                if (value != null)
+                {
+                    if (value.Id.Equals(((IEntity)instance).Id))
+                        propertyInfo.SetMethod.Invoke(item, new[] { instance });
+                }
+            }
         }
 
         //   Nurse.Rooms.Add(room);

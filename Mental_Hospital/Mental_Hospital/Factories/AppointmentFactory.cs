@@ -30,7 +30,8 @@ public class AppointmentFactory : IFactory
         appointment.Patient = patient;
         appointment.Prescriptions = new AssociationDictionary<Prescription>(appointment, _provider);
         _storage.RegisterNew(appointment);
-        
+        therapist.Appointments.Add(appointment);
+        patient?.Appointments.Add(appointment);
         return appointment;
     }
 

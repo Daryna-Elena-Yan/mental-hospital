@@ -18,6 +18,10 @@ public class Equipment : IEntity
         {
             IdRoom = value?.Id;
             _room = value;
+            if(value != null)
+                if(value.Equipments!=null)
+                    if (!value.Equipments.Contains(this))
+                        value.Equipments.Add(this);
         }
     }
 }

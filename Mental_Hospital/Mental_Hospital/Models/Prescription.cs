@@ -22,6 +22,10 @@ public class Prescription : IEntity
         {
             IdAppointment = value?.Id;
             _appointment = value;
+            if(value != null)
+                if(value.Prescriptions!=null)
+                    if (!value.Prescriptions.Contains(new KeyValuePair<Guid, Prescription>(Id,this)))
+                        value.Prescriptions.Add(Id,this);
         }
     }
 

@@ -32,6 +32,10 @@ public abstract class Diagnosis : IEntity
         {
             IdPatient = value?.Id;
             _patient = value;
+            if(value != null)
+                if(value.Diagnoses!=null)
+                    if (!value.Diagnoses.Contains(this))
+                        value.Diagnoses.Add(this);
         }
     }
 }

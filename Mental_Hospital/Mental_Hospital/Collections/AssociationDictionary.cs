@@ -86,7 +86,15 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
         foreach (var propertyInfo in propReferences)
         {
             var instance = Convert.ChangeType(propertyInfo.GetMethod.Invoke(item.Value, null),_parent.GetType());
-            propertyInfo.SetMethod.Invoke(item.Value,  new [] {instance});
+            if (instance != null)
+            {
+                var value = (IEntity)propertyInfo.GetValue(item.Value, null);
+                if (value != null)
+                {
+                    if(value.Id.Equals(((IEntity)instance).Id))
+                        propertyInfo.SetMethod.Invoke(item.Value,  new [] {instance});
+                }
+            }
         }
     }
 
@@ -161,10 +169,11 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
 
     public int Count => Values.Count;
     public bool IsReadOnly => false;
+
     public void Add(Guid key, T value)
     {
         if (Keys.Contains(key))
-            return;    
+            return;
         Values.Add(value);
         Keys.Add(key);
         var dictionaryType = typeof(AssociationDictionary<>).MakeGenericType(_parent.GetType());
@@ -176,9 +185,10 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
 
             var addMethod = dictionaryType.GetMethod("Add", BindingFlags.Instance | BindingFlags.Public);
             var keyValuePairType = typeof(KeyValuePair<,>).MakeGenericType(typeof(Guid), _parent.GetType());
-            var keyValuePair = Activator.CreateInstance(keyValuePairType, _parent.Id, _parent);            
+            var keyValuePair = Activator.CreateInstance(keyValuePairType, _parent.Id, _parent);
             addMethod.Invoke(dictionary, new[] { keyValuePair });
         }
+
         var collectionType = typeof(AssociationCollection<>).MakeGenericType(_parent.GetType());
 
         var collectionProp = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
@@ -190,14 +200,24 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
             var addMethod = collectionType.GetMethod("Add", BindingFlags.Instance | BindingFlags.Public);
             addMethod.Invoke(collection, new[] { _parent });
         }
+
         var propReferences = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(p => p.Name==_parent.GetType().Name);
-            
+            .Where(p => p.Name == _parent.GetType().Name);
+
         foreach (var propertyInfo in propReferences)
         {
-            var instance = Convert.ChangeType(propertyInfo.GetMethod.Invoke(value, null),_parent.GetType());
-            propertyInfo.SetMethod.Invoke(value,  new [] {instance});
-        }    }
+            var instance = Convert.ChangeType(propertyInfo.GetMethod.Invoke(value, null), _parent.GetType());
+            if (instance != null)
+            {
+                var valu = (IEntity)propertyInfo.GetValue(value, null);
+                if (valu != null)
+                {
+                    if (valu.Id.Equals(((IEntity)instance).Id))
+                        propertyInfo.SetMethod.Invoke(value, new[] { instance });
+                }
+            }
+        }
+    }
 
     public bool ContainsKey(Guid key)
     {

@@ -20,6 +20,11 @@ public class Appointment : IEntity
         {
             IdPatient = value?.Id;
             _patient = value;
+            if(value != null)
+                if(value.Appointments!=null)
+                    if (!value.Appointments.Contains(this))
+                        value.Appointments.Add(this);
+            
         }
     }
 
@@ -31,6 +36,10 @@ public class Appointment : IEntity
         {
             IdTherapist = value?.Id;
             _therapist = value;
+            if(value != null)
+                if(value.Appointments!=null)
+                    if (!value.Appointments.Contains(this))
+                        value.Appointments.Add(this);
         }
     }
     [JsonConverter(typeof(AssociationDictionaryJsonConverter<Prescription>))]

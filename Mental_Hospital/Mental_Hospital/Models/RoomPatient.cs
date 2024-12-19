@@ -21,6 +21,10 @@ public class RoomPatient  : IEntity
         {
             IdRoom = value?.Id;
             _room = value;
+            if(value != null)
+                if(value.RoomPatients!=null)
+                    if (!value.RoomPatients.Contains(this))
+                        value.RoomPatients.Add(this);
         }
     }
 
@@ -32,6 +36,10 @@ public class RoomPatient  : IEntity
         {
             IdPatient = value?.Id;
             _patient = value;
+            if(value != null)
+                if(value.RoomPatients!=null)
+                    if (!value.RoomPatients.Contains(this))
+                        value.RoomPatients.Add(this);
         }
     }
 

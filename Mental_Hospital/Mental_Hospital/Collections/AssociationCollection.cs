@@ -51,7 +51,20 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
         
         _objects.Add(item);
         _ids.Add(item.Id);
+        //Береженого бог бережет @ Ян
+        var dictionaryType = typeof(AssociationDictionary<>).MakeGenericType(_parent.GetType());
+        var dictionaryProp = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .FirstOrDefault(c => c.PropertyType == dictionaryType);
+        if (dictionaryProp != null)
+        {
+            var dictionary = dictionaryProp.GetMethod.Invoke(item, null);
 
+            var addMethod = dictionaryType.GetMethod("Add", BindingFlags.Instance | BindingFlags.Public);
+            var keyValuePairType = typeof(KeyValuePair<,>).MakeGenericType(typeof(Guid), _parent.GetType());
+            var keyValuePair = Activator.CreateInstance(keyValuePairType, _parent.Id, _parent);            
+            addMethod.Invoke(dictionary, new[] { keyValuePair });
+        }
+        //конец цитаты
         var collectionType = typeof(AssociationCollection<>).MakeGenericType(_parent.GetType());
 
         var collectionProp = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)

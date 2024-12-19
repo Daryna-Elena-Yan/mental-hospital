@@ -92,10 +92,10 @@ public class AssociationDictionary<T> : IAssociationCollection,IDictionary<Guid,
 
     public void Clear()
     {
-       
         foreach (var obj in Values)
         {
-            
+            Values.Remove(obj);
+            Keys.Remove(obj.Id);
         }    
     }
 

@@ -98,13 +98,6 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
 
     public void Clear()
     {
-        
-        foreach (var obj in _objects)
-        {
-           
-        }
-
-
         _objects.Clear();
         _ids.Clear();
     }
@@ -194,6 +187,18 @@ public class AssociationCollection<T> : IAssociationCollection, ICollection<T> w
     public List<Guid> GetIds => _ids;
     public int Count => _objects.Count;
     public bool IsReadOnly => false;
+
+    public T this[Guid id]
+    {
+        get => _objects.First(v=>v.Id.Equals(id));
+        set
+        {
+            _objects.Remove(_objects.First(v=>v.Id.Equals(id)));
+            _ids.Remove(id);
+            _objects.Add(value);
+            _ids.Add(value.Id);
+        }
+    }
 }
 
 public class AssociationCollectionJsonConverter<T> : JsonConverter<AssociationCollection<T>> where T : IEntity

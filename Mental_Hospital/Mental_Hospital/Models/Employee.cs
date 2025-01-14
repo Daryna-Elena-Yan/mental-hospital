@@ -27,8 +27,8 @@ public abstract class Employee :Person
         {
             IdSupervisor = value?.Id;
             _supervisor = value;
-            if(value != null)
-                if(value.Subordinates!=null)
+            if (value != null)
+                if (value.Subordinates != null)
                     if (!value.Subordinates.Contains(this))
                         value.Subordinates.Add(this);
         }

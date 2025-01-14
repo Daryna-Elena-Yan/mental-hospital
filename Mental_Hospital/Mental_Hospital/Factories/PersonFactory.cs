@@ -101,4 +101,23 @@ public class PersonFactory : IFactory
         _personStorage.RegisterNew(therapist);
         return therapist;
     }
+
+    public Patient EmployeeToPatient(Employee e, string anamnesis, DateTime? dateOfDeath)
+    {
+        var patient = _provider.GetRequiredService<Patient>(); //to create inside DI container
+        patient.Id = e.Id;
+        patient.Name = e.Name;
+        patient.Surname = e.Surname;
+        patient.DateOfBirth = e.DateOfBirth;
+        patient.Address = e.Address;
+        patient.Anamnesis = anamnesis;
+        patient.DateOfDeath = dateOfDeath;
+        patient.Diagnoses = new AssociationCollection<Diagnosis>(patient, _provider);
+        patient.Appointments = new AssociationCollection<Appointment>(patient, _provider);
+        patient.RoomPatients = new AssociationCollection<RoomPatient>(patient, _provider);
+        patient.Therapists = new AssociationCollection<Therapist>(patient, _provider);
+        _personStorage.Delete(e);
+        _personStorage.RegisterNew(patient);
+        return patient;
+    }
 }

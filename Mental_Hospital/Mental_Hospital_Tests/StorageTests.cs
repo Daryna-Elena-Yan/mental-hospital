@@ -70,6 +70,23 @@ public class Tests
         _provider.Dispose();
     }
 
+    [Test]
+    public void PatientInheritance()
+    {
+        var nurse = _personFactory.CreateNewNurse(null, "aaa", "AAA", DateTime.Today, "korobochka");
+        Assert.That(_personStorage.Count,Is.EqualTo(1));
+        Console.WriteLine(((Employee)_personStorage.FindBy(x =>
+                                  {
+                                      return x.Name == "aaa";
+                                  }).First()).Salary);
+        var patient = _personFactory.EmployeeToPatient(nurse, "d'", null);
+        Assert.That(_personStorage.Count,Is.EqualTo(1));
+        Console.WriteLine(((Patient)_personStorage.FindBy(x =>
+        {
+            return x.Name == "aaa";
+        }).First()).Anamnesis);
+        
+    }
     [Test, Category("Patient"), Category("Register")]
     public void PatientRegisterTest()
     {

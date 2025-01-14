@@ -120,4 +120,35 @@ public class PersonFactory : IFactory
         _personStorage.RegisterNew(patient);
         return patient;
     }
+    public Therapist NurseToTherapist(Nurse e, IEnumerable<string> qualifications)
+    {
+        var therapist = _provider.GetRequiredService<Therapist>();
+        therapist.Id = e.Id;
+        therapist.Name = e.Name;
+        therapist.Surname = e.Surname;
+        therapist.Bonus = e.Bonus;
+        therapist.OvertimePerMonth = e.OvertimePerMonth;
+        therapist.Address = e.Address;
+        therapist.Supervisor = e.Supervisor;
+        therapist.Subordinates = new AssociationCollection<Employee>(therapist, _provider);
+        therapist.Appointments = new AssociationCollection<Appointment>(therapist, _provider);
+        therapist.DateFired = null;
+        therapist.DateHired = e.DateHired;
+        therapist.DateOfBirth = e.DateOfBirth;
+        therapist.Salary = therapist.Bonus + Therapist.BasicSalaryInZl +
+                           therapist.OvertimePerMonth * Therapist.OvertimePaidPerHourInZl;
+        if (qualifications is not null)
+        {
+            foreach (var q in qualifications)
+            {
+                therapist.Qualifications.Add(q);
+            }
+        }
+
+        therapist.Patients = new AssociationCollection<Patient>(therapist, _provider);
+
+        _personStorage.Delete(e);
+        _personStorage.RegisterNew(therapist);
+        return therapist;
+    }
 }

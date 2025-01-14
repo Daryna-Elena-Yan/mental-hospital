@@ -71,21 +71,39 @@ public class Tests
     }
 
     [Test]
-    public void PatientInheritance()
+    public void NurseToPatientInheritanceTest()
     {
         var nurse = _personFactory.CreateNewNurse(null, "aaa", "AAA", DateTime.Today, "korobochka");
         Assert.That(_personStorage.Count,Is.EqualTo(1));
-        Console.WriteLine(((Employee)_personStorage.FindBy(x =>
-                                  {
-                                      return x.Name == "aaa";
-                                  }).First()).Salary);
-        var patient = _personFactory.EmployeeToPatient(nurse, "d'", null);
-        Assert.That(_personStorage.Count,Is.EqualTo(1));
-        Console.WriteLine(((Patient)_personStorage.FindBy(x =>
+        var snurse = (Employee)_personStorage.FindBy(x =>
         {
             return x.Name == "aaa";
-        }).First()).Anamnesis);
-        
+        }).First();
+        _personFactory.EmployeeToPatient(nurse, "d", null);
+        Assert.That(_personStorage.Count,Is.EqualTo(1));
+        var spatient = (Patient)_personStorage.FindBy(x =>
+        {
+            return x.Name == "aaa";
+        }).First();
+        Assert.That(spatient.Id.Equals(snurse.Id)&&spatient.Anamnesis=="d");
+    }
+    [Test]
+    public void NurseToTherapistInheritanceTest()
+    {
+        var nurse = _personFactory.CreateNewNurse(null, "aaa", "AAA", DateTime.Today, "korobochka");
+        Assert.That(_personStorage.Count,Is.EqualTo(1));
+        var snurse = (Employee)_personStorage.FindBy(x =>
+        {
+            return x.Name == "aaa";
+        }).First();
+        _personFactory.NurseToTherapist(nurse,["molodec"]);
+        Assert.That(_personStorage.Count,Is.EqualTo(1));
+        var stherapist= (Therapist)_personStorage.FindBy(x =>
+        {
+            return x.Name == "aaa";
+        }).First();
+        Assert.That(snurse.Id.Equals(stherapist.Id)&&stherapist.Qualifications[0]=="molodec");Console.WriteLine(stherapist.Id + " " + stherapist.Qualifications[0]);
+
     }
     [Test, Category("Patient"), Category("Register")]
     public void PatientRegisterTest()

@@ -1,4 +1,4 @@
-# Mental_Hospital
+# Mental Hospital Application
 
 ### Introduction
 This project is part of a university course, where the main objective was to design and implement a local storing system structure from scratch. The system is a comprehensive medical platform designed to streamline workflow for hospital employees and provide easy access to various types of patient and facility information.
